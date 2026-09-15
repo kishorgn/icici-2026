@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTTP Methods — Quick Reference</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --dark:#2C3E50; --light-blue:#E8F0FB; --amber:#F39C12; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#F0F2F5; color:var(--dark); }
+  .page { max-width:920px; margin:32px auto; padding:0 20px 60px; }
+  .pg-header { background:var(--navy); border-radius:10px; padding:24px 28px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; }
+  .pg-header h1 { font-size:22px; color:#fff; font-weight:700; }
+  .pg-header p  { font-size:12px; color:#c0cfef; margin-top:4px; }
+  .pg-header .badge { background:var(--orange); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; white-space:nowrap; }
+  .section { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.09); margin-bottom:20px; overflow:hidden; }
+  .section-hdr { background:var(--navy); color:#fff; padding:12px 20px; font-size:14px; font-weight:700; }
+  .section-body { padding:0; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:10px 12px; text-align:left; font-weight:600; font-size:12px; }
+  td { padding:10px 12px; border-bottom:1px solid #EEF0F3; vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#F8F9FC; }
+  .method-chip { display:inline-block; padding:4px 12px; border-radius:4px; font-family:monospace; font-size:13px; font-weight:700; }
+  .m-get    { background:#E8F5E9; color:var(--green); }
+  .m-post   { background:#FFF3E0; color:#B34A00; }
+  .m-put    { background:#F3E5F5; color:#6A1B9A; }
+  .m-patch  { background:#E3F2FD; color:#1565C0; }
+  .m-delete { background:#FDECEA; color:#C0392B; }
+  .code-good { color:var(--green); font-weight:700; font-family:monospace; }
+  .code-bad  { color:#C0392B; font-family:monospace; }
+  .vs-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .vs-col { padding:18px 20px; }
+  .vs-col.left  { border-right:1px solid #EEF0F3; }
+  .vs-col h3 { font-size:15px; font-weight:700; margin-bottom:12px; }
+  .vs-col h3.get-color  { color:var(--green); }
+  .vs-col h3.post-color { color:#B34A00; }
+  .vs-col h3.put-color  { color:#6A1B9A; }
+  .vs-col h3.patch-color{ color:#1565C0; }
+  .vs-row { font-size:13px; padding:7px 0; border-bottom:1px solid #F0F2F5; line-height:1.5; }
+  .vs-row:last-child { border-bottom:none; }
+  .vs-row .label { font-size:11px; font-weight:700; color:#999; text-transform:uppercase; margin-bottom:2px; }
+  .guide-row { display:flex; gap:14px; padding:12px 20px; border-bottom:1px solid #EEF0F3; align-items:flex-start; font-size:13px; }
+  .guide-row:last-child { border-bottom:none; }
+  .guide-q { flex:1; line-height:1.5; }
+  .guide-a { min-width:200px; font-weight:700; color:var(--navy); }
+  .note { background:var(--light-blue); padding:14px 20px; font-size:13px; }
+  .note strong { color:var(--navy); }
+  .back { display:inline-block; margin-bottom:20px; font-size:13px; color:var(--navy); text-decoration:none; font-weight:600; }
+  .back:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to Training Materials</a>
+  <div class="pg-header">
+    <div>
+      <h1>HTTP Methods — Quick Reference</h1>
+      <p>Keep this open during exercises as a desk reference</p>
+    </div>
+    <span class="badge">Day 1 · Example</span>
+  </div>
+
+  <!-- All 5 methods -->
+  <div class="section">
+    <div class="section-hdr">The 5 Methods</div>
+    <div class="section-body">
+      <table>
+        <tr>
+          <th style="width:13%">Method</th>
+          <th style="width:15%">Action</th>
+          <th>Banking example</th>
+          <th style="width:16%">Request body?</th>
+          <th style="width:13%">Success code</th>
+        </tr>
+        <tr>
+          <td><span class="method-chip m-get">GET</span></td>
+          <td>Read data</td>
+          <td>Fetch account balance</td>
+          <td>No</td>
+          <td><span class="code-good">200</span></td>
+        </tr>
+        <tr>
+          <td><span class="method-chip m-post">POST</span></td>
+          <td>Create new</td>
+          <td>Open a new account</td>
+          <td>Yes (request)</td>
+          <td><span class="code-good">201</span></td>
+        </tr>
+        <tr>
+          <td><span class="method-chip m-put">PUT</span></td>
+          <td>Replace all</td>
+          <td>Update full customer profile</td>
+          <td>Yes (request)</td>
+          <td><span class="code-good">200</span></td>
+        </tr>
+        <tr>
+          <td><span class="method-chip m-patch">PATCH</span></td>
+          <td>Update part</td>
+          <td>Change only email address</td>
+          <td>Yes (request)</td>
+          <td><span class="code-good">200</span></td>
+        </tr>
+        <tr>
+          <td><span class="method-chip m-delete">DELETE</span></td>
+          <td>Remove</td>
+          <td>Remove a beneficiary</td>
+          <td>No (response)</td>
+          <td><span class="code-good">204</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- GET vs POST -->
+  <div class="section">
+    <div class="section-hdr">GET vs POST — the most common confusion</div>
+    <div class="section-body">
+      <div class="vs-grid">
+        <div class="vs-col left">
+          <h3 class="get-color">GET — Read</h3>
+          <div class="vs-row">Read. Never changes anything on the server.</div>
+          <div class="vs-row">No request body.</div>
+          <div class="vs-row">Safe to call 100 times — same result every time.</div>
+          <div class="vs-row">Returns <span class="code-good">200</span> with data in the response body.</div>
+        </div>
+        <div class="vs-col">
+          <h3 class="post-color">POST — Create</h3>
+          <div class="vs-row">Create. Makes a brand new resource.</div>
+          <div class="vs-row">Requires a request body with the new data.</div>
+          <div class="vs-row">Each call creates a new record — calling twice makes two.</div>
+          <div class="vs-row">Returns <span class="code-good">201</span> with the new resource in the body.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUT vs PATCH -->
+  <div class="section">
+    <div class="section-hdr">PUT vs PATCH — the subtle difference</div>
+    <div class="section-body">
+      <div class="vs-grid">
+        <div class="vs-col left">
+          <h3 class="put-color">PUT — Full replace</h3>
+          <div class="vs-row">Must send <strong>ALL</strong> fields in the request body.</div>
+          <div class="vs-row">Fields not sent get wiped to null or default.</div>
+          <div class="vs-row">Used for admin-level full replacements.</div>
+          <div class="vs-row">Risk: accidentally deleting field values.</div>
+        </div>
+        <div class="vs-col">
+          <h3 class="patch-color">PATCH — Partial update</h3>
+          <div class="vs-row">Send <strong>only</strong> the fields that changed.</div>
+          <div class="vs-row">Fields not sent are untouched.</div>
+          <div class="vs-row">Safer for everyday partial updates.</div>
+          <div class="vs-row">Preferred when users edit one or two fields.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick decision -->
+  <div class="section">
+    <div class="section-hdr">Quick decision guide</div>
+    <div class="section-body">
+      <div class="guide-row"><div class="guide-q">Am I <strong>reading</strong> data? Will this change anything?</div><div class="guide-a">→ GET — reads never change data</div></div>
+      <div class="guide-row"><div class="guide-q">Am I <strong>creating</strong> a brand new resource?</div><div class="guide-a">→ POST</div></div>
+      <div class="guide-row"><div class="guide-q">Am I <strong>removing</strong> something?</div><div class="guide-a">→ DELETE</div></div>
+      <div class="guide-row"><div class="guide-q">Am I changing <strong>SOME fields</strong> of an existing resource?</div><div class="guide-a">→ PATCH</div></div>
+      <div class="guide-row"><div class="guide-q">Am I <strong>replacing an entire resource</strong> (all fields)?</div><div class="guide-a">→ PUT</div></div>
+      <div class="note"><strong>The golden rule:</strong> Never put a verb in your URL. The HTTP method IS the verb. <span class="code-bad">POST /createAccount</span> is wrong. The right way is <span class="code-good">POST /accounts</span>.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

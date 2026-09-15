@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 4 — API Design Workshop</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --dark:#2C3E50; --light-blue:#E8F0FB; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#F0F2F5; color:var(--dark); }
+  .page { max-width:860px; margin:32px auto; padding:0 20px 60px; }
+  .ex-header { background:var(--navy); border-radius:10px; padding:24px 28px; margin-bottom:24px; }
+  .ex-header .tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--orange); text-transform:uppercase; margin-bottom:6px; }
+  .ex-header h1 { font-size:22px; color:#fff; font-weight:700; margin-bottom:6px; }
+  .ex-header p  { font-size:13px; color:#c0cfef; }
+  .section { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.09); margin-bottom:20px; overflow:hidden; }
+  .section-hdr { background:var(--orange); color:#fff; padding:12px 20px; font-size:14px; font-weight:700; }
+  .section-hdr span { font-size:11px; font-weight:400; opacity:.9; margin-left:10px; }
+  .section-body { padding:20px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
+  td { padding:9px 12px; border-bottom:1px solid #EEF0F3; vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#F8F9FC; }
+  td input[type=text], .blank { border:none; border-bottom:2px solid var(--orange); width:100%; padding:4px 2px; font-size:13px; font-family:inherit; color:var(--dark); background:transparent; outline:none; }
+  .blank { display:inline-block; min-height:18px; }
+  code { background:#F0F2F5; padding:2px 6px; border-radius:3px; font-family:monospace; font-size:12.5px; }
+  .scenario { background:var(--light-blue); border-radius:10px; padding:18px 20px; margin-bottom:18px; }
+  .scenario h3 { font-size:15px; font-weight:700; color:var(--navy); margin-bottom:8px; }
+  .scenario p  { font-size:13px; line-height:1.6; }
+  .json-block { background:#1e2738; border-radius:8px; padding:16px; margin:12px 0; overflow-x:auto; }
+  .json-block pre { color:#e0e6f0; font-family:'Courier New',monospace; font-size:12px; line-height:1.65; }
+  .json-block .key { color:#9CDCFE; }
+  .json-block .str { color:#CE9178; }
+  .json-block .num { color:#B5CEA8; }
+  .checklist { list-style:none; }
+  .checklist li { padding:7px 0; border-bottom:1px solid #EEF0F3; font-size:13px; display:flex; align-items:center; gap:10px; }
+  .checklist li:last-child { border-bottom:none; }
+  .checklist li::before { content:'☐'; font-size:16px; color:var(--orange); flex-shrink:0; }
+  .gallery-step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; font-size:13px; }
+  .gs-num { min-width:28px; height:28px; background:var(--green); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .note { background:#E8F5E9; border-left:4px solid var(--green); border-radius:0 6px 6px 0; padding:12px 16px; font-size:13px; margin-top:12px; }
+  .note strong { color:var(--green); }
+  .back { display:inline-block; margin-bottom:20px; font-size:13px; color:var(--navy); text-decoration:none; font-weight:600; }
+  .back:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to Training Materials</a>
+  <div class="ex-header">
+    <div class="tag">Day 1 · Session 7 · Exercise 4 · Pair Workshop</div>
+    <h1>Branch &amp; ATM Finder API Design</h1>
+    <p>Work in pairs · Estimated time: 60 minutes · Gallery walk at the end</p>
+  </div>
+
+  <!-- Scenario -->
+  <div class="scenario">
+    <h3>The challenge</h3>
+    <p>
+      ICICI Bank needs a new <strong>Branch &amp; ATM Finder API</strong> so that mobile app users can locate nearby branches and ATMs across India.
+      Your pair is the API design team. Design the 6 endpoints below — choose the right method, write a clean URL, and decide what the expected status code should be.
+    </p>
+  </div>
+
+  <!-- Design table -->
+  <div class="section">
+    <div class="section-hdr">Part A — Design the 6 endpoints <span>(30 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:14px;">Complete each row. Use <code>/api/v1</code> prefix for all URLs.</p>
+      <table>
+        <tr>
+          <th style="width:35%">Operation</th>
+          <th style="width:15%">Method</th>
+          <th style="width:35%">URL</th>
+          <th style="width:15%">Status code</th>
+        </tr>
+        <tr>
+          <td>List all branches in India</td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+        </tr>
+        <tr>
+          <td>Get details of one specific branch by its ID</td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+        </tr>
+        <tr>
+          <td>Search branches by city (e.g. Mumbai)</td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+        </tr>
+        <tr>
+          <td>List all ATMs belonging to a specific branch</td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+        </tr>
+        <tr>
+          <td>Report that a specific ATM is out of service</td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+        </tr>
+        <tr>
+          <td>Add a newly opened branch to the system</td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+          <td><div class="blank"></div></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sample response -->
+  <div class="section">
+    <div class="section-hdr">Part B — Sample JSON response <span>(10 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:12px;">Here is a sample response for "Get one branch". Study it, then answer the questions below.</p>
+      <div class="json-block"><pre>{
+  <span class="key">"branchId"</span>:   <span class="str">"BR-MUM-001"</span>,
+  <span class="key">"name"</span>:       <span class="str">"ICICI Bank — Bandra West"</span>,
+  <span class="key">"city"</span>:       <span class="str">"Mumbai"</span>,
+  <span class="key">"state"</span>:      <span class="str">"Maharashtra"</span>,
+  <span class="key">"ifscCode"</span>:   <span class="str">"ICIC0001234"</span>,
+  <span class="key">"address"</span>:    <span class="str">"14, Linking Road, Bandra West, Mumbai 400050"</span>,
+  <span class="key">"phone"</span>:      <span class="str">"+91-22-26408001"</span>,
+  <span class="key">"openHours"</span>:  <span class="str">"Mon–Sat 09:30–15:30"</span>,
+  <span class="key">"atmCount"</span>:   <span class="num">3</span>,
+  <span class="key">"services"</span>:   [<span class="str">"Locker"</span>, <span class="str">"Forex"</span>, <span class="str">"NRI Services"</span>]
+}</pre></div>
+      <p style="font-size:13px;font-weight:700;margin:14px 0 10px;">Questions:</p>
+      <div style="font-size:13px;margin-bottom:10px;">Q1. Which HTTP method and URL returns this response? <span class="blank" style="width:60%"></span></div>
+      <div style="font-size:13px;margin-bottom:10px;">Q2. What status code does a successful response carry? <span class="blank" style="width:60px"></span></div>
+      <div style="font-size:13px;margin-bottom:10px;">Q3. If <code>branchId: "BR-MUM-999"</code> does not exist, what status code should the API return? <span class="blank" style="width:60px"></span></div>
+      <div style="font-size:13px;">Q4. Add one more field you think this response should have. Write it in JSON format below:</div>
+      <div class="json-block" style="margin-top:8px;"><pre>  <span class="key">"<span class="blank" style="width:120px;border-color:#4EC9B0"></span>"</span>: <span class="str">"<span class="blank" style="width:160px;border-color:#CE9178"></span>"</span></pre></div>
+    </div>
+  </div>
+
+  <!-- Gallery walk -->
+  <div class="section">
+    <div class="section-hdr">Gallery Walk <span>(10 min)</span></div>
+    <div class="section-body">
+      <div class="gallery-step"><div class="gs-num">1</div><div>Write your 6 endpoint designs on the whiteboard or sticky notes — one endpoint per line.</div></div>
+      <div class="gallery-step"><div class="gs-num">2</div><div>Walk to another pair's board. Put a ✓ next to designs you agree with and a ✗ next to ones you'd change.</div></div>
+      <div class="gallery-step"><div class="gs-num">3</div><div>Return to your board. For each ✗, discuss with your partner: is the critique valid? Update if yes.</div></div>
+      <div class="gallery-step"><div class="gs-num">4</div><div>Trainer picks 2–3 differences to discuss with the full class.</div></div>
+      <div class="note"><strong>Good design debate:</strong> There is rarely one single correct answer. Focus on whether the URL follows the 5 rules and whether the method accurately describes the operation.</div>
+    </div>
+  </div>
+
+  <!-- Self-check -->
+  <div class="section">
+    <div class="section-hdr">Self-check before gallery walk</div>
+    <div class="section-body">
+      <ul class="checklist">
+        <li>All my URLs use only nouns — no verbs anywhere</li>
+        <li>All resource names are plural (branches, not branch)</li>
+        <li>URLs are all lowercase with hyphens — no camelCase</li>
+        <li>Nested paths show ownership (e.g. /branches/{id}/atms)</li>
+        <li>I used GET for the city search with a query parameter, not a path variable</li>
+        <li>The new-branch endpoint uses POST and expects a 201 response</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

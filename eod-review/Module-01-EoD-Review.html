@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 Review — API Fundamentals</title>
+<style>
+  :root {
+    --navy: #0D3B8E;
+    --orange: #F7941D;
+    --green: #1E8449;
+    --dark: #2C3E50;
+    --light-blue: #E8F0FB;
+    --light-green: #E8F5E9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F6F9; color: var(--dark); }
+
+  .slide { display: none; min-height: 100vh; flex-direction: column; }
+  .slide.active { display: flex; }
+
+  .slide-header {
+    background: var(--navy);
+    color: white;
+    padding: 28px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .slide-header h1 { font-size: 2rem; font-weight: 700; }
+  .slide-header .meta { font-size: 0.9rem; opacity: 0.7; }
+  .badge {
+    background: var(--orange);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 18px;
+    border-radius: 20px;
+  }
+
+  .slide-body { flex: 1; padding: 48px 60px; display: flex; flex-direction: column; gap: 28px; }
+
+  .topic-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .slide-title { font-size: 2.4rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .slide-sub { font-size: 1.05rem; color: #666; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 8px; }
+  .card {
+    background: white;
+    border-radius: 10px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border-left: 5px solid var(--navy);
+  }
+  .card.green { border-left-color: var(--green); }
+  .card.orange { border-left-color: var(--orange); }
+  .card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .card.green h3 { color: var(--green); }
+  .card.orange h3 { color: var(--orange); }
+  .card p, .card li { font-size: 0.92rem; color: var(--dark); line-height: 1.6; }
+  .card ul { padding-left: 18px; }
+
+  .code-block {
+    background: #F0F0F0;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    color: #1A1A2E;
+    line-height: 1.7;
+    margin: 4px 0;
+  }
+
+  .highlight-row {
+    display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .chip {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .chip.get { background: #E8F5E9; color: #1E8449; }
+  .chip.post { background: #FFF3E0; color: #E65100; }
+  .chip.put { background: #E3F2FD; color: #1565C0; }
+  .chip.patch { background: #F3E5F5; color: #6A1B9A; }
+  .chip.del { background: #FFEBEE; color: #C62828; }
+
+  .status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .sc {
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .sc small { display: block; font-size: 0.72rem; font-weight: 400; opacity: 0.9; margin-top: 4px; }
+  .sc.ok { background: #1E8449; }
+  .sc.created { background: #2E86AB; }
+  .sc.nc { background: #5B8C5A; }
+  .sc.bad { background: #F39C12; }
+  .sc.unauth { background: #E67E22; }
+  .sc.forbid { background: #E74C3C; }
+  .sc.notfound { background: #C0392B; }
+  .sc.err { background: #8E44AD; }
+
+  .rule-list { display: flex; flex-direction: column; gap: 10px; }
+  .rule {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: white; border-radius: 8px; padding: 14px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .rule-num {
+    background: var(--navy); color: white;
+    font-weight: 700; font-size: 0.9rem;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .rule-text { font-size: 0.93rem; }
+  .rule-text strong { color: var(--navy); }
+  .rule-text .bad { color: #C0392B; font-family: monospace; }
+  .rule-text .good { color: var(--green); font-family: monospace; }
+
+  .rest-pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .pillar {
+    background: white; border-radius: 10px; padding: 22px;
+    text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .pillar .icon { font-size: 2rem; margin-bottom: 10px; }
+  .pillar h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .pillar p { font-size: 0.87rem; color: #555; line-height: 1.5; }
+
+  .slide-footer {
+    background: var(--navy);
+    color: white;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 60px;
+  }
+  .nav-btn {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-btn:hover { opacity: 0.85; }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .progress { font-size: 0.85rem; opacity: 0.7; }
+  .dots { display: flex; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.2s; }
+  .dot.active { background: var(--orange); }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: What is an API? -->
+<div class="slide active" id="slide-1">
+  <div class="slide-header">
+    <div>
+      <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px;">Day 1 Review · Module 1</div>
+      <h1>API Fundamentals</h1>
+    </div>
+    <div class="badge">Topic 1 of 5</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="topic-label">Topic 1</div>
+      <div class="slide-title">What is an API?</div>
+      <div class="slide-sub">Application Programming Interface — the waiter between two programs</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h3>🍽️ The Restaurant Analogy</h3>
+        <ul>
+          <li>You = the client app</li>
+          <li>Waiter = the API</li>
+          <li>Kitchen = the server / database</li>
+          <li>You tell the waiter → waiter tells the kitchen → kitchen sends food back</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>📱 You Use APIs Every Day</h3>
+        <ul>
+          <li>iMobile balance check → API call</li>
+          <li>UPI transfer → 4-6 API calls</li>
+          <li>Weather app → API call</li>
+          <li>Food delivery order → API chain</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <h3>📦 The Payload is JSON</h3>
+        <div class="code-block">{"id": 1, "name": "Arjun",<br>"balance": 12500.00}</div>
+        <p style="margin-top:8px;font-size:0.85rem;">Human-readable. Machine-parseable. Universal.</p>
+      </div>
+    </div>
+    <div style="background:var(--light-blue);border-radius:10px;padding:18px 24px;border-left:5px solid var(--navy);">
+      <strong>Key mental model:</strong> An API is a defined contract. Two programs agree on what to ask and what to send back. You will be the person who designs and builds these contracts.
+    </div>
+  </div>
+  <div class="slide-footer">
+    <button class="nav-btn" onclick="prev()" disabled>← Previous</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="dots" id="dots"></div>
+      <div class="progress" id="progress">1 / 5</div>
+    </div>
+    <button class="nav-btn" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 2: HTTP Request & Response -->
+<div class="slide" id="slide-2">
+  <div class="slide-header">
+    <div>
+      <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px;">Day 1 Review · Module 1</div>
+      <h1>API Fundamentals</h1>
+    </div>
+    <div class="badge">Topic 2 of 5</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="topic-label">Topic 2</div>
+      <div class="slide-title">HTTP: Request & Response</div>
+      <div class="slide-sub">Every API call follows this exact pattern — always</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h3>📤 Request (You Send)</h3>
+        <ul>
+          <li><strong>Method:</strong> GET, POST, PATCH…</li>
+          <li><strong>URL:</strong> /api/v1/customers/CUST1001</li>
+          <li><strong>Headers:</strong> Content-Type, Authorization…</li>
+          <li><strong>Body:</strong> JSON data (POST/PUT/PATCH only)</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>📥 Response (Server Sends)</h3>
+        <ul>
+          <li><strong>Status code:</strong> 200, 201, 404…</li>
+          <li><strong>Headers:</strong> Content-Type, Content-Length…</li>
+          <li><strong>Body:</strong> JSON data (or empty on 204)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="code-block">
+GET /api/v1/customers/CUST1001 HTTP/1.1<br>
+Host: api.icicibank.com<br>
+Authorization: Bearer eyJhbGci...<br>
+Accept: application/json<br>
+<br>
+← HTTP/1.1 200 OK<br>
+← Content-Type: application/json<br>
+← { "customerId": "CUST1001", "name": "Arjun Sharma" }
+    </div>
+    <div style="background:var(--light-green);border-radius:10px;padding:14px 20px;border-left:5px solid var(--green);">
+      <strong>Rule to remember:</strong> GET requests have NO body. You ask for data — you don't send data when reading. POST, PUT, and PATCH have a body.
+    </div>
+  </div>
+  <div class="slide-footer">
+    <button class="nav-btn" onclick="prev()">← Previous</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="dots" id="dots2"></div>
+      <div class="progress" id="progress2">2 / 5</div>
+    </div>
+    <button class="nav-btn" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 3: HTTP Methods -->
+<div class="slide" id="slide-3">
+  <div class="slide-header">
+    <div>
+      <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px;">Day 1 Review · Module 1</div>
+      <h1>API Fundamentals</h1>
+    </div>
+    <div class="badge">Topic 3 of 5</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="topic-label">Topic 3</div>
+      <div class="slide-title">HTTP Methods</div>
+      <div class="slide-sub">Five methods. One purpose each.</div>
+    </div>
+    <div class="highlight-row">
+      <div class="chip get">GET — Read</div>
+      <div class="chip post">POST — Create</div>
+      <div class="chip put">PUT — Replace</div>
+      <div class="chip patch">PATCH — Update</div>
+      <div class="chip del">DELETE — Remove</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h3>Three rules to live by</h3>
+        <ul>
+          <li>GET = read only. Never changes anything. Safe to call 100 times.</li>
+          <li>POST = create. Each call makes a new record.</li>
+          <li>DELETE = remove. Response has no body — the thing is gone.</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <h3>PATCH vs PUT</h3>
+        <ul>
+          <li><strong>PATCH:</strong> send only the changed fields. Safe for partial updates.</li>
+          <li><strong>PUT:</strong> send all fields. Missing fields get wiped.</li>
+          <li>In most banking APIs → use PATCH for updates.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="code-block">
+GET    /api/v1/customers          → get all customers<br>
+POST   /api/v1/customers          → create a customer<br>
+PATCH  /api/v1/customers/CUST1001 → update fields<br>
+DELETE /api/v1/customers/CUST1001 → remove customer
+    </div>
+  </div>
+  <div class="slide-footer">
+    <button class="nav-btn" onclick="prev()">← Previous</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="progress">3 / 5</div></div>
+    <button class="nav-btn" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 4: Status Codes -->
+<div class="slide" id="slide-4">
+  <div class="slide-header">
+    <div>
+      <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px;">Day 1 Review · Module 1</div>
+      <h1>API Fundamentals</h1>
+    </div>
+    <div class="badge">Topic 4 of 5</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="topic-label">Topic 4</div>
+      <div class="slide-title">Status Codes</div>
+      <div class="slide-sub">The server talks back in 3-digit codes</div>
+    </div>
+    <div class="status-grid">
+      <div class="sc ok">200<small>OK</small></div>
+      <div class="sc created">201<small>Created</small></div>
+      <div class="sc nc">204<small>No Content</small></div>
+      <div class="sc bad">400<small>Bad Request</small></div>
+      <div class="sc unauth">401<small>Unauthorized</small></div>
+      <div class="sc forbid">403<small>Forbidden</small></div>
+      <div class="sc notfound">404<small>Not Found</small></div>
+      <div class="sc err">500<small>Server Error</small></div>
+    </div>
+    <div class="cards">
+      <div class="card green">
+        <h3>2xx — All Good</h3>
+        <ul>
+          <li>200 = read/update succeeded</li>
+          <li>201 = new resource created</li>
+          <li>204 = deleted, nothing to return</li>
+        </ul>
+      </div>
+      <div class="card orange">
+        <h3>4xx — Client Error</h3>
+        <ul>
+          <li>400 = malformed request</li>
+          <li>401 = not authenticated (who are you?)</li>
+          <li>403 = authenticated but no permission</li>
+          <li>404 = resource not found</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left-color:#C0392B">
+        <h3>5xx — Server Error</h3>
+        <ul>
+          <li>500 = something crashed on our side</li>
+          <li>Not the client's fault</li>
+          <li>Our code needs to be fixed</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <button class="nav-btn" onclick="prev()">← Previous</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="progress">4 / 5</div></div>
+    <button class="nav-btn" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<!-- SLIDE 5: URL Design + REST -->
+<div class="slide" id="slide-5">
+  <div class="slide-header">
+    <div>
+      <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px;">Day 1 Review · Module 1</div>
+      <h1>API Fundamentals</h1>
+    </div>
+    <div class="badge">Topic 5 of 5</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="topic-label">Topic 5</div>
+      <div class="slide-title">URL Design + What is REST?</div>
+      <div class="slide-sub">5 URL rules · 3 REST principles</div>
+    </div>
+    <div class="rule-list">
+      <div class="rule"><div class="rule-num">1</div><div class="rule-text"><strong>NOUNS not verbs:</strong> <span class="bad">/getCustomers</span> → <span class="good">/customers</span></div></div>
+      <div class="rule"><div class="rule-num">2</div><div class="rule-text"><strong>PLURAL for collections:</strong> <span class="bad">/customer</span> → <span class="good">/customers</span></div></div>
+      <div class="rule"><div class="rule-num">3</div><div class="rule-text"><strong>LOWERCASE:</strong> <span class="bad">/CustomerList</span> → <span class="good">/customer-list</span></div></div>
+      <div class="rule"><div class="rule-num">4</div><div class="rule-text"><strong>HYPHENS not underscores:</strong> <span class="bad">/savings_accounts</span> → <span class="good">/savings-accounts</span></div></div>
+      <div class="rule"><div class="rule-num">5</div><div class="rule-text"><strong>NEST to show ownership:</strong> <span class="bad">/getAccountsByCustomer?id=1</span> → <span class="good">/customers/CUST1001/accounts</span></div></div>
+    </div>
+    <div class="rest-pillars">
+      <div class="pillar"><div class="icon">📦</div><h3>Resources</h3><p>Think in THINGS (customers, accounts), not ACTIONS (getBalance, createAccount).</p></div>
+      <div class="pillar"><div class="icon">🔒</div><h3>Stateless</h3><p>Every request carries all the info needed. Server remembers nothing between requests.</p></div>
+      <div class="pillar"><div class="icon">🔧</div><h3>Uniform Interface</h3><p>Use HTTP as designed: GET reads, POST creates, DELETE removes. Codes that mean what they say.</p></div>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <button class="nav-btn" onclick="prev()">← Previous</button>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><div class="progress">5 / 5</div></div>
+    <button class="nav-btn" onclick="next()" disabled>Next →</button>
+  </div>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  function buildDots() {
+    // dots are in footer of each slide; we'll use a single overlay approach
+  }
+
+  function show(n) {
+    slides.forEach((s,i) => {
+      s.classList.toggle('active', i === n);
+    });
+  }
+
+  function next() {
+    if (current < total - 1) { current++; show(current); }
+  }
+  function prev() {
+    if (current > 0) { current--; show(current); }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
+  });
+</script>
+</body>
+</html>

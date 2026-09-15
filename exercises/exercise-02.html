@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 2 — Status Codes</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --dark:#2C3E50; --light-blue:#E8F0FB; --red:#C0392B; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#F0F2F5; color:var(--dark); }
+  .page { max-width:860px; margin:32px auto; padding:0 20px 60px; }
+  .ex-header { background:var(--navy); border-radius:10px; padding:24px 28px; margin-bottom:24px; }
+  .ex-header .tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--orange); text-transform:uppercase; margin-bottom:6px; }
+  .ex-header h1 { font-size:22px; color:#fff; font-weight:700; margin-bottom:6px; }
+  .ex-header p  { font-size:13px; color:#c0cfef; }
+  .section { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.09); margin-bottom:20px; overflow:hidden; }
+  .section-hdr { background:var(--orange); color:#fff; padding:12px 20px; font-size:14px; font-weight:700; }
+  .section-hdr span { font-size:11px; font-weight:400; opacity:.9; margin-left:10px; }
+  .section-body { padding:20px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
+  td { padding:9px 12px; border-bottom:1px solid #EEF0F3; vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#F8F9FC; }
+  .blank { border-bottom:2px solid var(--orange); display:inline-block; width:120px; min-height:16px; }
+  .code-bank { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+  .code-chip {
+    padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; font-family:monospace; cursor:default;
+  }
+  .c2 { background:#E8F5E9; color:var(--green); border:2px solid var(--green); }
+  .c4 { background:#FFF3E0; color:#B34A00; border:2px solid var(--orange); }
+  .c5 { background:#FDECEA; color:var(--red); border:2px solid var(--red); }
+  .scenario-list { list-style:none; }
+  .scenario-list li { padding:10px 0; border-bottom:1px solid #EEF0F3; font-size:13px; display:flex; align-items:flex-start; gap:10px; }
+  .scenario-list li:last-child { border-bottom:none; }
+  .s-num { min-width:24px; font-weight:700; color:var(--navy); }
+  .s-blank { border-bottom:2px solid var(--orange); display:inline-block; width:60px; margin-left:8px; }
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .compare-card { border-radius:8px; padding:16px; }
+  .compare-card.left  { background:#FFF3E0; border:2px solid var(--orange); }
+  .compare-card.right { background:#FDECEA; border:2px solid var(--red); }
+  .compare-card h4 { font-size:14px; font-weight:700; margin-bottom:10px; }
+  .compare-card .c-code { font-size:24px; font-weight:900; margin-bottom:6px; }
+  .left  h4, .left  .c-code { color:#B34A00; }
+  .right h4, .right .c-code { color:var(--red); }
+  .compare-card p { font-size:13px; color:var(--dark); line-height:1.55; margin-bottom:8px; }
+  .q-row { margin-bottom:14px; font-size:13px; line-height:1.6; }
+  .note { background:var(--light-blue); border-left:4px solid var(--navy); border-radius:0 6px 6px 0; padding:12px 16px; font-size:13px; margin-top:12px; }
+  .note strong { color:var(--navy); }
+  .back { display:inline-block; margin-bottom:20px; font-size:13px; color:var(--navy); text-decoration:none; font-weight:600; }
+  .back:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to Training Materials</a>
+  <div class="ex-header">
+    <div class="tag">Day 1 · Session 4 · Exercise 2</div>
+    <h1>HTTP Status Codes</h1>
+    <p>Work in pairs · Estimated time: 30 minutes</p>
+  </div>
+
+  <!-- Code bank -->
+  <div class="section">
+    <div class="section-hdr">Status Code Bank — use these for Part A &amp; B</div>
+    <div class="section-body">
+      <div class="code-bank">
+        <span class="code-chip c2">200 OK</span>
+        <span class="code-chip c2">201 Created</span>
+        <span class="code-chip c2">204 No Content</span>
+        <span class="code-chip c4">400 Bad Request</span>
+        <span class="code-chip c4">401 Unauthorized</span>
+        <span class="code-chip c4">403 Forbidden</span>
+        <span class="code-chip c4">404 Not Found</span>
+        <span class="code-chip c5">500 Internal Server Error</span>
+      </div>
+      <div class="note"><strong>Families:</strong> 2xx = Success &nbsp;·&nbsp; 4xx = Client error (your mistake) &nbsp;·&nbsp; 5xx = Server error (their mistake)</div>
+    </div>
+  </div>
+
+  <!-- Part A -->
+  <div class="section">
+    <div class="section-hdr">Part A — Banking scenario matching <span>(15 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:14px;">Write the correct status code next to each scenario. Use the code bank above.</p>
+      <ul class="scenario-list">
+        <li><span class="s-num">1.</span> Customer checks their account balance. The balance is returned successfully.<span class="s-blank"></span></li>
+        <li><span class="s-num">2.</span> Customer opens a new fixed deposit. The FD record is created in the system.<span class="s-blank"></span></li>
+        <li><span class="s-num">3.</span> Customer removes a beneficiary. The operation succeeds with nothing to return.<span class="s-blank"></span></li>
+        <li><span class="s-num">4.</span> Customer enters a mobile number with letters ("98765ABCD0") in a transfer form.<span class="s-blank"></span></li>
+        <li><span class="s-num">5.</span> Customer's session token expired. They try to view their statement without logging in again.<span class="s-blank"></span></li>
+        <li><span class="s-num">6.</span> A teller tries to access a customer file they are not authorised to view. They are logged in but don't have permission.<span class="s-blank"></span></li>
+        <li><span class="s-num">7.</span> Customer calls <code>GET /api/v1/customers/CUST9999</code>. No such customer exists.<span class="s-blank"></span></li>
+        <li><span class="s-num">8.</span> A NullPointerException crashes the transaction service during a fund transfer attempt.<span class="s-blank"></span></li>
+        <li><span class="s-num">9.</span> Customer successfully updates only their email address (PATCH request).<span class="s-blank"></span></li>
+        <li><span class="s-num">10.</span> Customer tries to view another customer's account — they are authenticated but blocked.<span class="s-blank"></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Part B -->
+  <div class="section">
+    <div class="section-hdr">Part B — Code families <span>(5 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:14px;">Sort the 8 codes from the bank into the correct family columns.</p>
+      <table>
+        <tr>
+          <th style="width:33%">✅ 2xx — Success</th>
+          <th style="width:33%">⚠️ 4xx — Client Error</th>
+          <th style="width:33%">🔥 5xx — Server Error</th>
+        </tr>
+        <tr>
+          <td style="height:80px;vertical-align:top;padding-top:10px;"></td>
+          <td style="vertical-align:top;padding-top:10px;"></td>
+          <td style="vertical-align:top;padding-top:10px;"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Part C -->
+  <div class="section">
+    <div class="section-hdr">Part C — 401 vs 403: the most common mix-up <span>(10 min)</span></div>
+    <div class="section-body">
+      <div class="compare-grid" style="margin-bottom:18px;">
+        <div class="compare-card left">
+          <div class="c-code">401</div>
+          <h4>Unauthorized</h4>
+          <p>"Who are you? Show ID."</p>
+          <p>No valid session or token. The client is not authenticated at all.</p>
+          <p><strong>Fix:</strong> Log in and get a valid token first.</p>
+        </div>
+        <div class="compare-card right">
+          <div class="c-code">403</div>
+          <h4>Forbidden</h4>
+          <p>"I know who you are. You can't do this."</p>
+          <p>Valid token — but the user does not have permission for this resource.</p>
+          <p><strong>Fix:</strong> Request the correct access level.</p>
+        </div>
+      </div>
+      <p style="font-size:13px;font-weight:700;margin-bottom:12px;">Answer these questions:</p>
+      <div class="q-row">C1. A customer with an expired JWT tries to view their statement. Which code: 401 or 403? Why?<br><br><span class="blank" style="width:90%"></span></div>
+      <div class="q-row">C2. A branch manager is logged in but tries to access the CFO's salary details. Which code? Why?<br><br><span class="blank" style="width:90%"></span></div>
+      <div class="q-row">C3. A developer forgets to send the Authorization header at all. Which code?<span class="blank" style="width:60px;margin-left:10px;"></span></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

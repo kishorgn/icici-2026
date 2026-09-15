@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API & Services Training — Day Guide</title>
+<style>
+  :root {
+    --navy: #0D3B8E;
+    --orange: #F7941D;
+    --green: #1E8449;
+    --dark: #2C3E50;
+    --light-blue: #E8F0FB;
+    --grey: #95A5A6;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: var(--dark); }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 40px 22px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo-block { display: flex; flex-direction: column; }
+  .logo-block .bank { font-size: 22px; font-weight: 700; letter-spacing: 1px; color: var(--orange); }
+  .logo-block .programme { font-size: 13px; color: #c0cfef; margin-top: 2px; }
+  header h1 { font-size: 20px; font-weight: 600; color: #fff; border-left: 3px solid var(--orange); padding-left: 20px; }
+
+  /* ── Main ── */
+  main { max-width: 1080px; margin: 32px auto; padding: 0 24px 60px; }
+
+  /* ── Day block ── */
+  .day-block { margin-bottom: 36px; }
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .day-badge {
+    background: var(--navy);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .day-badge.done { background: var(--green); }
+  .day-badge.soon { background: var(--grey); }
+  .day-title { font-size: 17px; font-weight: 600; color: var(--dark); }
+  .day-sub   { font-size: 13px; color: #7F8C8D; margin-left: 4px; }
+
+  /* ── Resource grid ── */
+  .resources { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+
+  /* ── Resource card ── */
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: transform .15s, box-shadow .15s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
+  .card-accent { height: 5px; }
+  .accent-example  { background: var(--navy); }
+  .accent-exercise { background: var(--orange); }
+  .accent-review   { background: var(--green); }
+  .accent-quiz     { background: #8E44AD; }
+
+  .card-body { padding: 14px 16px 16px; }
+  .card-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .tag-example  { background: #E8F0FB; color: var(--navy); }
+  .tag-exercise { background: #FFF3E0; color: #B34A00; }
+  .tag-review   { background: #E8F5E9; color: var(--green); }
+  .tag-quiz     { background: #F3E5F5; color: #6A1B9A; }
+
+  .card-title { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 4px; line-height: 1.35; }
+  .card-desc  { font-size: 12px; color: #7F8C8D; line-height: 1.5; }
+
+  /* ── Coming soon ── */
+  .coming-soon {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    opacity: 0.55;
+  }
+  .cs-icon { font-size: 28px; }
+  .cs-text { font-size: 13px; color: #7F8C8D; }
+  .cs-text strong { display: block; font-size: 14px; color: #555; margin-bottom: 2px; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid #DDE1E7; margin: 10px 0 28px; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    color: #aaa;
+    font-size: 12px;
+    padding: 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <span class="bank">ICICI BANK</span>
+    <span class="programme">API &amp; Services Training</span>
+  </div>
+  <h1>Training Materials</h1>
+</header>
+
+<main>
+
+  <!-- ══════════ DAY 1 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge done">Day 1</span>
+      <span class="day-title">API Fundamentals</span>
+      <span class="day-sub">— What is an API · HTTP · REST · URL Design</span>
+    </div>
+    <div class="resources">
+
+      <!-- Examples -->
+      <a class="card" href="examples/http-methods.html">
+        <div class="card-accent accent-example"></div>
+        <div class="card-body">
+          <span class="card-tag tag-example">Example</span>
+          <div class="card-title">HTTP Methods Cheatsheet</div>
+          <div class="card-desc">GET · POST · PUT · PATCH · DELETE with banking examples</div>
+        </div>
+      </a>
+
+      <a class="card" href="examples/status-codes.html">
+        <div class="card-accent accent-example"></div>
+        <div class="card-body">
+          <span class="card-tag tag-example">Example</span>
+          <div class="card-title">Status Codes Reference</div>
+          <div class="card-desc">2xx · 4xx · 5xx — 8 essential codes explained</div>
+        </div>
+      </a>
+
+      <!-- Exercises -->
+      <a class="card" href="exercises/exercise-01.html">
+        <div class="card-accent accent-exercise"></div>
+        <div class="card-body">
+          <span class="card-tag tag-exercise">Exercise 1</span>
+          <div class="card-title">HTTP Methods</div>
+          <div class="card-desc">Match methods · Postman live calls · Banking scenarios</div>
+        </div>
+      </a>
+
+      <a class="card" href="exercises/exercise-02.html">
+        <div class="card-accent accent-exercise"></div>
+        <div class="card-body">
+          <span class="card-tag tag-exercise">Exercise 2</span>
+          <div class="card-title">Status Codes</div>
+          <div class="card-desc">10 banking scenarios · Code families · 401 vs 403</div>
+        </div>
+      </a>
+
+      <a class="card" href="exercises/exercise-03.html">
+        <div class="card-accent accent-exercise"></div>
+        <div class="card-body">
+          <span class="card-tag tag-exercise">Exercise 3</span>
+          <div class="card-title">URL Design</div>
+          <div class="card-desc">Fix bad URLs · Design new endpoints · Path vs query params</div>
+        </div>
+      </a>
+
+      <a class="card" href="exercises/exercise-04.html">
+        <div class="card-accent accent-exercise"></div>
+        <div class="card-body">
+          <span class="card-tag tag-exercise">Exercise 4</span>
+          <div class="card-title">API Design Workshop</div>
+          <div class="card-desc">Branch &amp; ATM Finder — design 6 operations from scratch</div>
+        </div>
+      </a>
+
+      <!-- EoD Review -->
+      <a class="card" href="eod-review/Module-01-EoD-Review.html">
+        <div class="card-accent accent-review"></div>
+        <div class="card-body">
+          <span class="card-tag tag-review">EoD Review</span>
+          <div class="card-title">Day 1 Recap Slides</div>
+          <div class="card-desc">5-slide end-of-day summary — key concepts & takeaways</div>
+        </div>
+      </a>
+
+      <!-- Quiz -->
+      <a class="card" href="eod-quiz/day1-quiz.html">
+        <div class="card-accent accent-quiz"></div>
+        <div class="card-body">
+          <span class="card-tag tag-quiz">Quiz</span>
+          <div class="card-title">Day 1 Scored Quiz</div>
+          <div class="card-desc">10 questions · 45 sec each · Instant feedback</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ══════════ DAY 2 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge soon">Day 2</span>
+      <span class="day-title">Spring Boot Basics</span>
+      <span class="day-sub">— Coming soon</span>
+    </div>
+    <div class="coming-soon">
+      <span class="cs-icon">🚧</span>
+      <div class="cs-text"><strong>Materials not yet available</strong>Content will be added after Day 1 in-person review.</div>
+    </div>
+  </div>
+
+  <!-- ══════════ DAY 3 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge soon">Day 3</span>
+      <span class="day-title">Data Persistence</span>
+      <span class="day-sub">— Coming soon</span>
+    </div>
+    <div class="coming-soon">
+      <span class="cs-icon">🚧</span>
+      <div class="cs-text"><strong>Materials not yet available</strong></div>
+    </div>
+  </div>
+
+  <!-- ══════════ DAY 4 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge soon">Day 4</span>
+      <span class="day-title">Error Handling &amp; Validation</span>
+      <span class="day-sub">— Coming soon</span>
+    </div>
+    <div class="coming-soon">
+      <span class="cs-icon">🚧</span>
+      <div class="cs-text"><strong>Materials not yet available</strong></div>
+    </div>
+  </div>
+
+  <!-- ══════════ DAY 5 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge soon">Day 5</span>
+      <span class="day-title">Security &amp; Auth</span>
+      <span class="day-sub">— Coming soon</span>
+    </div>
+    <div class="coming-soon">
+      <span class="cs-icon">🚧</span>
+      <div class="cs-text"><strong>Materials not yet available</strong></div>
+    </div>
+  </div>
+
+  <!-- ══════════ DAY 6 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge soon">Day 6</span>
+      <span class="day-title">Integration &amp; Testing</span>
+      <span class="day-sub">— Coming soon</span>
+    </div>
+    <div class="coming-soon">
+      <span class="cs-icon">🚧</span>
+      <div class="cs-text"><strong>Materials not yet available</strong></div>
+    </div>
+  </div>
+
+  <!-- ══════════ DAY 7 ══════════ -->
+  <div class="day-block">
+    <div class="day-header">
+      <span class="day-badge soon">Day 7</span>
+      <span class="day-title">Capstone Project</span>
+      <span class="day-sub">— Coming soon</span>
+    </div>
+    <div class="coming-soon">
+      <span class="cs-icon">🚧</span>
+      <div class="cs-text"><strong>Materials not yet available</strong></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>ICICI Bank · API &amp; Services Training · Internal Use Only</footer>
+
+</body>
+</html>

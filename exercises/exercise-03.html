@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 3 — URL Design</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --dark:#2C3E50; --light-blue:#E8F0FB; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#F0F2F5; color:var(--dark); }
+  .page { max-width:860px; margin:32px auto; padding:0 20px 60px; }
+  .ex-header { background:var(--navy); border-radius:10px; padding:24px 28px; margin-bottom:24px; }
+  .ex-header .tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--orange); text-transform:uppercase; margin-bottom:6px; }
+  .ex-header h1 { font-size:22px; color:#fff; font-weight:700; margin-bottom:6px; }
+  .ex-header p  { font-size:13px; color:#c0cfef; }
+  .section { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.09); margin-bottom:20px; overflow:hidden; }
+  .section-hdr { background:var(--orange); color:#fff; padding:12px 20px; font-size:14px; font-weight:700; }
+  .section-hdr span { font-size:11px; font-weight:400; opacity:.9; margin-left:10px; }
+  .section-body { padding:20px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
+  td { padding:9px 12px; border-bottom:1px solid #EEF0F3; vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#F8F9FC; }
+  .blank { border-bottom:2px solid var(--orange); display:inline-block; width:100%; min-height:16px; }
+  code { background:#F0F2F5; padding:2px 6px; border-radius:3px; font-family:monospace; font-size:13px; }
+  .bad  { color:#C0392B; font-weight:700; font-family:monospace; }
+  .good { color:var(--green); font-weight:700; font-family:monospace; }
+  .rules { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-bottom:4px; }
+  .rule-card { background:var(--light-blue); border-radius:8px; padding:12px 14px; }
+  .rule-card .r-num { font-size:11px; font-weight:700; color:var(--navy); text-transform:uppercase; margin-bottom:4px; }
+  .rule-card .r-text { font-size:13px; font-weight:600; color:var(--dark); margin-bottom:4px; }
+  .rule-card .r-ex { font-family:monospace; font-size:12px; color:#555; }
+  .fix-row { margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid #EEF0F3; }
+  .fix-row:last-child { border-bottom:none; margin-bottom:0; }
+  .fix-row .bad-url { font-family:monospace; color:#C0392B; font-size:13px; margin-bottom:6px; }
+  .fix-row .problem-label { font-size:11px; font-weight:700; color:var(--orange); text-transform:uppercase; margin-bottom:2px; }
+  .fix-row .problem { font-size:12px; color:#555; margin-bottom:8px; }
+  .fix-row .fix-label { font-size:11px; font-weight:700; color:var(--green); text-transform:uppercase; margin-bottom:4px; }
+  .note { background:var(--light-blue); border-left:4px solid var(--navy); border-radius:0 6px 6px 0; padding:12px 16px; font-size:13px; margin-top:12px; }
+  .note strong { color:var(--navy); }
+  .design-row { margin-bottom:14px; font-size:13px; }
+  .design-row .op { font-weight:600; margin-bottom:6px; }
+  .answer-grid { display:grid; grid-template-columns:80px 1fr 1fr; gap:6px 12px; align-items:center; font-size:13px; }
+  .answer-grid .lbl { font-size:11px; font-weight:700; color:var(--navy); text-transform:uppercase; }
+  .pv-table th { background:var(--green); }
+  .back { display:inline-block; margin-bottom:20px; font-size:13px; color:var(--navy); text-decoration:none; font-weight:600; }
+  .back:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to Training Materials</a>
+  <div class="ex-header">
+    <div class="tag">Day 1 · Session 5 · Exercise 3</div>
+    <h1>URL Design</h1>
+    <p>Work in pairs · Estimated time: 60 minutes</p>
+  </div>
+
+  <!-- Quick ref -->
+  <div class="section">
+    <div class="section-hdr">Quick Reference — 5 URL Design Rules</div>
+    <div class="section-body">
+      <div class="rules">
+        <div class="rule-card"><div class="r-num">Rule 1</div><div class="r-text">Nouns only — never verbs</div><div class="r-ex">✓ /customers &nbsp; ✗ /getCustomers</div></div>
+        <div class="rule-card"><div class="r-num">Rule 2</div><div class="r-text">Always plural</div><div class="r-ex">✓ /accounts &nbsp; ✗ /account</div></div>
+        <div class="rule-card"><div class="r-num">Rule 3</div><div class="r-text">Lowercase only</div><div class="r-ex">✓ /customers &nbsp; ✗ /Customers</div></div>
+        <div class="rule-card"><div class="r-num">Rule 4</div><div class="r-text">Hyphens for spaces</div><div class="r-ex">✓ /fixed-deposits &nbsp; ✗ /fixedDeposits</div></div>
+        <div class="rule-card"><div class="r-num">Rule 5</div><div class="r-text">Nest to show ownership</div><div class="r-ex">✓ /customers/{id}/accounts</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part A -->
+  <div class="section">
+    <div class="section-hdr">Part A — Fix the bad URLs <span>(20 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:16px;">Each URL below breaks one or more rules. Name the problem and write the correct URL.</p>
+
+      <div class="fix-row">
+        <div class="bad-url">GET /getCustomerById/1001</div>
+        <div class="problem-label">Problem</div><div class="problem">Contains a verb ("get") and action in the URL path</div>
+        <div class="fix-label">Corrected URL</div><div class="blank"></div>
+      </div>
+      <div class="fix-row">
+        <div class="bad-url">POST /createNewAccount</div>
+        <div class="problem-label">Problem</div><div class="problem"><span class="blank" style="width:60%"></span></div>
+        <div class="fix-label">Corrected URL</div><div class="blank"></div>
+      </div>
+      <div class="fix-row">
+        <div class="bad-url">GET /Customer/1001/Account</div>
+        <div class="problem-label">Problem</div><div class="problem"><span class="blank" style="width:60%"></span></div>
+        <div class="fix-label">Corrected URL</div><div class="blank"></div>
+      </div>
+      <div class="fix-row">
+        <div class="bad-url">DELETE /removebeneficiary/B2233</div>
+        <div class="problem-label">Problem</div><div class="problem"><span class="blank" style="width:60%"></span></div>
+        <div class="fix-label">Corrected URL</div><div class="blank"></div>
+      </div>
+      <div class="fix-row">
+        <div class="bad-url">GET /fixedDeposit/FD9900/interestCalculation</div>
+        <div class="problem-label">Problem</div><div class="problem"><span class="blank" style="width:60%"></span></div>
+        <div class="fix-label">Corrected URL</div><div class="blank"></div>
+      </div>
+      <div class="fix-row">
+        <div class="bad-url">PATCH /api/UpdateCustomerEmail</div>
+        <div class="problem-label">Problem</div><div class="problem"><span class="blank" style="width:60%"></span></div>
+        <div class="fix-label">Corrected URL</div><div class="blank"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part B -->
+  <div class="section">
+    <div class="section-hdr">Part B — Design URLs from scratch <span>(20 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:16px;">Design the URL and pick the right method for each operation. Use <code>/api/v1</code> prefix.</p>
+
+      <div class="design-row">
+        <div class="op">1. List all accounts belonging to customer CUST1001</div>
+        <div class="answer-grid">
+          <span class="lbl">Method</span><span class="blank" style="width:80px"></span><span></span>
+          <span class="lbl">URL</span><span class="blank"></span><span></span>
+        </div>
+      </div>
+      <div class="design-row">
+        <div class="op">2. Get details of a specific transaction TXN5500 inside account ACC2200</div>
+        <div class="answer-grid">
+          <span class="lbl">Method</span><span class="blank" style="width:80px"></span><span></span>
+          <span class="lbl">URL</span><span class="blank"></span><span></span>
+        </div>
+      </div>
+      <div class="design-row">
+        <div class="op">3. Create a new beneficiary for customer CUST1001</div>
+        <div class="answer-grid">
+          <span class="lbl">Method</span><span class="blank" style="width:80px"></span><span></span>
+          <span class="lbl">URL</span><span class="blank"></span><span></span>
+        </div>
+      </div>
+      <div class="design-row">
+        <div class="op">4. Update only the credit limit on a credit card CC7700</div>
+        <div class="answer-grid">
+          <span class="lbl">Method</span><span class="blank" style="width:80px"></span><span></span>
+          <span class="lbl">URL</span><span class="blank"></span><span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part C -->
+  <div class="section">
+    <div class="section-hdr">Part C — Path variable vs query parameter <span>(20 min)</span></div>
+    <div class="section-body">
+      <table class="pv-table" style="margin-bottom:16px;">
+        <tr>
+          <th>Use a path variable when…</th>
+          <th>Use a query parameter when…</th>
+        </tr>
+        <tr>
+          <td>You need <strong>one specific resource</strong> by identity<br><code>/customers/CUST1001</code></td>
+          <td>You want to <strong>filter, sort, or paginate</strong> a collection<br><code>/customers?city=Mumbai&amp;limit=20</code></td>
+        </tr>
+      </table>
+      <p style="font-size:13px;font-weight:700;margin-bottom:12px;">Decide: path variable or query parameter?</p>
+      <table>
+        <tr><th>Operation</th><th>Your choice</th><th>Write the URL</th></tr>
+        <tr>
+          <td>Get the customer whose ID is CUST1002</td>
+          <td><span class="blank" style="width:120px"></span></td>
+          <td><span class="blank"></span></td>
+        </tr>
+        <tr>
+          <td>List all customers in Mumbai</td>
+          <td><span class="blank" style="width:120px"></span></td>
+          <td><span class="blank"></span></td>
+        </tr>
+        <tr>
+          <td>Get the 2nd page of 10 transactions for account ACC2200</td>
+          <td><span class="blank" style="width:120px"></span></td>
+          <td><span class="blank"></span></td>
+        </tr>
+        <tr>
+          <td>Delete beneficiary B3311 belonging to customer CUST1001</td>
+          <td><span class="blank" style="width:120px"></span></td>
+          <td><span class="blank"></span></td>
+        </tr>
+      </table>
+      <div class="note"><strong>Rule of thumb:</strong> If removing the value makes the URL point to a different resource, it's a path variable. If the URL still makes sense without it, it's a query parameter.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

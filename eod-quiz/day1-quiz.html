@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 Quiz — API Fundamentals</title>
+<style>
+  :root {
+    --navy: #0D3B8E;
+    --orange: #F7941D;
+    --green: #1E8449;
+    --red: #C0392B;
+    --dark: #2C3E50;
+    --light-blue: #E8F0FB;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F6F9; color: var(--dark); }
+
+  #start-screen, #quiz-screen, #results-screen { min-height: 100vh; display: flex; flex-direction: column; }
+  .hidden { display: none !important; }
+
+  /* START */
+  #start-screen {
+    align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #0D3B8E 0%, #1E5DBE 100%);
+    text-align: center; padding: 40px;
+  }
+  #start-screen h1 { color: white; font-size: 3rem; font-weight: 800; margin-bottom: 12px; }
+  #start-screen p { color: rgba(255,255,255,0.8); font-size: 1.1rem; margin-bottom: 8px; }
+  .start-meta {
+    display: flex; gap: 24px; justify-content: center; margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .meta-chip {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .start-btn {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: transform 0.1s;
+  }
+  .start-btn:hover { transform: scale(1.03); }
+
+  /* QUIZ */
+  .quiz-header {
+    background: var(--navy);
+    color: white;
+    padding: 16px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .quiz-header h2 { font-size: 1.1rem; }
+  .timer-wrap { text-align: right; }
+  .timer {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--orange);
+    font-variant-numeric: tabular-nums;
+  }
+  .timer.warning { color: #FF6B6B; }
+  .q-count { font-size: 0.8rem; opacity: 0.7; }
+
+  .progress-bar-wrap { height: 4px; background: rgba(255,255,255,0.2); }
+  .progress-bar { height: 100%; background: var(--orange); transition: width 0.3s; }
+
+  .quiz-body { flex: 1; padding: 48px; max-width: 860px; margin: 0 auto; width: 100%; }
+
+  .question-num {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 36px;
+    line-height: 1.4;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 14px; }
+  .option {
+    background: white;
+    border: 2px solid #E0E6F0;
+    border-radius: 10px;
+    padding: 18px 24px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--dark);
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .option:hover { border-color: var(--navy); background: var(--light-blue); }
+  .option.selected { border-color: var(--navy); background: var(--light-blue); }
+  .option.correct { border-color: var(--green); background: #E8F5E9; color: var(--green); font-weight: 700; pointer-events: none; }
+  .option.wrong { border-color: var(--red); background: #FFEBEE; color: var(--red); pointer-events: none; }
+  .option.disabled { pointer-events: none; opacity: 0.6; }
+  .option-label {
+    background: var(--navy);
+    color: white;
+    font-weight: 700;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .option.correct .option-label { background: var(--green); }
+  .option.wrong .option-label { background: var(--red); }
+
+  .feedback {
+    margin-top: 20px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 0.93rem;
+    line-height: 1.5;
+  }
+  .feedback.correct-fb { background: #E8F5E9; color: var(--green); border-left: 4px solid var(--green); }
+  .feedback.wrong-fb { background: #FFEBEE; color: var(--red); border-left: 4px solid var(--red); }
+
+  .quiz-footer {
+    background: white;
+    padding: 16px 48px;
+    display: flex; justify-content: flex-end;
+    border-top: 1px solid #E0E6F0;
+  }
+  .next-q-btn {
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .next-q-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* RESULTS */
+  #results-screen {
+    align-items: center; justify-content: center;
+    padding: 40px; text-align: center;
+    background: linear-gradient(135deg, #F4F6F9 0%, #E8F0FB 100%);
+  }
+  .score-circle {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    font-weight: 800;
+    border: 6px solid;
+  }
+  .score-circle .score-num { font-size: 2.8rem; line-height: 1; }
+  .score-circle .score-label { font-size: 0.8rem; margin-top: 4px; }
+
+  .score-circle.great { border-color: var(--green); color: var(--green); }
+  .score-circle.good { border-color: var(--orange); color: var(--orange); }
+  .score-circle.ok { border-color: #E74C3C; color: #E74C3C; }
+
+  #results-screen h2 { font-size: 2rem; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+  #results-screen p { font-size: 1.05rem; color: #555; margin-bottom: 6px; }
+
+  .result-breakdown {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin: 28px 0; max-width: 520px; width: 100%;
+  }
+  .rb-card {
+    background: white; border-radius: 10px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .rb-card .rb-num { font-size: 2rem; font-weight: 800; }
+  .rb-card .rb-lbl { font-size: 0.8rem; color: #888; margin-top: 4px; }
+  .rb-card.correct { color: var(--green); }
+  .rb-card.wrong { color: var(--red); }
+  .rb-card.time { color: var(--navy); }
+
+  .restart-btn {
+    background: var(--navy);
+    color: white; border: none; padding: 14px 40px;
+    border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <h1>Day 1 Quiz</h1>
+  <p>Module 1 — API Fundamentals</p>
+  <p>ICICI Bank API & Services Training</p>
+  <div class="start-meta">
+    <div class="meta-chip">📝 10 Questions</div>
+    <div class="meta-chip">⏱️ 45 seconds each</div>
+    <div class="meta-chip">🎯 Individual · Scored</div>
+  </div>
+  <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-top:0;">Write your final score on the slip of paper the trainer distributes.</p>
+  <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz-screen" class="hidden">
+  <div class="quiz-header">
+    <div>
+      <h2>Day 1 Quiz — API Fundamentals</h2>
+      <div class="q-count" id="q-count">Question 1 of 10</div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer" id="timer">0:45</div>
+      <div class="q-count">Time remaining</div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:10%"></div>
+  </div>
+  <div class="quiz-body">
+    <div class="question-num" id="q-num">Question 1</div>
+    <div class="question-text" id="q-text"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback hidden" id="feedback"></div>
+  </div>
+  <div class="quiz-footer">
+    <button class="next-q-btn" id="next-btn" onclick="nextQuestion()" disabled>Next Question →</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results-screen" class="hidden">
+  <div class="score-circle" id="score-circle">
+    <div class="score-num" id="score-num">0/10</div>
+    <div class="score-label">SCORE</div>
+  </div>
+  <h2 id="results-heading">Good effort!</h2>
+  <p id="results-sub"></p>
+  <div class="result-breakdown">
+    <div class="rb-card correct"><div class="rb-num" id="rb-correct">0</div><div class="rb-lbl">✓ Correct</div></div>
+    <div class="rb-card wrong"><div class="rb-num" id="rb-wrong">0</div><div class="rb-lbl">✗ Wrong</div></div>
+    <div class="rb-card time"><div class="rb-num" id="rb-pct">0%</div><div class="rb-lbl">Score</div></div>
+  </div>
+  <p style="color:#888;font-size:0.9rem;margin-bottom:16px;">Write this score on your quiz slip and hand it to the trainer.</p>
+  <button class="restart-btn" onclick="location.reload()">Try Again</button>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Which HTTP method is used to READ data from a server?",
+    opts: ["POST", "GET", "DELETE", "PATCH"],
+    ans: 1,
+    exp: "GET is the read-only method. It never changes anything on the server. Safe to call 100 times."
+  },
+  {
+    q: "What does HTTP status code 200 mean?",
+    opts: ["Resource was created", "Request succeeded", "Not found", "No content"],
+    ans: 1,
+    exp: "200 OK means the request was processed successfully and the response body contains the result."
+  },
+  {
+    q: "What does HTTP status code 404 mean?",
+    opts: ["Server crashed", "Bad request", "The resource does not exist", "No permission"],
+    ans: 2,
+    exp: "404 Not Found — the resource you asked for doesn't exist. Example: GET /customers/CUST9999 when that customer isn't in the system."
+  },
+  {
+    q: "Which HTTP method should be used to CREATE a new customer record?",
+    opts: ["GET", "PUT", "POST", "PATCH"],
+    ans: 2,
+    exp: "POST creates a new resource. On success, the server returns 201 Created with the new record in the body."
+  },
+  {
+    q: "A URL like '/getAllCustomers' violates which REST naming rule?",
+    opts: ["Must use plural nouns", "Must use lowercase", "No verbs in the URL", "Must use hyphens"],
+    ans: 2,
+    exp: "Rule 1: Use NOUNS not verbs. The HTTP method (GET) already says you're reading. The URL should just be /customers."
+  },
+  {
+    q: "What does the 4xx family of status codes indicate?",
+    opts: ["Server-side errors", "Successful responses", "Client-side errors", "Redirects"],
+    ans: 2,
+    exp: "4xx means the problem is on the client side — the request itself was wrong. Fix the request and try again."
+  },
+  {
+    q: "Which status code should a server return after successfully creating a new resource?",
+    opts: ["200", "204", "201", "400"],
+    ans: 2,
+    exp: "201 Created is the correct code after POST. It specifically says 'a new resource was made,' unlike 200 which just says 'success.'"
+  },
+  {
+    q: "What is the purpose of the Content-Type header in an HTTP request?",
+    opts: ["Identifies the server version", "Tells the server what format the request body is in", "Carries the login password", "Sets the response language"],
+    ans: 1,
+    exp: "Content-Type tells the server how to parse the request body. For REST APIs it's usually 'application/json'."
+  },
+  {
+    q: "A customer is logged in but their token has expired. What status code should the server return?",
+    opts: ["403", "404", "400", "401"],
+    ans: 3,
+    exp: "401 Unauthorized — the token is no longer valid, so the server doesn't know who this is. The client needs to log in again and get a fresh token."
+  },
+  {
+    q: "What is the KEY difference between PUT and PATCH?",
+    opts: [
+      "PUT is faster than PATCH",
+      "PATCH creates, PUT updates",
+      "PUT replaces the entire resource; PATCH updates only specified fields",
+      "They are identical"
+    ],
+    ans: 2,
+    exp: "PUT replaces the whole record — any field you don't send gets wiped. PATCH only touches the fields you send. Use PATCH for everyday updates."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = 0;
+let timerInterval = null;
+let secondsLeft = 45;
+let answered_this_q = false;
+
+function startQuiz() {
+  document.getElementById('start-screen').classList.add('hidden');
+  document.getElementById('quiz-screen').classList.remove('hidden');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered_this_q = false;
+  secondsLeft = 45;
+  const q = questions[current];
+
+  document.getElementById('q-num').textContent = `Question ${current + 1}`;
+  document.getElementById('q-count').textContent = `Question ${current + 1} of ${questions.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('progress-bar').style.width = `${((current + 1) / questions.length) * 100}%`;
+
+  const timerEl = document.getElementById('timer');
+  timerEl.className = 'timer';
+  timerEl.textContent = '0:45';
+
+  const fb = document.getElementById('feedback');
+  fb.classList.add('hidden');
+  fb.textContent = '';
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="option-label">${labels[i]}</div><span>${opt}</span>`;
+    div.onclick = () => selectAnswer(i);
+    opts.appendChild(div);
+  });
+
+  document.getElementById('next-btn').disabled = true;
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    timerEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    if (secondsLeft <= 10) timerEl.className = 'timer warning';
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!answered_this_q) timeUp();
+    }
+  }, 1000);
+}
+
+function selectAnswer(i) {
+  if (answered_this_q) return;
+  answered_this_q = true;
+  clearInterval(timerInterval);
+
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+
+  opts.forEach((o, idx) => {
+    o.classList.add('disabled');
+    if (idx === q.ans) o.classList.add('correct');
+    else if (idx === i && i !== q.ans) o.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('hidden');
+  if (i === q.ans) {
+    score++;
+    fb.className = 'feedback correct-fb';
+    fb.textContent = `✓ Correct! ${q.exp}`;
+  } else {
+    fb.className = 'feedback wrong-fb';
+    fb.textContent = `✗ The correct answer is "${q.opts[q.ans]}". ${q.exp}`;
+  }
+  answered++;
+  document.getElementById('next-btn').disabled = false;
+}
+
+function timeUp() {
+  answered_this_q = true;
+  answered++;
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach((o, idx) => {
+    o.classList.add('disabled');
+    if (idx === q.ans) o.classList.add('correct');
+  });
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('hidden');
+  fb.className = 'feedback wrong-fb';
+  fb.textContent = `⏱️ Time's up! The correct answer was "${q.opts[q.ans]}". ${q.exp}`;
+  document.getElementById('next-btn').disabled = false;
+}
+
+function nextQuestion() {
+  current++;
+  if (current < questions.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  clearInterval(timerInterval);
+  document.getElementById('quiz-screen').classList.add('hidden');
+  document.getElementById('results-screen').classList.remove('hidden');
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('score-num').textContent = `${score}/${questions.length}`;
+  document.getElementById('rb-correct').textContent = score;
+  document.getElementById('rb-wrong').textContent = questions.length - score;
+  document.getElementById('rb-pct').textContent = `${pct}%`;
+
+  const circle = document.getElementById('score-circle');
+  const heading = document.getElementById('results-heading');
+  const sub = document.getElementById('results-sub');
+
+  if (pct >= 80) {
+    circle.className = 'score-circle great';
+    heading.textContent = 'Excellent work! 🎉';
+    sub.textContent = 'You have a solid understanding of Day 1 concepts. See you in tomorrow\'s Spring Boot session!';
+  } else if (pct >= 60) {
+    circle.className = 'score-circle good';
+    heading.textContent = 'Good effort!';
+    sub.textContent = 'Review the questions you got wrong. Ask the trainer before Day 2 starts if anything is still unclear.';
+  } else {
+    circle.className = 'score-circle ok';
+    heading.textContent = 'Keep going!';
+    sub.textContent = 'Day 1 covered a lot. Review the EoD slides and today\'s exercises before tomorrow. The concepts will get clearer with practice.';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status Codes — Quick Reference</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --dark:#2C3E50; --light-blue:#E8F0FB; --red:#C0392B; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#F0F2F5; color:var(--dark); }
+  .page { max-width:920px; margin:32px auto; padding:0 20px 60px; }
+  .pg-header { background:var(--navy); border-radius:10px; padding:24px 28px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; }
+  .pg-header h1 { font-size:22px; color:#fff; font-weight:700; }
+  .pg-header p  { font-size:12px; color:#c0cfef; margin-top:4px; }
+  .pg-header .badge { background:var(--orange); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; white-space:nowrap; }
+  .section { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.09); margin-bottom:20px; overflow:hidden; }
+  .section-hdr { background:var(--navy); color:#fff; padding:12px 20px; font-size:14px; font-weight:700; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:10px 12px; text-align:left; font-weight:600; font-size:12px; }
+  td { padding:10px 12px; border-bottom:1px solid #EEF0F3; vertical-align:middle; line-height:1.5; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#F8F9FC; }
+  .code-badge {
+    display:inline-block; width:48px; height:32px; border-radius:6px;
+    font-family:monospace; font-size:14px; font-weight:900;
+    text-align:center; line-height:32px; color:#fff;
+  }
+  .c2xx { background:var(--green); }
+  .c4xx { background:var(--orange); }
+  .c5xx { background:var(--red); }
+  .name { font-weight:700; font-size:13px; }
+  .example { font-size:12px; color:#666; font-style:italic; }
+  .vs-grid { display:grid; grid-template-columns:1fr 1fr; }
+  .vs-col { padding:18px 20px; }
+  .vs-col.left { border-right:1px solid #EEF0F3; }
+  .vs-col h3 { font-size:15px; font-weight:700; margin-bottom:12px; }
+  .code401 { color:var(--orange); }
+  .code403 { color:var(--red); }
+  .vs-row { font-size:13px; padding:7px 0; border-bottom:1px solid #F0F2F5; }
+  .vs-row:last-child { border-bottom:none; }
+  .use-grid { display:grid; grid-template-columns:80px 1fr 1fr; }
+  .use-hdr { background:var(--navy); color:#fff; padding:10px 12px; font-size:12px; font-weight:600; }
+  .use-row { display:contents; }
+  .use-row > div { padding:9px 12px; border-bottom:1px solid #EEF0F3; font-size:13px; vertical-align:middle; }
+  .use-row:nth-child(even) > div { background:#F8F9FC; }
+  .note { background:var(--light-blue); padding:14px 20px; font-size:13px; }
+  .note strong { color:var(--navy); }
+  .back { display:inline-block; margin-bottom:20px; font-size:13px; color:var(--navy); text-decoration:none; font-weight:600; }
+  .back:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to Training Materials</a>
+  <div class="pg-header">
+    <div>
+      <h1>HTTP Status Codes — Quick Reference</h1>
+      <p>Three families: 2xx = success &nbsp;·&nbsp; 4xx = client error &nbsp;·&nbsp; 5xx = server error</p>
+    </div>
+    <span class="badge">Day 1 · Example</span>
+  </div>
+
+  <!-- 8 essential codes -->
+  <div class="section">
+    <div class="section-hdr">The 8 Essential Codes</div>
+    <table>
+      <tr>
+        <th style="width:70px">Code</th>
+        <th style="width:160px">Name</th>
+        <th>When you see it</th>
+        <th>Banking example</th>
+      </tr>
+      <tr><td><span class="code-badge c2xx">200</span></td><td class="name">OK</td><td>Request worked. Data returned in body.</td><td class="example">GET account balance succeeded</td></tr>
+      <tr><td><span class="code-badge c2xx">201</span></td><td class="name">Created</td><td>A new resource was just made.</td><td class="example">POST /customers → new customer created</td></tr>
+      <tr><td><span class="code-badge c2xx">204</span></td><td class="name">No Content</td><td>Worked. Nothing to return in body.</td><td class="example">DELETE beneficiary succeeded</td></tr>
+      <tr><td><span class="code-badge c4xx">400</span></td><td class="name">Bad Request</td><td>Your request has invalid data.</td><td class="example">Mobile number contains letters</td></tr>
+      <tr><td><span class="code-badge c4xx">401</span></td><td class="name">Unauthorized</td><td>No valid session/token. Log in first.</td><td class="example">Expired JWT token used</td></tr>
+      <tr><td><span class="code-badge c4xx">403</span></td><td class="name">Forbidden</td><td>Logged in but no permission for this.</td><td class="example">Viewing another customer's account</td></tr>
+      <tr><td><span class="code-badge c4xx">404</span></td><td class="name">Not Found</td><td>That resource does not exist.</td><td class="example">GET /customers/CUST9999 — no such customer</td></tr>
+      <tr><td><span class="code-badge c5xx">500</span></td><td class="name">Server Error</td><td>Something crashed on the server.</td><td class="example">NullPointerException in the Java service</td></tr>
+    </table>
+  </div>
+
+  <!-- 401 vs 403 -->
+  <div class="section">
+    <div class="section-hdr">401 vs 403 — the most misused pair</div>
+    <div class="vs-grid">
+      <div class="vs-col left">
+        <h3 class="code401">401 Unauthorized</h3>
+        <div class="vs-row">"Who are you? Show ID."</div>
+        <div class="vs-row">No token, or the token is invalid/expired.</div>
+        <div class="vs-row">The server cannot identify who is making the request.</div>
+        <div class="vs-row"><strong>Fix:</strong> Log in and get a valid token.</div>
+        <div class="vs-row" style="padding-top:10px;font-style:italic;color:#888;">Like arriving without an ID at a guarded gate.</div>
+      </div>
+      <div class="vs-col">
+        <h3 class="code403">403 Forbidden</h3>
+        <div class="vs-row">"I know who you are. You cannot do this."</div>
+        <div class="vs-row">Valid token — but not enough permissions.</div>
+        <div class="vs-row">The server knows exactly who is asking, and says no.</div>
+        <div class="vs-row"><strong>Fix:</strong> Request the correct access level.</div>
+        <div class="vs-row" style="padding-top:10px;font-style:italic;color:#888;">Like having an ID but not being on the guest list.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Choosing the right 2xx -->
+  <div class="section">
+    <div class="section-hdr">Choosing the right 2xx code</div>
+    <table>
+      <tr>
+        <th style="width:80px">Code</th>
+        <th>Use it when…</th>
+        <th>What NOT to do</th>
+      </tr>
+      <tr>
+        <td><span class="code-badge c2xx" style="width:36px;font-size:12px;">200</span></td>
+        <td>Reading data (GET), updating an existing resource (PUT/PATCH)</td>
+        <td>Never return 200 for a CREATE operation</td>
+      </tr>
+      <tr>
+        <td><span class="code-badge c2xx" style="width:36px;font-size:12px;">201</span></td>
+        <td>Creating a new resource (POST)</td>
+        <td>Never return 200 when something new was made</td>
+      </tr>
+      <tr>
+        <td><span class="code-badge c2xx" style="width:36px;font-size:12px;">204</span></td>
+        <td>Deleting (DELETE) — nothing meaningful to return</td>
+        <td>Never return 200 with an empty body — use 204</td>
+      </tr>
+    </table>
+    <div class="note"><strong>Remember:</strong> The status code is how the server tells the client what happened. Getting it wrong breaks every client that depends on your API — apps, tests, and other services.</div>
+  </div>
+
+</div>
+</body>
+</html>

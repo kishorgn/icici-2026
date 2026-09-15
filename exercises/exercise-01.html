@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 1 — HTTP Methods</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --dark:#2C3E50; --light-blue:#E8F0FB; --amber:#F39C12; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Segoe UI',Arial,sans-serif; background:#F0F2F5; color:var(--dark); }
+  .page { max-width:860px; margin:32px auto; padding:0 20px 60px; }
+
+  /* header */
+  .ex-header { background:var(--navy); border-radius:10px; padding:24px 28px; margin-bottom:24px; }
+  .ex-header .tag { font-size:11px; font-weight:700; letter-spacing:1px; color:var(--orange); text-transform:uppercase; margin-bottom:6px; }
+  .ex-header h1 { font-size:22px; color:#fff; font-weight:700; margin-bottom:6px; }
+  .ex-header p  { font-size:13px; color:#c0cfef; }
+
+  /* section */
+  .section { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.09); margin-bottom:20px; overflow:hidden; }
+  .section-hdr { background:var(--orange); color:#fff; padding:12px 20px; font-size:14px; font-weight:700; }
+  .section-hdr span { font-size:11px; font-weight:400; opacity:.9; margin-left:10px; }
+  .section-body { padding:20px; }
+
+  /* tables */
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:10px 12px; text-align:left; font-weight:600; }
+  td { padding:9px 12px; border-bottom:1px solid #EEF0F3; vertical-align:top; }
+  tr:last-child td { border-bottom:none; }
+  tr:nth-child(even) td { background:#F8F9FC; }
+  .blank { border-bottom:2px solid var(--orange); display:inline-block; width:120px; min-height:16px; }
+  .method { font-family:monospace; font-weight:700; font-size:13px; }
+  .m-get    { color:var(--green); }
+  .m-post   { color:var(--orange); }
+  .m-put    { color:#8E44AD; }
+  .m-patch  { color:#2980B9; }
+  .m-delete { color:#C0392B; }
+
+  /* code block */
+  .code { background:#1e2738; border-radius:8px; padding:16px 18px; margin:10px 0; overflow-x:auto; }
+  .code pre { color:#e0e6f0; font-family:'Courier New',monospace; font-size:12.5px; line-height:1.65; white-space:pre; }
+  .code .comment { color:#6A9955; }
+  .code .url     { color:#4EC9B0; }
+  .code .method  { color:#DCDCAA; }
+  .code .key     { color:#9CDCFE; }
+  .code .val     { color:#CE9178; }
+
+  /* numbered step */
+  .steps { padding:0; }
+  .step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .step-num { min-width:28px; height:28px; background:var(--navy); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; margin-top:1px; }
+  .step-body { font-size:13px; line-height:1.6; }
+  .step-body strong { color:var(--navy); }
+
+  /* note */
+  .note { background:var(--light-blue); border-left:4px solid var(--navy); border-radius:0 6px 6px 0; padding:12px 16px; font-size:13px; margin-top:12px; }
+  .note strong { color:var(--navy); }
+
+  /* matching exercise */
+  .match-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .match-col { }
+  .match-col h4 { font-size:12px; font-weight:700; color:var(--navy); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+  .match-item { background:#F8F9FC; border:1px solid #E0E4EB; border-radius:6px; padding:8px 12px; font-size:13px; margin-bottom:6px; }
+  .match-item .letter { font-weight:700; color:var(--orange); margin-right:6px; }
+  .match-item .num { font-weight:700; color:var(--navy); margin-right:6px; }
+  .answer-line { margin-top:12px; font-size:13px; }
+  .answer-line span { display:inline-block; border-bottom:1px solid #ccc; width:28px; text-align:center; margin:0 4px; }
+
+  /* back link */
+  .back { display:inline-block; margin-bottom:20px; font-size:13px; color:var(--navy); text-decoration:none; font-weight:600; }
+  .back:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">← Back to Training Materials</a>
+
+  <div class="ex-header">
+    <div class="tag">Day 1 · Session 3 · Exercise 1</div>
+    <h1>HTTP Methods</h1>
+    <p>Work in pairs · Estimated time: 45 minutes</p>
+  </div>
+
+  <!-- Part A -->
+  <div class="section">
+    <div class="section-hdr">Part A — Fill in the blanks <span>(10 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:14px;">Complete the table. Use: <strong>GET · POST · PUT · PATCH · DELETE</strong></p>
+      <table>
+        <tr>
+          <th style="width:15%">Method</th>
+          <th style="width:20%">Action</th>
+          <th>Banking example</th>
+          <th style="width:18%">Request body?</th>
+          <th style="width:15%">Success code</th>
+        </tr>
+        <tr>
+          <td><span class="blank"></span></td>
+          <td>Read data</td>
+          <td>Fetch account balance</td>
+          <td>No</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td><span class="blank"></span></td>
+          <td>Create new</td>
+          <td>Open a new account</td>
+          <td>Yes</td>
+          <td><span class="blank" style="width:60px"></span></td>
+        </tr>
+        <tr>
+          <td><span class="blank"></span></td>
+          <td>Replace all</td>
+          <td>Update full customer profile</td>
+          <td><span class="blank" style="width:40px"></span></td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td><span class="blank"></span></td>
+          <td>Update part</td>
+          <td>Change only email address</td>
+          <td>Yes</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td><span class="blank"></span></td>
+          <td>Remove</td>
+          <td>Remove a beneficiary</td>
+          <td>No</td>
+          <td><span class="blank" style="width:60px"></span></td>
+        </tr>
+      </table>
+      <div class="note"><strong>Remember:</strong> GET is the only method that must never have a request body and must never change data on the server.</div>
+    </div>
+  </div>
+
+  <!-- Part B -->
+  <div class="section">
+    <div class="section-hdr">Part B — Live Postman calls <span>(15 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:16px;">Open Postman and make each call. Record the status code and one thing you notice about the response.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>GET https://jsonplaceholder.typicode.com/posts</strong><br>
+            Status code you got: <span class="blank" style="width:60px"></span> &nbsp; How many records? <span class="blank" style="width:60px"></span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>GET https://jsonplaceholder.typicode.com/posts/1</strong><br>
+            Status code: <span class="blank" style="width:60px"></span> &nbsp; What changed in the URL? <span class="blank" style="width:180px"></span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>POST https://jsonplaceholder.typicode.com/posts</strong><br>
+            Set <em>Content-Type: application/json</em> header. Send this body:
+            <div class="code"><pre>{
+  "title": "My first banking post",
+  "body":  "Learning APIs at ICICI",
+  "userId": 1
+}</pre></div>
+            Status code: <span class="blank" style="width:60px"></span> &nbsp; What id was assigned? <span class="blank" style="width:80px"></span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>PATCH https://jsonplaceholder.typicode.com/posts/1</strong><br>
+            Send body: <code style="background:#F0F2F5;padding:2px 6px;border-radius:3px;">{ "title": "Updated title only" }</code><br>
+            Status code: <span class="blank" style="width:60px"></span> &nbsp; Were other fields affected? <span class="blank" style="width:80px"></span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>DELETE https://jsonplaceholder.typicode.com/posts/1</strong><br>
+            Status code: <span class="blank" style="width:60px"></span> &nbsp; What was in the response body? <span class="blank" style="width:120px"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part C -->
+  <div class="section">
+    <div class="section-hdr">Part C — Banking operations matching <span>(10 min)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:14px;">Match each banking operation on the left to the correct HTTP method on the right.</p>
+      <div class="match-grid">
+        <div class="match-col">
+          <h4>Operations</h4>
+          <div class="match-item"><span class="num">1.</span> Check your savings account balance</div>
+          <div class="match-item"><span class="num">2.</span> Open a new fixed deposit</div>
+          <div class="match-item"><span class="num">3.</span> Change your registered mobile number</div>
+          <div class="match-item"><span class="num">4.</span> Cancel a standing instruction</div>
+          <div class="match-item"><span class="num">5.</span> Update your full KYC profile (all fields)</div>
+          <div class="match-item"><span class="num">6.</span> Download last 6 months statement</div>
+          <div class="match-item"><span class="num">7.</span> Add a new beneficiary</div>
+          <div class="match-item"><span class="num">8.</span> Change only the daily transfer limit</div>
+        </div>
+        <div class="match-col">
+          <h4>HTTP Methods</h4>
+          <div class="match-item"><span class="letter">A.</span> GET</div>
+          <div class="match-item"><span class="letter">B.</span> POST</div>
+          <div class="match-item"><span class="letter">C.</span> PUT</div>
+          <div class="match-item"><span class="letter">D.</span> PATCH</div>
+          <div class="match-item"><span class="letter">E.</span> DELETE</div>
+        </div>
+      </div>
+      <div class="answer-line" style="margin-top:16px;">
+        Answers: 1<span></span> 2<span></span> 3<span></span> 4<span></span> 5<span></span> 6<span></span> 7<span></span> 8<span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Part D -->
+  <div class="section">
+    <div class="section-hdr">Part D — Critical thinking <span>(10 min — discuss with your pair)</span></div>
+    <div class="section-body">
+      <p style="font-size:13px;margin-bottom:14px;">Discuss with your partner. Be ready to share with the class.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">D1</div>
+          <div class="step-body">
+            A developer uses <strong>POST /api/v1/customers/search</strong> to search for customers because "search is an action, not a noun." What is wrong with this? What should they use instead?<br><br>
+            <span class="blank" style="width:100%"></span><br><br>
+            <span class="blank" style="width:80%"></span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">D2</div>
+          <div class="step-body">
+            Your teammate says "PUT and PATCH are the same — they both update data, so just pick one." How would you explain the real difference using a customer profile example?<br><br>
+            <span class="blank" style="width:100%"></span><br><br>
+            <span class="blank" style="width:80%"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

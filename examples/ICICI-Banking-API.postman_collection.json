@@ -1,0 +1,136 @@
+{
+  "info": {
+    "_postman_id": "icici-banking-api-day1",
+    "name": "ICICI Banking API — Day 1",
+    "description": "Day 1 hands-on exercises. Uses jsonplaceholder.typicode.com for demo calls (no setup needed) and localhost:8080 for the Spring Boot preview at end of day.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080", "type": "string" },
+    { "key": "jp_url",   "value": "https://jsonplaceholder.typicode.com", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Session 1 – What is an API? (jsonplaceholder demo)",
+      "item": [
+        {
+          "name": "GET all users",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{jp_url}}/users", "host": ["{{jp_url}}"], "path": ["users"] },
+            "description": "Live API call — no setup needed. Returns 10 fake users as JSON."
+          }
+        },
+        {
+          "name": "GET one user",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{jp_url}}/users/1", "host": ["{{jp_url}}"], "path": ["users", "1"] },
+            "description": "Path variable: /users/{id}. Try changing 1 to 2, 3, 4…"
+          }
+        },
+        {
+          "name": "GET posts by user",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{jp_url}}/posts?userId=1",
+              "host": ["{{jp_url}}"], "path": ["posts"],
+              "query": [{ "key": "userId", "value": "1" }]
+            },
+            "description": "Query parameter: ?userId=1. Filter posts by owner."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Session 3 – HTTP Methods (Exercise 1)",
+      "item": [
+        {
+          "name": "GET /posts",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{jp_url}}/posts", "host": ["{{jp_url}}"], "path": ["posts"] },
+            "description": "Read — never changes anything. Returns 200."
+          }
+        },
+        {
+          "name": "POST /posts",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{jp_url}}/posts", "host": ["{{jp_url}}"], "path": ["posts"] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My first API post\",\n  \"body\": \"Hello from Postman\",\n  \"userId\": 1\n}"
+            },
+            "description": "Create — returns 201. Body is required."
+          }
+        },
+        {
+          "name": "PUT /posts/1",
+          "request": {
+            "method": "PUT",
+            "url": { "raw": "{{jp_url}}/posts/1", "host": ["{{jp_url}}"], "path": ["posts", "1"] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Full replace — all fields required\",\n  \"body\": \"Every field must be sent with PUT\",\n  \"userId\": 1\n}"
+            },
+            "description": "Full replace — ALL fields required. Returns 200."
+          }
+        },
+        {
+          "name": "PATCH /posts/1",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{jp_url}}/posts/1", "host": ["{{jp_url}}"], "path": ["posts", "1"] },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Only title changed — PATCH\"\n}"
+            },
+            "description": "Partial update — send only changed fields. Returns 200."
+          }
+        },
+        {
+          "name": "DELETE /posts/1",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{jp_url}}/posts/1", "host": ["{{jp_url}}"], "path": ["posts", "1"] },
+            "description": "Remove — returns 200 (jsonplaceholder quirk; real APIs return 204)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Session 8 – Spring Boot Preview (localhost)",
+      "item": [
+        {
+          "name": "GET all customers",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/v1/customers", "host": ["{{base_url}}"], "path": ["api", "v1", "customers"] },
+            "description": "Requires Spring Boot app running: mvn spring-boot:run"
+          }
+        },
+        {
+          "name": "GET customer by ID — CUST1001",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/v1/customers/CUST1001", "host": ["{{base_url}}"], "path": ["api", "v1", "customers", "CUST1001"] },
+            "description": "Path variable. Try CUST1002, CUST1003, or CUST9999 (→ 404)."
+          }
+        },
+        {
+          "name": "GET customer by ID — CUST9999 (expect 404)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/api/v1/customers/CUST9999", "host": ["{{base_url}}"], "path": ["api", "v1", "customers", "CUST9999"] },
+            "description": "Unknown ID → 404 Not Found. Shows how Spring Boot returns the right status code."
+          }
+        }
+      ]
+    }
+  ]
+}
