@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2 Quiz — Spring Boot REST</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA;--red:#C0392B}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+header{background:var(--navy);color:#fff;padding:20px 32px;text-align:center}
+header h1{font-size:1.5rem;font-weight:700}
+header p{font-size:0.85rem;opacity:.75;margin-top:4px}
+.timer-bar{background:var(--orange);color:#fff;text-align:center;padding:8px;font-size:0.85rem;font-weight:700;letter-spacing:1px}
+#timer{font-size:1rem;font-weight:800}
+.container{max-width:760px;margin:28px auto;padding:0 20px 40px}
+.q-card{background:#fff;border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid var(--light)}
+.q-card.answered{border-left-color:var(--green)}
+.q-num{font-size:0.75rem;font-weight:700;color:#666;margin-bottom:8px}
+.q-text{font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:16px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all .15s;font-size:14px;line-height:1.5}
+.option:hover{border-color:var(--navy);background:var(--light)}
+.option input[type=radio]{margin-top:2px;flex-shrink:0;accent-color:var(--navy)}
+.option.selected{border-color:var(--navy);background:var(--light)}
+.option.correct{border-color:var(--green)!important;background:#E8F5E9!important}
+.option.wrong{border-color:var(--red)!important;background:#FFEBEE!important}
+.code-q{background:#1a1a1a;color:#F39C12;padding:12px 16px;border-radius:6px;font-family:'Courier New',monospace;font-size:13px;margin-bottom:12px;white-space:pre;overflow-x:auto}
+.explanation{display:none;margin-top:12px;padding:10px 14px;background:#F0F4FF;border-radius:6px;font-size:13px;border-left:3px solid var(--navy)}
+.explanation.show{display:block}
+.submit-row{text-align:center;margin:32px 0}
+.submit-btn{background:var(--navy);color:#fff;border:none;padding:14px 40px;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s}
+.submit-btn:hover{background:#1a5ca8}
+.submit-btn:disabled{background:#999;cursor:not-allowed}
+.result{display:none;background:#fff;border-radius:12px;padding:32px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.1);margin:20px 0}
+.score-circle{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin:0 auto 16px;border:6px solid}
+.score-text{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.score-msg{font-size:0.9rem;color:#666;margin-bottom:20px}
+.retry-btn{background:var(--orange);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:0.9rem;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Day 2 Quiz — Spring Boot REST: Full CRUD</h1>
+  <p>ICICI Bank API Services | 10 Questions | 10 Minutes</p>
+</header>
+<div class="timer-bar">⏱ Time remaining: <span id="timer">10:00</span></div>
+
+<div class="container">
+
+<div class="q-card" id="q1">
+  <div class="q-num">Question 1 of 10</div>
+  <div class="q-text">Which annotation tells Spring Boot to map an HTTP POST request to a controller method?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q1" value="a"> @GetMapping</label>
+    <label class="option"><input type="radio" name="q1" value="b"> @PostMapping</label>
+    <label class="option"><input type="radio" name="q1" value="c"> @RequestBody</label>
+    <label class="option"><input type="radio" name="q1" value="d"> @RequestMapping</label>
+  </div>
+  <div class="explanation">✅ <strong>@PostMapping</strong> maps HTTP POST requests to a method. @GetMapping maps GET, @RequestBody reads the body, @RequestMapping sets the base URL.</div>
+</div>
+
+<div class="q-card" id="q2">
+  <div class="q-num">Question 2 of 10</div>
+  <div class="q-text">What HTTP status code should a successful POST (resource creation) return?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q2" value="a"> 200 OK</label>
+    <label class="option"><input type="radio" name="q2" value="b"> 201 Created</label>
+    <label class="option"><input type="radio" name="q2" value="c"> 204 No Content</label>
+    <label class="option"><input type="radio" name="q2" value="d"> 202 Accepted</label>
+  </div>
+  <div class="explanation">✅ <strong>201 Created</strong> is the correct status for successful resource creation. 200 OK is for successful reads/updates. 204 is for deletes.</div>
+</div>
+
+<div class="q-card" id="q3">
+  <div class="q-num">Question 3 of 10</div>
+  <div class="q-text">Which annotation reads a value from the URL path — e.g., the <code>CUST1001</code> in <code>/customers/CUST1001</code>?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q3" value="a"> @RequestParam</label>
+    <label class="option"><input type="radio" name="q3" value="b"> @RequestBody</label>
+    <label class="option"><input type="radio" name="q3" value="c"> @PathVariable</label>
+    <label class="option"><input type="radio" name="q3" value="d"> @QueryParam</label>
+  </div>
+  <div class="explanation">✅ <strong>@PathVariable</strong> extracts a value from a URL path segment like <code>{customerId}</code>. @RequestParam reads query parameters (?key=value). @RequestBody reads the JSON body.</div>
+</div>
+
+<div class="q-card" id="q4">
+  <div class="q-num">Question 4 of 10</div>
+  <div class="q-text">What is the correct ResponseEntity call for a successful DELETE operation?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q4" value="a"> ResponseEntity.ok(null)</label>
+    <label class="option"><input type="radio" name="q4" value="b"> ResponseEntity.noContent().build()</label>
+    <label class="option"><input type="radio" name="q4" value="c"> ResponseEntity.status(200).build()</label>
+    <label class="option"><input type="radio" name="q4" value="d"> ResponseEntity.deleted().build()</label>
+  </div>
+  <div class="explanation">✅ <strong>ResponseEntity.noContent().build()</strong> returns 204 No Content with no body — the correct REST convention for a successful delete. There is no .deleted() method.</div>
+</div>
+
+<div class="q-card" id="q5">
+  <div class="q-num">Question 5 of 10</div>
+  <div class="q-text">A client sends <code>PUT /customers/CUST1001</code> with body: <code>{"name":"New Name"}</code> (no email, no mobile). What happens to the email and mobile fields?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q5" value="a"> They stay unchanged — PUT is like PATCH</label>
+    <label class="option"><input type="radio" name="q5" value="b"> They become null/empty — PUT is a full replace</label>
+    <label class="option"><input type="radio" name="q5" value="c"> Spring throws a 400 error for missing fields</label>
+    <label class="option"><input type="radio" name="q5" value="d"> The PUT is rejected because the body is incomplete</label>
+  </div>
+  <div class="explanation">✅ <strong>They become null/empty.</strong> PUT is a full replace — Spring deserializes only what's in the JSON. Missing fields become null. This is the key difference from PATCH.</div>
+</div>
+
+<div class="q-card" id="q6">
+  <div class="q-num">Question 6 of 10</div>
+  <div class="q-text">Why does the Day 2 CustomerController use <code>new ArrayList&lt;&gt;(List.of(...))</code> instead of <code>Arrays.asList(...)</code>?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q6" value="a"> ArrayList is faster than Arrays.asList</label>
+    <label class="option"><input type="radio" name="q6" value="b"> Arrays.asList returns an immutable list; ArrayList supports add/remove/set</label>
+    <label class="option"><input type="radio" name="q6" value="c"> List.of() doesn't work in Java 8</label>
+    <label class="option"><input type="radio" name="q6" value="d"> ArrayList automatically sorts elements</label>
+  </div>
+  <div class="explanation">✅ <strong>Arrays.asList() returns a fixed-size list</strong> that does not support add() or remove(). For CRUD operations (POST adds, DELETE removes), we need a mutable ArrayList.</div>
+</div>
+
+<div class="q-card" id="q7">
+  <div class="q-num">Question 7 of 10</div>
+  <div class="q-text">Look at this code. What is wrong?<br><br>
+  <div class="code-q">@PostMapping
+public Customer createCustomer(@RequestBody Customer customer) {
+    customers.add(customer);
+    return customer;
+}</div>
+  </div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q7" value="a"> @PostMapping should be @RequestMapping(method=POST)</label>
+    <label class="option"><input type="radio" name="q7" value="b"> The method returns 200 instead of 201, and doesn't assign an ID</label>
+    <label class="option"><input type="radio" name="q7" value="c"> @RequestBody is not needed for POST</label>
+    <label class="option"><input type="radio" name="q7" value="d"> Nothing — this code is correct</label>
+  </div>
+  <div class="explanation">✅ <strong>Two bugs:</strong> (1) Returns plain Customer → Spring defaults to 200 OK instead of 201 Created. Should use ResponseEntity.status(201).body(customer). (2) No ID is assigned — server must set customerId before adding.</div>
+</div>
+
+<div class="q-card" id="q8">
+  <div class="q-num">Question 8 of 10</div>
+  <div class="q-text">What does <code>@RestController</code> do that plain <code>@Controller</code> does not?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q8" value="a"> It automatically creates CRUD endpoints</label>
+    <label class="option"><input type="radio" name="q8" value="b"> It combines @Controller + @ResponseBody, making all methods return JSON by default</label>
+    <label class="option"><input type="radio" name="q8" value="c"> It handles exceptions automatically</label>
+    <label class="option"><input type="radio" name="q8" value="d"> It maps the class to /api automatically</label>
+  </div>
+  <div class="explanation">✅ <strong>@RestController = @Controller + @ResponseBody.</strong> @ResponseBody tells Spring to serialize the return value to JSON and write it to the response body, instead of resolving it as a view name.</div>
+</div>
+
+<div class="q-card" id="q9">
+  <div class="q-num">Question 9 of 10</div>
+  <div class="q-text">A customer wants to change only their email. Which HTTP method is the best choice?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q9" value="a"> POST — because we're sending new data</label>
+    <label class="option"><input type="radio" name="q9" value="b"> PUT — because we're updating the customer</label>
+    <label class="option"><input type="radio" name="q9" value="c"> PATCH — because we're updating a specific field only</label>
+    <label class="option"><input type="radio" name="q9" value="d"> GET — to retrieve and then update</label>
+  </div>
+  <div class="explanation">✅ <strong>PATCH</strong> is designed for partial updates. PUT would require sending all fields (risky if the client doesn't have them all). PATCH sends only the changed field.</div>
+</div>
+
+<div class="q-card" id="q10">
+  <div class="q-num">Question 10 of 10</div>
+  <div class="q-text">Which of the following correctly declares a DELETE endpoint that returns 204 No Content on success and 404 if not found?</div>
+  <div class="options">
+    <label class="option"><input type="radio" name="q10" value="a"><code>@DeleteMapping("/{id}")<br>public void delete(@PathVariable String id) { customers.removeIf(...); }</code></label>
+    <label class="option"><input type="radio" name="q10" value="b"><code>@DeleteMapping("/{id}")<br>public ResponseEntity&lt;Void&gt; delete(@PathVariable String id) {<br>  boolean r = customers.removeIf(...);<br>  return r ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();<br>}</code></label>
+    <label class="option"><input type="radio" name="q10" value="c"><code>@DeleteMapping("/{id}")<br>public ResponseEntity&lt;String&gt; delete(@PathVariable String id) {<br>  customers.removeIf(...);<br>  return ResponseEntity.ok("deleted");<br>}</code></label>
+    <label class="option"><input type="radio" name="q10" value="d"><code>@GetMapping("/{id}/delete")<br>public ResponseEntity&lt;Void&gt; delete(@PathVariable String id) { ... }</code></label>
+  </div>
+  <div class="explanation">✅ <strong>Option B</strong> is correct: uses @DeleteMapping, ResponseEntity&lt;Void&gt;, checks removeIf() return value, returns 204 on success and 404 if not found. Option A returns void (no status control). C returns 200 with a body. D uses GET for a delete operation.</div>
+</div>
+
+<div class="submit-row">
+  <button class="submit-btn" id="submitBtn" onclick="submitQuiz()">Submit Quiz</button>
+</div>
+
+<div class="result" id="result">
+  <div class="score-circle" id="scoreCircle"></div>
+  <div class="score-text" id="scoreText"></div>
+  <div class="score-msg" id="scoreMsg"></div>
+  <button class="retry-btn" onclick="retry()">Review Answers</button>
+</div>
+
+</div>
+
+<script>
+const answers = { q1:'b', q2:'b', q3:'c', q4:'b', q5:'b', q6:'b', q7:'b', q8:'b', q9:'c', q10:'b' };
+const explanations = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+let timerInterval, submitted = false, seconds = 600;
+
+function tick() {
+  seconds--;
+  if(seconds <= 0) { clearInterval(timerInterval); submitQuiz(); return; }
+  const m = Math.floor(seconds/60), s = seconds%60;
+  document.getElementById('timer').textContent = m + ':' + String(s).padStart(2,'0');
+  if(seconds <= 60) document.getElementById('timer').style.color='#ff6b6b';
+}
+
+timerInterval = setInterval(tick, 1000);
+
+function submitQuiz() {
+  if(submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+  document.getElementById('submitBtn').disabled = true;
+
+  let score = 0;
+  for(const [q, correct] of Object.entries(answers)) {
+    const chosen = document.querySelector(`input[name="${q}"]:checked`);
+    const card = document.getElementById(q);
+    const opts = card.querySelectorAll('.option');
+    opts.forEach(opt => {
+      const inp = opt.querySelector('input');
+      if(inp.value === correct) opt.classList.add('correct');
+      else if(chosen && inp.value === chosen.value && inp.value !== correct) opt.classList.add('wrong');
+    });
+    const exp = card.querySelector('.explanation');
+    exp.classList.add('show');
+    if(chosen && chosen.value === correct) { score++; card.style.borderLeftColor='var(--green)'; }
+    else { card.style.borderLeftColor='var(--red)'; }
+  }
+
+  const pct = Math.round(score/10*100);
+  const circle = document.getElementById('scoreCircle');
+  const text = document.getElementById('scoreText');
+  const msg = document.getElementById('scoreMsg');
+  circle.textContent = pct + '%';
+  
+  if(pct >= 80) {
+    circle.style.cssText='border-color:var(--green);color:var(--green);width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin:0 auto 16px;border:6px solid';
+    text.textContent = '🎉 ' + score + '/10 — Excellent!';
+    msg.textContent = 'You have a strong grasp of Spring Boot REST. Ready for Day 3!';
+  } else if(pct >= 60) {
+    circle.style.cssText='border-color:var(--amber);color:var(--amber);width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin:0 auto 16px;border:6px solid';
+    text.textContent = '👍 ' + score + '/10 — Good work';
+    msg.textContent = 'Review the explanations for the questions you missed. Check the reference docs!';
+  } else {
+    circle.style.cssText='border-color:var(--red);color:var(--red);width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;margin:0 auto 16px;border:6px solid';
+    text.textContent = '📖 ' + score + '/10 — Needs review';
+    msg.textContent = 'Read through the explanations carefully. Talk to your pair or the trainer.';
+  }
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+function retry() {
+  document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
+  window.scrollTo(0,0);
+}
+
+document.querySelectorAll('.option').forEach(opt => {
+  opt.addEventListener('click', function() {
+    if(submitted) return;
+    const name = this.querySelector('input').name;
+    document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+      inp.closest('.option').classList.remove('selected');
+    });
+    this.classList.add('selected');
+    this.querySelector('input').checked = true;
+    document.getElementById('submitBtn').disabled = false;
+  });
+});
+</script>
+</body>
+</html>

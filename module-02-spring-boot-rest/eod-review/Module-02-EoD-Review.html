@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2 — EoD Review | Spring Boot REST</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#0a0a1a;color:#fff;height:100vh;overflow:hidden}
+.slide{display:none;height:100vh;padding:48px 64px;flex-direction:column;justify-content:center}
+.slide.active{display:flex}
+/* Slide 1 */
+.slide-1{background:linear-gradient(135deg,#0D3B8E 0%,#1a5ca8 60%,#2575b7 100%)}
+.tag-line{font-size:0.8rem;letter-spacing:3px;opacity:.7;text-transform:uppercase;margin-bottom:16px}
+.day-title{font-size:3.2rem;font-weight:800;line-height:1.1;margin-bottom:16px}
+.day-title span{color:var(--orange)}
+.subtitle{font-size:1.1rem;opacity:.8;max-width:600px}
+.achieved-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px;max-width:700px}
+.ach{background:rgba(255,255,255,.1);border-radius:8px;padding:12px 16px;font-size:0.85rem;border-left:3px solid var(--orange)}
+/* Slide 2 */
+.slide-2{background:linear-gradient(135deg,#1E8449 0%,#239B56 100%)}
+.slide-title{font-size:2rem;font-weight:700;margin-bottom:8px}
+.slide-sub{font-size:0.9rem;opacity:.7;margin-bottom:32px}
+.method-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:900px}
+.m-card{background:rgba(255,255,255,.12);border-radius:10px;padding:16px 12px;text-align:center}
+.m-verb{font-family:'Courier New',monospace;font-size:0.85rem;font-weight:700;margin-bottom:6px}
+.m-desc{font-size:0.7rem;opacity:.8;margin-bottom:8px}
+.m-status{font-size:1.2rem;font-weight:800;color:var(--amber)}
+.m-label{font-size:0.65rem;opacity:.6}
+/* Slide 3 */
+.slide-3{background:linear-gradient(135deg,#0D3B8E 0%,#16228a 100%)}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;max-width:800px}
+.compare-box{background:rgba(255,255,255,.1);border-radius:12px;padding:22px}
+.c-title{font-size:1rem;font-weight:700;margin-bottom:12px}
+.c-row{font-size:0.8rem;margin-bottom:6px;opacity:.85;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.c-row strong{color:var(--amber)}
+/* Slide 4 */
+.slide-4{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)}
+.concept-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:24px;max-width:900px}
+.con-card{background:rgba(255,255,255,.06);border-radius:10px;padding:18px;border-top:3px solid}
+.con-card.blue{border-color:var(--navy)}
+.con-card.orange{border-color:var(--orange)}
+.con-card.green{border-color:var(--green)}
+.con-title{font-size:0.85rem;font-weight:700;margin-bottom:8px;color:var(--amber)}
+.con-body{font-size:0.75rem;opacity:.8;line-height:1.6}
+code{background:rgba(255,255,255,.1);font-family:'Courier New',monospace;padding:2px 6px;border-radius:3px;font-size:0.8rem}
+/* Slide 5 */
+.slide-5{background:linear-gradient(135deg,var(--orange) 0%,#e67e22 100%)}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;max-width:800px}
+.preview-card{background:rgba(0,0,0,.15);border-radius:10px;padding:16px}
+.p-title{font-size:0.85rem;font-weight:700;margin-bottom:8px}
+.p-list{font-size:0.75rem;opacity:.85;line-height:1.8;padding-left:16px}
+/* Navigation */
+nav{position:fixed;bottom:24px;right:32px;display:flex;gap:8px;z-index:100}
+.nav-btn{background:rgba(255,255,255,.15);color:#fff;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-size:0.85rem;font-weight:600;transition:background .2s}
+.nav-btn:hover{background:rgba(255,255,255,.3)}
+.progress{position:fixed;bottom:24px;left:32px;display:flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:background .2s}
+.dot.active{background:#fff;width:24px;border-radius:4px}
+.slide-num{position:fixed;top:20px;right:32px;font-size:0.8rem;opacity:.5}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+
+<!-- Slide 1: Day Summary -->
+<div class="slide slide-1 active">
+  <div class="tag-line">ICICI Bank API Services | Module 02</div>
+  <div class="day-title">Day 2 <span>Complete</span></div>
+  <div class="subtitle">Spring Boot REST: Full CRUD — you built a working API today</div>
+  <div class="achieved-grid">
+    <div class="ach">✅ Built 5 HTTP method endpoints from scratch</div>
+    <div class="ach">✅ Used @RequestBody to accept JSON input</div>
+    <div class="ach">✅ Returned correct status codes with ResponseEntity</div>
+    <div class="ach">✅ Tested all endpoints end-to-end with Postman</div>
+    <div class="ach">✅ Built AccountController in the pair workshop</div>
+    <div class="ach">✅ Understood PUT (full replace) vs PATCH (partial)</div>
+  </div>
+</div>
+
+<!-- Slide 2: The 5 Methods -->
+<div class="slide slide-2">
+  <div class="slide-title">The 5 Methods — Status Codes</div>
+  <div class="slide-sub">Every method has a standard success status code. Know them.</div>
+  <div class="method-cards">
+    <div class="m-card">
+      <div class="m-verb">GET</div>
+      <div class="m-desc">Read a resource</div>
+      <div class="m-status">200</div>
+      <div class="m-label">OK</div>
+    </div>
+    <div class="m-card">
+      <div class="m-verb">POST</div>
+      <div class="m-desc">Create a resource</div>
+      <div class="m-status">201</div>
+      <div class="m-label">Created</div>
+    </div>
+    <div class="m-card">
+      <div class="m-verb">PUT</div>
+      <div class="m-desc">Full replace</div>
+      <div class="m-status">200</div>
+      <div class="m-label">OK</div>
+    </div>
+    <div class="m-card">
+      <div class="m-verb">PATCH</div>
+      <div class="m-desc">Partial update</div>
+      <div class="m-status">200</div>
+      <div class="m-label">OK</div>
+    </div>
+    <div class="m-card">
+      <div class="m-verb">DELETE</div>
+      <div class="m-desc">Remove</div>
+      <div class="m-status">204</div>
+      <div class="m-label">No Content</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: PUT vs PATCH -->
+<div class="slide slide-3">
+  <div class="slide-title">PUT vs PATCH</div>
+  <div class="slide-sub">The most common confusion — know the difference</div>
+  <div class="compare-row">
+    <div class="compare-box">
+      <div class="c-title">⚡ PUT — Full Replace</div>
+      <div class="c-row"><strong>Body:</strong> ALL fields required</div>
+      <div class="c-row"><strong>Omit a field:</strong> it becomes null</div>
+      <div class="c-row"><strong>URL:</strong> /customers/{id}</div>
+      <div class="c-row"><strong>Idempotent:</strong> yes</div>
+      <div class="c-row"><strong>Use when:</strong> replacing everything</div>
+    </div>
+    <div class="compare-box">
+      <div class="c-title">🩹 PATCH — Partial Update</div>
+      <div class="c-row"><strong>Body:</strong> only changed fields</div>
+      <div class="c-row"><strong>Omit a field:</strong> it stays unchanged</div>
+      <div class="c-row"><strong>URL:</strong> /customers/{id}/email</div>
+      <div class="c-row"><strong>Idempotent:</strong> yes</div>
+      <div class="c-row"><strong>Use when:</strong> updating one specific field</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: Key Concepts -->
+<div class="slide slide-4">
+  <div class="slide-title">Key Concepts — Day 2</div>
+  <div class="concept-grid">
+    <div class="con-card blue">
+      <div class="con-title">@RequestBody</div>
+      <div class="con-body">Spring reads the HTTP request body and deserializes JSON → Java object automatically. Jackson does the work. Required for POST, PUT, PATCH.</div>
+    </div>
+    <div class="con-card orange">
+      <div class="con-title">ResponseEntity</div>
+      <div class="con-body">Gives you full control over the HTTP response: status code + body + headers. Without it, Spring always returns 200. Never skip it in a real API.</div>
+    </div>
+    <div class="con-card green">
+      <div class="con-title">@PathVariable</div>
+      <div class="con-body">Extracts a value from the URL path. <code>/customers/{id}</code> → <code>@PathVariable String id</code>. Used in GET (one), PUT, PATCH, DELETE.</div>
+    </div>
+    <div class="con-card blue">
+      <div class="con-title">AtomicInteger</div>
+      <div class="con-body">Thread-safe counter for ID generation. <code>counter.incrementAndGet()</code> returns next value. Real apps use DB-generated IDs (auto-increment / UUID).</div>
+    </div>
+    <div class="con-card orange">
+      <div class="con-title">204 No Content</div>
+      <div class="con-body">DELETE success returns no body intentionally. <code>ResponseEntity&lt;Void&gt;</code> and <code>.noContent().build()</code>. Postman shows "No Body" — that's correct.</div>
+    </div>
+    <div class="con-card green">
+      <div class="con-title">Mutable List</div>
+      <div class="con-body">Day 1 used <code>Arrays.asList()</code> (immutable). Day 2 needs <code>new ArrayList&lt;&gt;(List.of(...))</code> to support add / remove / set operations.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: Day 3 Preview -->
+<div class="slide slide-5" style="color:var(--dark)">
+  <div class="slide-title" style="color:var(--dark)">Day 3 Preview</div>
+  <div class="slide-sub" style="color:rgba(0,0,0,.6);margin-bottom:0">Validation + Error Handling — making the API production-ready</div>
+  <div class="preview-grid" style="margin-top:28px">
+    <div class="preview-card" style="background:rgba(255,255,255,.3)">
+      <div class="p-title">What you'll build</div>
+      <ul class="p-list" style="color:rgba(0,0,0,.75)">
+        <li>@Valid + Bean Validation annotations</li>
+        <li>@NotBlank, @Size, @Pattern</li>
+        <li>@ExceptionHandler for 400/404/500</li>
+        <li>Consistent error response format</li>
+      </ul>
+    </div>
+    <div class="preview-card" style="background:rgba(255,255,255,.3)">
+      <div class="p-title">Tonight's prep</div>
+      <ul class="p-list" style="color:rgba(0,0,0,.75)">
+        <li>Look at the CustomerController we built</li>
+        <li>Think: what bad inputs could break it?</li>
+        <li>What happens if name is null? Email is ""?</li>
+        <li>Take the Day 2 quiz if you haven't!</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="slide-num" id="slideNum">1 / 5</div>
+
+<div class="progress">
+  <div class="dot active" onclick="goTo(0)"></div>
+  <div class="dot" onclick="goTo(1)"></div>
+  <div class="dot" onclick="goTo(2)"></div>
+  <div class="dot" onclick="goTo(3)"></div>
+  <div class="dot" onclick="goTo(4)"></div>
+</div>
+
+<nav>
+  <button class="nav-btn" onclick="prev()">← Prev</button>
+  <button class="nav-btn" onclick="next()">Next →</button>
+</nav>
+
+<script>
+let cur = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const numEl = document.getElementById('slideNum');
+function show(n) {
+  slides[cur].classList.remove('active');
+  dots[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  dots[cur].classList.add('active');
+  numEl.textContent = (cur+1) + ' / ' + slides.length;
+}
+function next() { if(cur < slides.length-1) show(cur+1); }
+function prev() { if(cur > 0) show(cur-1); }
+function goTo(n) { show(n); }
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowRight'||e.key==='Space') next();
+  if(e.key==='ArrowLeft') prev();
+});
+</script>
+</body>
+</html>

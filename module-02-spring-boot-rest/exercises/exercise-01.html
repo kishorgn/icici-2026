@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 01 — PUT: Full Replace | Day 2</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.6}
+header{background:var(--navy);color:#fff;padding:20px 32px}
+header h1{font-size:1.4rem;font-weight:700}
+header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+.badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+.container{max-width:900px;margin:32px auto;padding:0 20px}
+.part{background:#fff;border-radius:10px;padding:28px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.part-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--light)}
+.part-num{width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+.part-header h2{font-size:1.1rem;color:var(--navy)}
+.input-line{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.q-num{font-weight:700;color:var(--navy);width:24px;flex-shrink:0;padding-top:2px}
+.q-text{flex:1}
+.answer-box{width:100%;margin-top:6px;padding:8px 12px;border:2px solid #ddd;border-radius:6px;font-family:inherit;font-size:14px;resize:vertical;min-height:40px;outline:none;transition:border-color .2s}
+.answer-box:focus{border-color:var(--navy)}
+.code-frame{background:#1a1a1a;color:#F39C12;padding:20px 24px;border-radius:8px;font-family:'Courier New',monospace;font-size:13px;line-height:1.7;margin:12px 0;white-space:pre;overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:13px}
+td{padding:10px 14px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
+tr:nth-child(even) td{background:var(--light)}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.tag-get{background:#E3F4EB;color:var(--green)}
+.tag-put{background:#FFF3CD;color:#856404}
+.note{background:#FFF8E7;border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;margin:12px 0}
+.code-block{background:#F0F4FF;border-left:4px solid var(--navy);padding:12px 16px;font-family:'Courier New',monospace;font-size:13px;border-radius:0 6px 6px 0;margin:8px 0}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 01 — PUT: Full Replace</h1>
+  <p>Module 02: Spring Boot REST | ICICI Bank API Services</p>
+  <span class="badge">⏱ ~20 minutes | Pair Exercise</span>
+</header>
+
+<div class="container">
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">A</div>
+      <h2>Concept Check — answer before coding</h2>
+    </div>
+    <div class="input-line"><span class="q-num">1.</span><div class="q-text">What is the full URL to update customer CUST1002?<textarea class="answer-box" rows="1"></textarea></div></div>
+    <div class="input-line"><span class="q-num">2.</span><div class="q-text">What HTTP status code does a successful PUT return?<textarea class="answer-box" rows="1"></textarea></div></div>
+    <div class="input-line"><span class="q-num">3.</span><div class="q-text">What status code if the customer is not found?<textarea class="answer-box" rows="1"></textarea></div></div>
+    <div class="input-line"><span class="q-num">4.</span><div class="q-text">Does PUT require a <code>@RequestBody</code>? Circle: <strong>YES / NO</strong> — Why?<textarea class="answer-box" rows="2"></textarea></div></div>
+    <div class="input-line"><span class="q-num">5.</span><div class="q-text">What happens if the client sends the wrong <code>customerId</code> in the body?<textarea class="answer-box" rows="2"></textarea></div></div>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">B</div>
+      <h2>Code It — add replaceCustomer() to CustomerController.java</h2>
+    </div>
+    <p>The method should: accept <code>@PathVariable</code> + <code>@RequestBody</code>, find the customer, replace it, return <strong>200</strong> or <strong>404</strong>.</p>
+    <div class="code-frame">@PutMapping("/{customerId}")
+public ResponseEntity&lt;Customer&gt; replaceCustomer(
+        @PathVariable String customerId,
+        @RequestBody Customer updated) {
+
+    // Your code here:
+
+
+
+
+    
+}</div>
+    <div class="note">💡 Use <code>customers.set(i, updated)</code> to replace the element at index <code>i</code>. Don't forget to set the customerId on the <code>updated</code> object before saving!</div>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">C</div>
+      <h2>Test It — Postman sequence</h2>
+    </div>
+    <table>
+      <tr><th>Step</th><th>Request</th><th>Body</th><th>Expected</th><th>Got ✓/✗</th></tr>
+      <tr><td>1</td><td><span class="tag tag-get">GET</span> /customers/CUST1001</td><td>—</td><td>200 — current data</td><td></td></tr>
+      <tr><td>2</td><td><span class="tag tag-put">PUT</span> /customers/CUST1001</td><td><code>{"name":"Arjun S.","email":"new@email.com","mobile":"9999999999"}</code></td><td>200 — all fields updated</td><td></td></tr>
+      <tr><td>3</td><td><span class="tag tag-get">GET</span> /customers/CUST1001</td><td>—</td><td>200 — new data persisted</td><td></td></tr>
+      <tr><td>4</td><td><span class="tag tag-put">PUT</span> /customers/CUST9999</td><td><code>{"name":"Ghost"}</code></td><td>404 — not found</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">D</div>
+      <h2>Discussion — discuss with your pair</h2>
+    </div>
+    <div class="input-line"><span class="q-num">1.</span><div class="q-text">You send <code>PUT /customers/CUST1001</code> with body: <code>{"name": "New Name"}</code> (no email or mobile). What happens to those fields?<textarea class="answer-box" rows="2"></textarea></div></div>
+    <div class="input-line"><span class="q-num">2.</span><div class="q-text">Why does Spring Boot ignore the <code>customerId</code> in the PUT body?<textarea class="answer-box" rows="2"></textarea></div></div>
+    <div class="input-line"><span class="q-num">3.</span><div class="q-text">A teammate says "PUT and POST do the same thing, just different URLs." How do you correct them?<textarea class="answer-box" rows="3"></textarea></div></div>
+  </div>
+
+</div>
+</body>
+</html>

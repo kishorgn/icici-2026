@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 02 — PATCH + DELETE | Day 2</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.6}
+header{background:var(--green);color:#fff;padding:20px 32px}
+header h1{font-size:1.4rem;font-weight:700}
+header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+.badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+.container{max-width:900px;margin:32px auto;padding:0 20px}
+.part{background:#fff;border-radius:10px;padding:28px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.part-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--light)}
+.part-num{width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+.part-header h2{font-size:1.1rem;color:var(--green)}
+.input-line{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.q-num{font-weight:700;color:var(--green);width:24px;flex-shrink:0;padding-top:2px}
+.q-text{flex:1}
+.answer-box{width:100%;margin-top:6px;padding:8px 12px;border:2px solid #ddd;border-radius:6px;font-family:inherit;font-size:14px;resize:vertical;min-height:40px;outline:none;transition:border-color .2s}
+.answer-box:focus{border-color:var(--green)}
+.code-frame{background:#1a1a1a;color:#F39C12;padding:20px 24px;border-radius:8px;font-family:'Courier New',monospace;font-size:13px;line-height:1.7;margin:12px 0;white-space:pre;overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th{background:var(--green);color:#fff;padding:10px 14px;text-align:left;font-size:13px}
+td{padding:10px 14px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
+tr:nth-child(even) td{background:var(--light)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0}
+.compare-box{padding:16px;border-radius:8px;border:2px solid #ddd}
+.compare-box h3{font-size:0.9rem;font-weight:700;margin-bottom:8px}
+.put-box{border-color:#F39C12;background:#FFF8E7}
+.patch-box{border-color:var(--green);background:#E8F5E9}
+.note{background:#FFF8E7;border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 6px 6px 0;font-size:13px;margin:12px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.tag-patch{background:#E8F5E9;color:var(--green)}
+.tag-delete{background:#FFEBEE;color:#C62828}
+.tag-get{background:#E3F4EB;color:var(--green)}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 02 — PATCH + DELETE</h1>
+  <p>Module 02: Spring Boot REST | ICICI Bank API Services</p>
+  <span class="badge">⏱ ~20 minutes | Pair Exercise</span>
+</header>
+
+<div class="container">
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">A</div>
+      <h2>PATCH Concept — PUT vs PATCH</h2>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-box put-box">
+        <h3>⚡ PUT — Full Replace</h3>
+        <p>Body must contain <strong>ALL fields</strong>.<br>Omit a field → it becomes <strong>null</strong>.<br>Replace the entire object.</p>
+      </div>
+      <div class="compare-box patch-box">
+        <h3>🩹 PATCH — Partial Update</h3>
+        <p>Body contains only <strong>changed fields</strong>.<br>Other fields are <strong>untouched</strong>.<br>Update specific part of the object.</p>
+      </div>
+    </div>
+    <div class="input-line"><span class="q-num">Q.</span><div class="q-text">Our PATCH endpoint updates only email. What would the request body look like?<textarea class="answer-box" rows="2"></textarea></div></div>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">B</div>
+      <h2>Code PATCH — updateEmail() in CustomerController.java</h2>
+    </div>
+    <p>Update <strong>only the email</strong>. Return 200 with full customer, or 404 if not found.</p>
+    <div class="code-frame">@PatchMapping("/{customerId}/email")
+public ResponseEntity&lt;Customer&gt; updateEmail(
+        @PathVariable String customerId,
+        @RequestBody Customer patch) {
+
+    // Your code here:
+
+
+
+    
+}</div>
+    <div class="note">💡 Read only <code>patch.getEmail()</code> and call <code>c.setEmail(...)</code> on the found customer. Do NOT replace the whole object!</div>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">C</div>
+      <h2>Code DELETE — deleteCustomer() in CustomerController.java</h2>
+    </div>
+    <p>Remove from the list. Return <strong>204 No Content</strong> on success, <strong>404</strong> if not found.</p>
+    <div class="code-frame">@DeleteMapping("/{customerId}")
+public ResponseEntity&lt;Void&gt; deleteCustomer(@PathVariable String customerId) {
+
+    // Your code here:
+
+
+    
+}</div>
+    <div class="note">💡 Use <code>customers.removeIf(c -> c.getCustomerId().equals(customerId))</code> — it returns <code>true</code> if anything was removed. <code>ResponseEntity&lt;Void&gt;</code> because 204 has no body.</div>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">D</div>
+      <h2>Test Sequence — run in order</h2>
+    </div>
+    <table>
+      <tr><th>Step</th><th>Request</th><th>Body</th><th>Expected</th><th>Got ✓/✗</th></tr>
+      <tr><td>1</td><td><span class="tag tag-patch">PATCH</span> /customers/CUST1002/email</td><td><code>{"email":"newemail@test.com"}</code></td><td>200 — email changed, name + mobile intact</td><td></td></tr>
+      <tr><td>2</td><td><span class="tag tag-get">GET</span> /customers/CUST1002</td><td>—</td><td>200 — verify only email changed</td><td></td></tr>
+      <tr><td>3</td><td><span class="tag tag-delete">DELETE</span> /customers/CUST1002</td><td>—</td><td>204 — no body (intentional!)</td><td></td></tr>
+      <tr><td>4</td><td><span class="tag tag-get">GET</span> /customers/CUST1002</td><td>—</td><td>404 — gone</td><td></td></tr>
+      <tr><td>5</td><td><span class="tag tag-delete">DELETE</span> /customers/CUST9999</td><td>—</td><td>404 — never existed</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">💬</div>
+      <h2>Reflection</h2>
+    </div>
+    <div class="input-line"><span class="q-num">1.</span><div class="q-text">Why does DELETE return 204 (no body) instead of 200 with the deleted object?<textarea class="answer-box" rows="2"></textarea></div></div>
+    <div class="input-line"><span class="q-num">2.</span><div class="q-text">In a real banking system, when would you prefer PATCH over PUT?<textarea class="answer-box" rows="2"></textarea></div></div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 04 — Account Workshop | Day 2</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.6}
+header{background:linear-gradient(135deg,var(--navy),#1a5ca8);color:#fff;padding:20px 32px}
+header h1{font-size:1.4rem;font-weight:700}
+header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+.badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px;margin-right:6px}
+.container{max-width:960px;margin:32px auto;padding:0 20px}
+.scenario{background:var(--navy);color:#fff;border-radius:10px;padding:24px;margin-bottom:24px}
+.scenario h2{font-size:1.1rem;margin-bottom:8px}
+.scenario p{font-size:0.9rem;opacity:.85;line-height:1.6}
+.part{background:#fff;border-radius:10px;padding:28px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.part-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--light)}
+.part-num{width:36px;height:36px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+.part-header h2{font-size:1.1rem;color:var(--navy)}
+.answer-box{width:100%;margin-top:6px;padding:8px 12px;border:2px solid #ddd;border-radius:6px;font-family:inherit;font-size:14px;resize:vertical;min-height:36px;outline:none;transition:border-color .2s}
+.answer-box:focus{border-color:var(--navy)}
+.model-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin:12px 0}
+.field-card{background:var(--light);border-radius:8px;padding:12px;text-align:center}
+.field-name{font-family:'Courier New',monospace;font-weight:700;color:var(--navy);font-size:13px}
+.field-type{font-size:11px;color:#666;margin-top:2px}
+.field-ex{font-size:11px;color:var(--green);margin-top:4px}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:13px}
+td{padding:10px 14px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
+tr:nth-child(even) td{background:var(--light)}
+.code-seed{background:#1a1a1a;color:#F39C12;padding:16px 20px;border-radius:8px;font-family:'Courier New',monospace;font-size:12px;line-height:1.6;margin:12px 0;white-space:pre}
+.checklist{list-style:none;padding:0}
+.checklist li{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;padding:10px 14px;background:var(--light);border-radius:6px}
+.checklist input[type=checkbox]{margin-top:2px;flex-shrink:0;width:16px;height:16px;accent-color:var(--green)}
+.gallery{background:#E8F5E9;border:2px solid var(--green);border-radius:8px;padding:20px;margin:12px 0}
+.gallery h3{color:var(--green);font-size:1rem;margin-bottom:12px}
+.gallery ul{padding-left:20px}
+.gallery li{margin-bottom:6px;font-size:14px}
+.result-input{width:100%;padding:6px 10px;border:1px solid #ddd;border-radius:4px;font-family:inherit;font-size:13px}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 04 — Pair Workshop: Account Endpoints</h1>
+  <p>Module 02: Spring Boot REST | ICICI Bank API Services</p>
+  <span class="badge">⏱ ~60 minutes</span>
+  <span class="badge" style="background:var(--green)">👥 Pair Exercise</span>
+</header>
+
+<div class="container">
+
+  <div class="scenario">
+    <h2>🏦 Scenario: ICICI Account Management API</h2>
+    <p>ICICI Bank needs to expose Account management via REST. Customers can have multiple accounts (savings, current). Your task is to build <code>AccountController.java</code> — a complete CRUD controller — following the same patterns you learned for customers. This is a real extension of the project you've been working on.</p>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">A</div>
+      <h2>Design the Endpoints First</h2>
+    </div>
+    <p style="margin-bottom:12px">Before writing any code, design all 5 endpoints:</p>
+    <table>
+      <tr><th>Operation</th><th>Method</th><th>URL</th><th>Request Body</th><th>Success Status</th></tr>
+      <tr><td>Get all accounts</td><td>GET</td><td>/api/v1/accounts</td><td>—</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>Get one account</td><td>GET</td><td><input type="text" class="result-input"></td><td>—</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>Open new account</td><td>POST</td><td><input type="text" class="result-input"></td><td>{customerId, accountType, balance}</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>Update account status</td><td>PATCH</td><td><input type="text" class="result-input"></td><td>{status: "INACTIVE"}</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>Close account</td><td>DELETE</td><td><input type="text" class="result-input"></td><td>—</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+    </table>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">B</div>
+      <h2>Build Account.java</h2>
+    </div>
+    <p style="margin-bottom:12px">Create <code>src/main/java/com/icici/banking/model/Account.java</code> with these 5 fields:</p>
+    <div class="model-grid">
+      <div class="field-card"><div class="field-name">accountId</div><div class="field-type">String</div><div class="field-ex">"ACC2001"</div></div>
+      <div class="field-card"><div class="field-name">customerId</div><div class="field-type">String</div><div class="field-ex">"CUST1001"</div></div>
+      <div class="field-card"><div class="field-name">accountType</div><div class="field-type">String</div><div class="field-ex">"SAVINGS"</div></div>
+      <div class="field-card"><div class="field-name">balance</div><div class="field-type">double</div><div class="field-ex">25000.00</div></div>
+      <div class="field-card"><div class="field-name">status</div><div class="field-type">String</div><div class="field-ex">"ACTIVE"</div></div>
+    </div>
+    <p>Don't forget: <strong>constructor</strong> (all 5 params) + <strong>getters and setters</strong> for all fields.</p>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">C</div>
+      <h2>Build AccountController.java</h2>
+    </div>
+    <p>Create <code>src/main/java/com/icici/banking/controller/AccountController.java</code></p>
+    <p style="margin:8px 0">Seed data to start with:</p>
+    <div class="code-seed">new Account("ACC2001", "CUST1001", "SAVINGS",  25000.00, "ACTIVE")
+new Account("ACC2002", "CUST1001", "CURRENT", 100000.00, "ACTIVE")
+new Account("ACC2003", "CUST1002", "SAVINGS",   8500.00, "ACTIVE")</div>
+    <p>Implement all 5 endpoints with correct annotations and ResponseEntity status codes. Use <code>AtomicInteger</code> starting at <code>2003</code> for ID generation.</p>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">D</div>
+      <h2>Test Your API — record results</h2>
+    </div>
+    <table>
+      <tr><th>Test</th><th>Request</th><th>Result</th></tr>
+      <tr><td>1. List all accounts</td><td>GET /api/v1/accounts</td><td><input type="text" class="result-input" placeholder="pass / fail / status code got"></td></tr>
+      <tr><td>2. Get ACC2001</td><td>GET /api/v1/accounts/ACC2001</td><td><input type="text" class="result-input"></td></tr>
+      <tr><td>3. Open new account</td><td>POST /api/v1/accounts</td><td><input type="text" class="result-input"></td></tr>
+      <tr><td>4. Deactivate ACC2001</td><td>PATCH /api/v1/accounts/ACC2001/status</td><td><input type="text" class="result-input"></td></tr>
+      <tr><td>5. Close ACC2002</td><td>DELETE /api/v1/accounts/ACC2002</td><td><input type="text" class="result-input"></td></tr>
+      <tr><td>6. Get deleted account</td><td>GET /api/v1/accounts/ACC2002</td><td><input type="text" class="result-input"></td></tr>
+    </table>
+  </div>
+
+  <div class="gallery">
+    <h3>🖼 Gallery Walk Prep</h3>
+    <p style="font-size:13px;margin-bottom:12px">You have 5 minutes before presenting. Be ready to show:</p>
+    <ul>
+      <li>AccountController.java in your IDE — explain <strong>one method</strong> in detail</li>
+      <li>Live Postman call for <strong>POST /accounts</strong> and <strong>DELETE /accounts/{id}</strong></li>
+      <li><strong>One thing</strong> that tripped you up and how you fixed it</li>
+    </ul>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">✓</div>
+      <h2>Self-Check before Gallery Walk</h2>
+    </div>
+    <ul class="checklist">
+      <li><input type="checkbox"> Account.java has all 5 fields with getters and setters</li>
+      <li><input type="checkbox"> AccountController has @RestController and @RequestMapping("/api/v1/accounts")</li>
+      <li><input type="checkbox"> POST returns 201 Created</li>
+      <li><input type="checkbox"> DELETE returns 204 No Content</li>
+      <li><input type="checkbox"> All endpoints return 404 when account not found</li>
+      <li><input type="checkbox"> All 6 Postman tests pass</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

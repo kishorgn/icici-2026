@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRUD Request-Response Reference | Day 2</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:14px;line-height:1.6}
+header{background:var(--orange);color:var(--dark);padding:20px 32px}
+header h1{font-size:1.3rem;font-weight:700}
+header p{font-size:0.8rem;opacity:.7;margin-top:4px}
+.container{max-width:960px;margin:28px auto;padding:0 20px}
+.crud-card{background:#fff;border-radius:10px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden}
+.crud-header{padding:14px 20px;color:#fff;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:12px}
+.method-badge{font-family:'Courier New',monospace;font-size:12px;padding:3px 10px;border-radius:4px;background:rgba(255,255,255,.2)}
+.crud-body{padding:20px}
+.row-grid{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;align-items:start;margin-bottom:6px}
+.row-label{font-weight:700;font-size:12px;color:#666;padding-top:3px}
+.row-value{font-family:'Courier New',monospace;font-size:13px;background:var(--light);padding:4px 10px;border-radius:4px}
+.row-value.note{background:#FFF8E7;font-family:inherit;font-size:13px;color:var(--dark)}
+.row-value.ok{background:#E8F5E9;color:var(--green)}
+.row-value.err{background:#FFEBEE;color:#C62828}
+.h-get{background:var(--green)}
+.h-post{background:#856404}
+.h-put{background:var(--orange)}
+.h-patch{background:var(--navy)}
+.h-delete{background:#C62828}
+.summary-table{width:100%;border-collapse:collapse;margin:8px 0}
+.summary-table th{background:var(--navy);color:#fff;padding:8px 12px;font-size:12px;text-align:left}
+.summary-table td{padding:8px 12px;border-bottom:1px solid #eee;font-size:12px;font-family:'Courier New',monospace}
+.summary-table tr:nth-child(even) td{background:var(--light)}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.c-put{background:#FFF8E7;border:2px solid var(--amber);border-radius:8px;padding:14px}
+.c-patch{background:#E8F5E9;border:2px solid var(--green);border-radius:8px;padding:14px}
+.c-title{font-weight:700;font-size:12px;margin-bottom:6px}
+.code-inline{background:var(--light);font-family:'Courier New',monospace;font-size:12px;padding:3px 7px;border-radius:4px}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>CRUD Request-Response Reference</h1>
+  <p>Module 02 | ICICI Bank API Services | Banking Examples</p>
+</header>
+
+<div class="container">
+
+  <div class="crud-card">
+    <div class="crud-header h-get"><span class="method-badge">GET</span> Read Resources</div>
+    <div class="crud-body">
+      <p style="margin-bottom:12px;font-size:13px">Two GET patterns — list all, or get one by ID:</p>
+      <div class="row-grid"><span class="row-label">List All</span><span class="row-value">GET /api/v1/customers</span></div>
+      <div class="row-grid"><span class="row-label">Get One</span><span class="row-value">GET /api/v1/customers/CUST1001</span></div>
+      <div class="row-grid"><span class="row-label">Request Body</span><span class="row-value note">None — GET never has a body</span></div>
+      <div class="row-grid"><span class="row-label">List Response</span><span class="row-value ok">200 OK + JSON array</span></div>
+      <div class="row-grid"><span class="row-label">One Response</span><span class="row-value ok">200 OK + JSON object</span></div>
+      <div class="row-grid"><span class="row-label">Not Found</span><span class="row-value err">404 Not Found (list = 200 with empty array [])</span></div>
+    </div>
+  </div>
+
+  <div class="crud-card">
+    <div class="crud-header h-post"><span class="method-badge">POST</span> Create a Resource</div>
+    <div class="crud-body">
+      <div class="row-grid"><span class="row-label">URL</span><span class="row-value">POST /api/v1/customers</span></div>
+      <div class="row-grid"><span class="row-label">Headers</span><span class="row-value">Content-Type: application/json</span></div>
+      <div class="row-grid"><span class="row-label">Request Body</span><span class="row-value">{ "name": "Neha Singh", "email": "neha@email.com", "mobile": "9988776655" }</span></div>
+      <div class="row-grid"><span class="row-label">⚠ Important</span><span class="row-value note">Do NOT include customerId — server assigns it</span></div>
+      <div class="row-grid"><span class="row-label">Success</span><span class="row-value ok">201 Created + full object with server-assigned ID</span></div>
+      <div class="row-grid"><span class="row-label">Response Body</span><span class="row-value">{ "customerId": "CUST1004", "name": "Neha Singh", "email": "neha@email.com", "mobile": "9988776655" }</span></div>
+      <div class="row-grid"><span class="row-label">Bad Input</span><span class="row-value err">400 Bad Request</span></div>
+    </div>
+  </div>
+
+  <div class="crud-card">
+    <div class="crud-header h-put"><span class="method-badge">PUT</span> Full Replace</div>
+    <div class="crud-body">
+      <div class="row-grid"><span class="row-label">URL</span><span class="row-value">PUT /api/v1/customers/CUST1001</span></div>
+      <div class="row-grid"><span class="row-label">Request Body</span><span class="row-value">{ "name": "Arjun S.", "email": "arjun.new@email.com", "mobile": "9000000000" }</span></div>
+      <div class="row-grid"><span class="row-label">⚠ Important</span><span class="row-value note">ALL fields required — omitting a field makes it null/empty</span></div>
+      <div class="row-grid"><span class="row-label">Success</span><span class="row-value ok">200 OK + full updated object</span></div>
+      <div class="row-grid"><span class="row-label">Not Found</span><span class="row-value err">404 Not Found — no body</span></div>
+      <div class="row-grid"><span class="row-label">Idempotent?</span><span class="row-value note">Yes — calling PUT twice gives the same result</span></div>
+    </div>
+  </div>
+
+  <div class="crud-card">
+    <div class="crud-header h-patch"><span class="method-badge">PATCH</span> Partial Update</div>
+    <div class="crud-body">
+      <div class="row-grid"><span class="row-label">URL</span><span class="row-value">PATCH /api/v1/customers/CUST1001/email</span></div>
+      <div class="row-grid"><span class="row-label">Request Body</span><span class="row-value">{ "email": "arjun.updated@email.com" }</span></div>
+      <div class="row-grid"><span class="row-label">Unchanged fields</span><span class="row-value note">name and mobile stay exactly as they were</span></div>
+      <div class="row-grid"><span class="row-label">Success</span><span class="row-value ok">200 OK + full customer with updated email</span></div>
+      <div class="row-grid"><span class="row-label">Not Found</span><span class="row-value err">404 Not Found</span></div>
+    </div>
+  </div>
+
+  <div class="crud-card">
+    <div class="crud-header h-delete"><span class="method-badge">DELETE</span> Remove a Resource</div>
+    <div class="crud-body">
+      <div class="row-grid"><span class="row-label">URL</span><span class="row-value">DELETE /api/v1/customers/CUST1001</span></div>
+      <div class="row-grid"><span class="row-label">Request Body</span><span class="row-value note">None</span></div>
+      <div class="row-grid"><span class="row-label">Success</span><span class="row-value ok">204 No Content — empty body (intentional!)</span></div>
+      <div class="row-grid"><span class="row-label">Not Found</span><span class="row-value err">404 Not Found</span></div>
+      <div class="row-grid"><span class="row-label">2nd call on same ID</span><span class="row-value err">404 — already deleted</span></div>
+    </div>
+  </div>
+
+  <div class="crud-card">
+    <div class="crud-header" style="background:var(--dark)">PUT vs PATCH — The Critical Difference</div>
+    <div class="crud-body">
+      <p style="margin-bottom:12px;font-size:13px"><strong>Scenario:</strong> Customer wants to update only their email. Name and mobile should stay the same.</p>
+      <div class="compare">
+        <div class="c-put">
+          <div class="c-title">❌ With PUT</div>
+          <p style="font-size:12px;margin-bottom:6px">Must send everything:</p>
+          <code style="font-size:11px;display:block;background:#1a1a1a;color:#F39C12;padding:8px;border-radius:4px">{"name":"Arjun",<br>"mobile":"9876543210",<br>"email":"new@x.com"}</code>
+          <p style="font-size:12px;margin-top:6px;color:#C62828">Omit name → name becomes null!</p>
+        </div>
+        <div class="c-patch">
+          <div class="c-title">✓ With PATCH</div>
+          <p style="font-size:12px;margin-bottom:6px">Send only what changed:</p>
+          <code style="font-size:11px;display:block;background:#1a1a1a;color:#F39C12;padding:8px;border-radius:4px">{"email":"new@x.com"}</code>
+          <p style="font-size:12px;margin-top:6px;color:var(--green)">name + mobile untouched ✓</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crud-card">
+    <div class="crud-header" style="background:var(--navy)">All 5 Endpoints at a Glance</div>
+    <div class="crud-body" style="padding:0">
+      <table class="summary-table">
+        <tr><th>Method</th><th>URL</th><th>Body</th><th>Success</th><th>Not Found</th></tr>
+        <tr><td>GET</td><td>/customers</td><td>—</td><td>200 + array</td><td>—</td></tr>
+        <tr><td>GET</td><td>/customers/{id}</td><td>—</td><td>200 + obj</td><td>404</td></tr>
+        <tr><td>POST</td><td>/customers</td><td>All fields (no ID)</td><td>201 + obj</td><td>—</td></tr>
+        <tr><td>PUT</td><td>/customers/{id}</td><td>All fields (no ID)</td><td>200 + obj</td><td>404</td></tr>
+        <tr><td>PATCH</td><td>/customers/{id}/email</td><td>{"email":"..."}</td><td>200 + obj</td><td>404</td></tr>
+        <tr><td>DELETE</td><td>/customers/{id}</td><td>—</td><td>204 (no body)</td><td>404</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

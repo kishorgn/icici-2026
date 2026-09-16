@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Boot REST Annotations Cheatsheet | Day 2</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:14px;line-height:1.6}
+header{background:var(--navy);color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:1.3rem;font-weight:700}
+header p{font-size:0.8rem;opacity:.75}
+.container{max-width:1000px;margin:28px auto;padding:0 20px}
+.section{background:#fff;border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.section-title{font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:4px;height:20px;background:var(--orange);border-radius:2px}
+table{width:100%;border-collapse:collapse}
+th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-size:12px;font-weight:700}
+td{padding:10px 14px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
+tr:nth-child(even) td{background:var(--light)}
+.ann{display:inline-block;background:#0D3B8E;color:#fff;font-family:'Courier New',monospace;font-size:12px;padding:2px 8px;border-radius:4px;white-space:nowrap}
+.ann-orange{background:#d4490a}
+.ann-green{background:var(--green)}
+.code-block{background:#1a1a1a;color:#F39C12;padding:18px 20px;border-radius:8px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;white-space:pre;overflow-x:auto;margin:12px 0}
+.badge-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.badge{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.b-get{background:#E3F4EB;color:var(--green);border:1px solid var(--green)}
+.b-post{background:#FFF8E7;color:#856404;border:1px solid var(--amber)}
+.b-put{background:#FFF3CD;color:#856404;border:1px solid #F7941D}
+.b-patch{background:#E8F0FB;color:var(--navy);border:1px solid var(--navy)}
+.b-delete{background:#FFEBEE;color:#C62828;border:1px solid #C62828}
+.tip{background:#FFF8E7;border-left:4px solid var(--amber);padding:10px 14px;border-radius:0 6px 6px 0;font-size:13px;margin:8px 0}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <div>
+    <h1>Spring Boot REST — Annotations Cheatsheet</h1>
+    <p>Module 02 | ICICI Bank API Services | Day 2</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <div class="section-title">HTTP Method Annotations — quick reference</div>
+    <div class="badge-row">
+      <span class="badge b-get">@GetMapping — READ</span>
+      <span class="badge b-post">@PostMapping — CREATE</span>
+      <span class="badge b-put">@PutMapping — FULL REPLACE</span>
+      <span class="badge b-patch">@PatchMapping — PARTIAL UPDATE</span>
+      <span class="badge b-delete">@DeleteMapping — REMOVE</span>
+    </div>
+    <table>
+      <tr><th>Annotation</th><th>HTTP Method</th><th>Typical URL</th><th>Success Status</th></tr>
+      <tr><td><span class="ann ann-green">@GetMapping</span></td><td>GET</td><td>/customers or /customers/{id}</td><td>200 OK</td></tr>
+      <tr><td><span class="ann ann-orange">@PostMapping</span></td><td>POST</td><td>/customers</td><td>201 Created</td></tr>
+      <tr><td><span class="ann" style="background:#856404">@PutMapping("/{id}")</span></td><td>PUT</td><td>/customers/{id}</td><td>200 OK</td></tr>
+      <tr><td><span class="ann">@PatchMapping("/{id}/field")</span></td><td>PATCH</td><td>/customers/{id}/email</td><td>200 OK</td></tr>
+      <tr><td><span class="ann" style="background:#C62828">@DeleteMapping("/{id}")</span></td><td>DELETE</td><td>/customers/{id}</td><td>204 No Content</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Class-Level Annotations</div>
+    <table>
+      <tr><th>Annotation</th><th>Purpose</th><th>Without It</th></tr>
+      <tr><td><span class="ann">@RestController</span></td><td>Marks this as a REST API controller. All methods return JSON automatically. (Combines @Controller + @ResponseBody)</td><td>Spring doesn't register it as a controller; no endpoints exposed</td></tr>
+      <tr><td><span class="ann">@RequestMapping("/api/v1/customers")</span></td><td>Sets the base URL prefix for ALL methods in this class</td><td>Each method needs the full URL; tedious and error-prone</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Parameter Annotations</div>
+    <table>
+      <tr><th>Annotation</th><th>Reads From</th><th>Example URL</th><th>Java Code</th></tr>
+      <tr><td><span class="ann">@PathVariable</span></td><td>URL path segment</td><td>GET /customers/CUST1001</td><td><code>@PathVariable String customerId</code></td></tr>
+      <tr><td><span class="ann">@RequestBody</span></td><td>HTTP request body (JSON)</td><td>POST /customers with JSON body</td><td><code>@RequestBody Customer customer</code></td></tr>
+      <tr><td><span class="ann">@RequestParam</span></td><td>URL query string</td><td>GET /customers?city=Mumbai</td><td><code>@RequestParam String city</code></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">ResponseEntity Patterns</div>
+    <table>
+      <tr><th>Scenario</th><th>Code</th><th>Status</th><th>Body</th></tr>
+      <tr><td>Found + return object</td><td><code>ResponseEntity.ok(customer)</code></td><td>200</td><td>Yes</td></tr>
+      <tr><td>Created successfully</td><td><code>ResponseEntity.status(201).body(customer)</code></td><td>201</td><td>Yes</td></tr>
+      <tr><td>Deleted (no body)</td><td><code>ResponseEntity.noContent().build()</code></td><td>204</td><td>No</td></tr>
+      <tr><td>Not found</td><td><code>ResponseEntity.notFound().build()</code></td><td>404</td><td>No</td></tr>
+      <tr><td>Bad request</td><td><code>ResponseEntity.badRequest().body("Invalid")</code></td><td>400</td><td>Yes (error msg)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Complete Controller Template</div>
+    <div class="code-block">@RestController
+@RequestMapping("/api/v1/customers")
+public class CustomerController {
+
+    private static final AtomicInteger counter = new AtomicInteger(1003);
+    private final List&lt;Customer&gt; customers = new ArrayList&lt;&gt;(List.of(...));
+
+    @GetMapping
+    public List&lt;Customer&gt; getAllCustomers() { return customers; }
+
+    @GetMapping("/{customerId}")
+    public ResponseEntity&lt;Customer&gt; getCustomer(@PathVariable String customerId) {
+        return customers.stream().filter(c -> c.getCustomerId().equals(customerId))
+                .findFirst().map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;Customer&gt; createCustomer(@RequestBody Customer customer) {
+        customer.setCustomerId("CUST" + counter.incrementAndGet());
+        customers.add(customer);
+        return ResponseEntity.status(201).body(customer);
+    }
+
+    @PutMapping("/{customerId}")
+    public ResponseEntity&lt;Customer&gt; replaceCustomer(@PathVariable String customerId,
+                                                     @RequestBody Customer updated) {
+        for (int i = 0; i &lt; customers.size(); i++) {
+            if (customers.get(i).getCustomerId().equals(customerId)) {
+                updated.setCustomerId(customerId);
+                customers.set(i, updated);
+                return ResponseEntity.ok(updated);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{customerId}/email")
+    public ResponseEntity&lt;Customer&gt; updateEmail(@PathVariable String customerId,
+                                                 @RequestBody Customer patch) {
+        for (Customer c : customers) {
+            if (c.getCustomerId().equals(customerId)) {
+                c.setEmail(patch.getEmail());
+                return ResponseEntity.ok(c);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{customerId}")
+    public ResponseEntity&lt;Void&gt; deleteCustomer(@PathVariable String customerId) {
+        boolean removed = customers.removeIf(c -> c.getCustomerId().equals(customerId));
+        return removed ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+}</div>
+    <div class="tip">📌 This is the complete Day 2 CustomerController. Each endpoint maps to exactly one HTTP method + URL pattern. You'll extend this pattern to AccountController in Exercise 4.</div>
+  </div>
+
+</div>
+</body>
+</html>

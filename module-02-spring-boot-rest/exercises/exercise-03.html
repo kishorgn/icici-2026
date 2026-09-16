@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 03 — ResponseEntity | Day 2</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--white:#fff;--dark:#2C3E50;--light:#E8F0FB;--bg:#F4F6FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:15px;line-height:1.6}
+header{background:var(--amber);color:var(--dark);padding:20px 32px}
+header h1{font-size:1.4rem;font-weight:700}
+header p{font-size:0.85rem;opacity:.7;margin-top:4px}
+.badge{display:inline-block;background:var(--navy);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+.container{max-width:900px;margin:32px auto;padding:0 20px}
+.part{background:#fff;border-radius:10px;padding:28px;margin-bottom:28px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.part-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--light)}
+.part-num{width:36px;height:36px;border-radius:50%;background:var(--amber);color:var(--dark);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+.part-header h2{font-size:1.1rem;color:var(--dark)}
+.answer-box{width:100%;margin-top:6px;padding:8px 12px;border:2px solid #ddd;border-radius:6px;font-family:inherit;font-size:14px;resize:vertical;min-height:40px;outline:none;transition:border-color .2s}
+.answer-box:focus{border-color:var(--amber)}
+.input-line{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px}
+.q-num{font-weight:700;color:#856404;width:24px;flex-shrink:0;padding-top:2px}
+table{width:100%;border-collapse:collapse;margin:12px 0}
+th{background:var(--amber);color:var(--dark);padding:10px 14px;text-align:left;font-size:13px;font-weight:700}
+td{padding:10px 14px;border-bottom:1px solid #eee;font-size:13px;vertical-align:top}
+tr:nth-child(even) td{background:var(--light)}
+.code-frame{background:#1a1a1a;color:#F39C12;padding:20px 24px;border-radius:8px;font-family:'Courier New',monospace;font-size:13px;line-height:1.7;margin:12px 0;white-space:pre;overflow-x:auto}
+.bug-box{background:#FFF3CD;border:2px solid var(--amber);border-radius:8px;padding:16px;margin:12px 0}
+.bug-box .label{font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px}
+.fix-area{margin-top:8px}
+.fix-area label{font-size:12px;font-weight:700;color:var(--dark);display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 03 — ResponseEntity: Status Code Control</h1>
+  <p>Module 02: Spring Boot REST | ICICI Bank API Services</p>
+  <span class="badge">⏱ ~25 minutes | Individual</span>
+</header>
+
+<div class="container">
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">A</div>
+      <h2>Match the ResponseEntity</h2>
+    </div>
+    <p style="margin-bottom:12px">Draw a line (or write the letter) matching each scenario to the correct ResponseEntity call:</p>
+    <table>
+      <tr><th>Scenario</th><th>ResponseEntity call</th><th>Your Match (letter)</th></tr>
+      <tr><td>1. Customer created successfully</td><td>A. ResponseEntity.notFound().build()</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>2. Customer found and returned</td><td>B. ResponseEntity.noContent().build()</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>3. Customer not found</td><td>C. ResponseEntity.ok(customer)</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>4. Customer deleted</td><td>D. ResponseEntity.status(201).body(customer)</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>5. Invalid JSON body received</td><td>E. ResponseEntity.badRequest().body("msg")</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+    </table>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">B</div>
+      <h2>Fill in the Status Codes</h2>
+    </div>
+    <table>
+      <tr><th>HTTP Method</th><th>Success Scenario</th><th>Status Code</th><th>Has Body?</th></tr>
+      <tr><td>GET</td><td>Customer found</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>POST</td><td>Customer created</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>PUT</td><td>Customer replaced</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>PATCH</td><td>Email updated</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>DELETE</td><td>Customer removed</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+      <tr><td>GET</td><td>Customer not found</td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td><td><input type="text" style="width:60px;padding:4px;border:1px solid #ddd;border-radius:4px"></td></tr>
+    </table>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">C</div>
+      <h2>Fix the Bugs — 3 bugs in this method</h2>
+    </div>
+    <div class="code-frame">@PostMapping
+public Customer createCustomer(@RequestBody Customer customer) {
+    customers.add(customer);      // Bug 1: ID not assigned
+    return customer;              // Bug 2: No status code control
+}                                 // Bug 3: Something missing at class level...</div>
+    <div class="bug-box">
+      <div class="label">BUG 1 FIX</div>
+      <textarea class="answer-box" rows="2" placeholder="Write the fix for Bug 1..."></textarea>
+    </div>
+    <div class="bug-box">
+      <div class="label">BUG 2 FIX</div>
+      <textarea class="answer-box" rows="2" placeholder="Write the fix for Bug 2..."></textarea>
+    </div>
+    <div class="bug-box">
+      <div class="label">BUG 3 FIX</div>
+      <textarea class="answer-box" rows="2" placeholder="What's missing at the class level?"></textarea>
+    </div>
+  </div>
+
+  <div class="part">
+    <div class="part-header">
+      <div class="part-num">D</div>
+      <h2>Write Your Own — add name validation</h2>
+    </div>
+    <p>Complete this method so it returns <strong>400 Bad Request</strong> if the customer name is null or blank:</p>
+    <div class="code-frame">@PostMapping
+public ResponseEntity&lt;Customer&gt; createCustomer(@RequestBody Customer customer) {
+    // Add validation here:
+
+
+    
+    String newId = "CUST" + counter.incrementAndGet();
+    customer.setCustomerId(newId);
+    customers.add(customer);
+    return ResponseEntity.status(201).body(customer);
+}</div>
+    <textarea class="answer-box" rows="4" placeholder="Write the validation check that returns 400 if name is null or blank..."></textarea>
+  </div>
+
+</div>
+</body>
+</html>
