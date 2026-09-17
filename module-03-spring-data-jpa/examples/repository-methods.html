@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Repository Methods — Quick Reference</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center}
+  header h1{font-size:1.3rem;font-weight:700}
+  header p{font-size:0.8rem;opacity:.75}
+  .container{max-width:920px;margin:28px auto;padding:0 20px 60px}
+  h2{color:var(--navy);margin:28px 0 12px;font-size:1.1rem;border-bottom:2px solid var(--orange);padding-bottom:6px}
+  h3{color:var(--orange);margin:18px 0 8px;font-size:0.95rem}
+  code{background:#f0f0f0;border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:0.88em}
+  pre{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:14px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.85rem;margin:10px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.85rem}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left}
+  td{padding:8px 12px;border-bottom:1px solid #e0e0e0;vertical-align:top}
+  td:first-child{font-family:'Courier New',monospace;white-space:nowrap;color:#1a1a2e;font-weight:600}
+  tr:nth-child(even) td{background:var(--light)}
+  .tip{background:var(--light);border-left:3px solid var(--navy);padding:10px 14px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <div>
+    <h1>Repository Methods — Quick Reference</h1>
+    <p>Module 03 | ICICI Bank API Services | Day 3</p>
+  </div>
+</header>
+<div class="container">
+
+  <h2>Built-in JpaRepository Methods</h2>
+  <table>
+    <tr><th>Method</th><th>SQL</th><th>Returns</th></tr>
+    <tr><td>findAll()</td><td>SELECT * FROM table</td><td>List&lt;T&gt;</td></tr>
+    <tr><td>findById(id)</td><td>SELECT ... WHERE id = ?</td><td>Optional&lt;T&gt;</td></tr>
+    <tr><td>save(entity)</td><td>INSERT or UPDATE</td><td>T</td></tr>
+    <tr><td>saveAll(entities)</td><td>Batch INSERT/UPDATE</td><td>List&lt;T&gt;</td></tr>
+    <tr><td>deleteById(id)</td><td>DELETE WHERE id = ?</td><td>void</td></tr>
+    <tr><td>delete(entity)</td><td>DELETE WHERE id = entity.id</td><td>void</td></tr>
+    <tr><td>existsById(id)</td><td>SELECT COUNT&gt;0 WHERE id=?</td><td>boolean</td></tr>
+    <tr><td>count()</td><td>SELECT COUNT(*)</td><td>long</td></tr>
+    <tr><td>findAllById(ids)</td><td>SELECT ... WHERE id IN (?)</td><td>List&lt;T&gt;</td></tr>
+  </table>
+
+  <h2>Derived Query Keywords</h2>
+  <table>
+    <tr><th>Keyword</th><th>JPQL Fragment</th><th>Example</th></tr>
+    <tr><td>findBy</td><td>WHERE field = ?</td><td>findByEmail(String email)</td></tr>
+    <tr><td>findByContaining</td><td>WHERE field LIKE %?%</td><td>findByNameContaining(String kw)</td></tr>
+    <tr><td>findByStartingWith</td><td>WHERE field LIKE ?%</td><td>findByNameStartingWith(String prefix)</td></tr>
+    <tr><td>findByEndingWith</td><td>WHERE field LIKE %?</td><td>findByEmailEndingWith(String domain)</td></tr>
+    <tr><td>findByIgnoreCase</td><td>WHERE UPPER(field)=UPPER(?)</td><td>findByEmailIgnoreCase(String email)</td></tr>
+    <tr><td>findByGreaterThan</td><td>WHERE field &gt; ?</td><td>findByBalanceGreaterThan(BigDecimal amt)</td></tr>
+    <tr><td>findByLessThan</td><td>WHERE field &lt; ?</td><td>findByBalanceLessThan(BigDecimal amt)</td></tr>
+    <tr><td>findByBetween</td><td>WHERE field BETWEEN ? AND ?</td><td>findByBalanceBetween(BigDecimal lo, BigDecimal hi)</td></tr>
+    <tr><td>findByIsNull</td><td>WHERE field IS NULL</td><td>findByEmailIsNull()</td></tr>
+    <tr><td>findByIsNotNull</td><td>WHERE field IS NOT NULL</td><td>findByEmailIsNotNull()</td></tr>
+    <tr><td>findByOrderByAsc</td><td>ORDER BY field ASC</td><td>findByStatusOrderByNameAsc(String status)</td></tr>
+    <tr><td>findByAnd</td><td>WHERE f1=? AND f2=?</td><td>findByAccountTypeAndStatus(String t, String s)</td></tr>
+    <tr><td>findByOr</td><td>WHERE f1=? OR f2=?</td><td>findByNameOrEmail(String name, String email)</td></tr>
+  </table>
+
+  <h2>@Query Examples</h2>
+
+  <h3>JPQL (uses class + field names)</h3>
+  <pre>@Query("SELECT c FROM Customer c WHERE c.email LIKE %:domain")
+List&lt;Customer&gt; findByEmailDomain(@Param("domain") String domain);</pre>
+
+  <h3>Native SQL (uses table + column names)</h3>
+  <pre>@Query(value = "SELECT * FROM customers WHERE email LIKE %:domain", nativeQuery = true)
+List&lt;Customer&gt; findByEmailDomainNative(@Param("domain") String domain);</pre>
+
+  <h3>Update/Delete with @Modifying</h3>
+  <pre>@Modifying
+@Transactional
+@Query("UPDATE Customer c SET c.status = :status WHERE c.customerId = :id")
+int updateStatus(@Param("id") String id, @Param("status") String status);</pre>
+
+  <h2>JPQL vs SQL Quick Comparison</h2>
+  <table>
+    <tr><th>JPQL</th><th>SQL Equivalent</th></tr>
+    <tr><td>FROM Customer</td><td>FROM customers</td></tr>
+    <tr><td>c.customerId</td><td>c.customer_id</td></tr>
+    <tr><td>SELECT c FROM Customer c</td><td>SELECT * FROM customers</td></tr>
+    <tr><td>JOIN c.accounts a</td><td>JOIN accounts a ON a.customer_id = c.customer_id</td></tr>
+  </table>
+
+  <div class="tip"><strong>Rule of thumb:</strong> Use derived query methods for simple lookups. Use @Query when the method name would be unreadably long or you need aggregation/joins.</div>
+</div>
+</body>
+</html>

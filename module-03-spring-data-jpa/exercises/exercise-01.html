@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercise 01 — From POJO to Entity</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px}
+  header h1{font-size:1.4rem;font-weight:700}
+  header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+  .container{max-width:860px;margin:32px auto;padding:0 20px 60px}
+  h2{color:var(--navy);margin:28px 0 12px;font-size:1.15rem;border-left:4px solid var(--orange);padding-left:10px}
+  h3{color:var(--navy);margin:20px 0 8px;font-size:1rem}
+  p,li{line-height:1.7;font-size:0.95rem;margin-bottom:8px}
+  ul,ol{padding-left:24px;margin-bottom:12px}
+  code{background:#f0f0f0;border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:0.9em}
+  pre{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.88rem;margin:12px 0}
+  .tip{background:var(--light);border-left:4px solid var(--navy);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:0.9rem}
+  .tip strong{color:var(--navy)}
+  .warn{background:#fff8e1;border-left:4px solid var(--amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:0.9rem}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.9rem}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left}
+  td{padding:8px 12px;border-bottom:1px solid #e0e0e0}
+  tr:nth-child(even) td{background:var(--light)}
+  .step{background:#fff;border:1px solid #e0e6f0;border-radius:10px;padding:20px;margin-bottom:20px}
+  .step-num{background:var(--orange);color:#fff;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;margin-right:8px}
+  .checklist li{list-style:none;padding-left:4px}
+  .checklist li::before{content:'□ ';font-size:1.1rem;color:var(--navy)}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 01: From POJO to Entity</h1>
+  <p>Module 03: Data Persistence | ICICI Bank API Services | Day 3</p>
+  <span class="badge">⏱ 45 min · Individual</span>
+</header>
+<div class="container">
+
+  <h2>Background</h2>
+  <p>Your <code>Customer</code> class is currently a plain Java object (POJO). Spring Data JPA needs it decorated with annotations so Hibernate knows how to map it to a database table.</p>
+
+  <table>
+    <tr><th>Before</th><th>After</th></tr>
+    <tr><td><code>public class Customer</code></td><td><code>@Entity @Table(name="customers") public class Customer</code></td></tr>
+    <tr><td><code>private String customerId</code></td><td><code>@Id @Column(name="customer_id") private String customerId</code></td></tr>
+    <tr><td>No default constructor</td><td><code>public Customer() {}</code> added (required by JPA)</td></tr>
+    <tr><td>ArrayList only</td><td>Works with any JPA-compatible database</td></tr>
+  </table>
+
+  <div class="step">
+    <h2><span class="step-num">1</span> Add JPA Dependency to pom.xml <small style="color:#666;font-weight:400">(5 min)</small></h2>
+    <p>Open <code>pom.xml</code>. Find the commented JPA + H2 section and uncomment it:</p>
+    <pre>&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+  &lt;artifactId&gt;h2&lt;/artifactId&gt;
+  &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+    <p>Reload Maven: right-click <code>pom.xml</code> → <strong>Maven → Reload Project</strong>.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span> Configure H2 + JPA in application.yml <small style="color:#666;font-weight:400">(5 min)</small></h2>
+    <pre>spring:
+  datasource:
+    url: jdbc:h2:mem:icicidb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true</pre>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span> Annotate Customer.java <small style="color:#666;font-weight:400">(15 min)</small></h2>
+    <pre>import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "customers")
+public class Customer {
+
+    @Id
+    @Column(name = "customer_id", nullable = false, unique = true)
+    private String customerId;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "email", unique = true)
+    private String email;
+
+    @Column(name = "mobile")
+    private String mobile;
+
+    // Required by JPA
+    public Customer() {}
+
+    // Existing constructor + getters/setters unchanged
+}</pre>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">4</span> Start the Application <small style="color:#666;font-weight:400">(5 min)</small></h2>
+    <p>Run the app. In the console you should see Hibernate generate the table:</p>
+    <pre>Hibernate: create table customers (
+    customer_id varchar(255) not null,
+    email varchar(255) unique,
+    mobile varchar(255),
+    name varchar(255) not null,
+    primary key (customer_id)
+)</pre>
+    <div class="tip"><strong>💡 Tip:</strong> If you don't see this, check <code>show-sql: true</code> is in <code>application.yml</code> and the JPA dependency loaded.</div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">5</span> Verify in H2 Console <small style="color:#666;font-weight:400">(10 min)</small></h2>
+    <p>Open <strong>http://localhost:8080/h2-console</strong>:</p>
+    <ul>
+      <li>JDBC URL: <code>jdbc:h2:mem:icicidb</code></li>
+      <li>Username: <code>sa</code> &nbsp;·&nbsp; Password: (leave blank)</li>
+    </ul>
+    <p>Click Connect, then run: <code>SELECT * FROM CUSTOMERS;</code> — 0 rows is correct at this stage.</p>
+  </div>
+
+  <h2>Verification Checklist</h2>
+  <ul class="checklist">
+    <li>Console shows <code>create table customers</code> on startup</li>
+    <li>H2 console connects successfully</li>
+    <li>SELECT * FROM CUSTOMERS returns 0 rows (no error)</li>
+    <li>Application starts without errors</li>
+  </ul>
+
+  <h2>Common Mistakes</h2>
+  <table>
+    <tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr>
+    <tr><td>Forgot no-arg constructor</td><td>InstantiationException at startup</td><td>Add <code>public Customer() {}</code></td></tr>
+    <tr><td>Wrong import (javax. not jakarta.)</td><td>Symbols unresolved</td><td>Use <code>jakarta.persistence.*</code> for Spring Boot 3.x</td></tr>
+    <tr><td>Wrong JDBC URL in H2 console</td><td>Connection refused</td><td>Must match yml: <code>jdbc:h2:mem:icicidb</code></td></tr>
+  </table>
+</div>
+</body>
+</html>

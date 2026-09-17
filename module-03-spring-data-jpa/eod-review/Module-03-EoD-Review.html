@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Module 03 — EoD Review</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px}
+  header h1{font-size:1.4rem;font-weight:700}
+  header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+  .container{max-width:860px;margin:32px auto;padding:0 20px 60px}
+  h2{color:var(--navy);margin:28px 0 12px;font-size:1.1rem;border-left:4px solid var(--orange);padding-left:10px}
+  p,li{line-height:1.7;font-size:0.95rem;margin-bottom:8px}
+  ul{padding-left:24px;margin-bottom:12px}
+  code{background:#f0f0f0;border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:0.9em}
+  .concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+  @media(max-width:600px){.concept-grid{grid-template-columns:1fr}}
+  .concept-card{background:#fff;border-radius:10px;border:1px solid #e0e6f0;padding:16px}
+  .concept-card h3{color:var(--orange);margin-bottom:8px;font-size:0.95rem}
+  .concept-card code{display:block;background:#f0f0f0;padding:6px 10px;border-radius:4px;font-size:0.85rem;margin:4px 0}
+  .journey{background:#fff;border-radius:10px;border:1px solid #e0e6f0;padding:20px;margin:16px 0}
+  .journey-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+  .js-num{background:var(--navy);color:#fff;border-radius:50%;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .js-text strong{display:block;margin-bottom:2px;color:var(--navy)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.9rem}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left}
+  td{padding:8px 12px;border-bottom:1px solid #e0e0e0}
+  tr:nth-child(even) td{background:var(--light)}
+  .tomorrow{background:linear-gradient(135deg,var(--navy),#1a4faa);color:#fff;border-radius:12px;padding:24px;margin-top:28px}
+  .tomorrow h2{color:#fff;border-left-color:var(--orange)}
+  .tomorrow li{color:rgba(255,255,255,.9)}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Module 03: End of Day Review</h1>
+  <p>Module 03: Data Persistence | ICICI Bank API Services | Day 3</p>
+  <span class="badge">Data Persistence — Spring Data JPA</span>
+</header>
+<div class="container">
+
+  <h2>What You Built Today</h2>
+  <div class="journey">
+    <div class="journey-step">
+      <div class="js-num">1</div>
+      <div class="js-text">
+        <strong>Annotated Customer.java as a JPA @Entity</strong>
+        Added @Entity, @Table, @Id, @Column. Added no-arg constructor. Hibernate generated the database table automatically.
+      </div>
+    </div>
+    <div class="journey-step">
+      <div class="js-num">2</div>
+      <div class="js-text">
+        <strong>Created CustomerRepository</strong>
+        Extended JpaRepository&lt;Customer, String&gt;. Got findAll, findById, save, deleteById and more — for free.
+      </div>
+    </div>
+    <div class="journey-step">
+      <div class="js-num">3</div>
+      <div class="js-text">
+        <strong>Refactored CustomerController</strong>
+        Removed ArrayList and manual loops. Replaced with clean repository calls. Less code, more power.
+      </div>
+    </div>
+    <div class="journey-step">
+      <div class="js-num">4</div>
+      <div class="js-text">
+        <strong>Added Custom Query Methods</strong>
+        findByEmail, findByMobile, searchByName with @Query. Spring derives or executes SQL from method names.
+      </div>
+    </div>
+    <div class="journey-step">
+      <div class="js-num">5</div>
+      <div class="js-text">
+        <strong>Built Account Entity (Workshop)</strong>
+        Applied every concept independently — entity annotations, repository, seed data, H2 verification.
+      </div>
+    </div>
+  </div>
+
+  <h2>Key Concepts</h2>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <h3>@Entity = Table</h3>
+      <code>@Entity @Table(name="customers")</code>
+      <p style="margin-top:8px;font-size:0.88rem">Every class annotated @Entity gets its own database table. Hibernate creates it automatically (with ddl-auto: create-drop).</p>
+    </div>
+    <div class="concept-card">
+      <h3>@Id = Primary Key</h3>
+      <code>@Id @Column(name="customer_id")</code>
+      <p style="margin-top:8px;font-size:0.88rem">We kept String IDs (CUST1001). Use @GeneratedValue(IDENTITY) when the DB should auto-generate a Long.</p>
+    </div>
+    <div class="concept-card">
+      <h3>JpaRepository</h3>
+      <code>extends JpaRepository&lt;T, ID&gt;</code>
+      <p style="margin-top:8px;font-size:0.88rem">Zero implementations written. Spring provides findAll, save, deleteById etc. You just declare the interface.</p>
+    </div>
+    <div class="concept-card">
+      <h3>Derived Queries</h3>
+      <code>findByEmail(String email)</code>
+      <p style="margin-top:8px;font-size:0.88rem">Method name → SQL. Spring parses findBy + FieldName and generates WHERE email = ? automatically.</p>
+    </div>
+    <div class="concept-card">
+      <h3>@Query (JPQL)</h3>
+      <code>"SELECT c FROM Customer c WHERE..."</code>
+      <p style="margin-top:8px;font-size:0.88rem">JPQL uses class names, not table names. For complex queries where method names become unreadable.</p>
+    </div>
+    <div class="concept-card">
+      <h3>H2 Console</h3>
+      <code>localhost:8080/h2-console</code>
+      <p style="margin-top:8px;font-size:0.88rem">Browser-based SQL editor. See your data, run queries, debug schema. JDBC URL must match application.yml exactly.</p>
+    </div>
+  </div>
+
+  <h2>The Big Transformation: ArrayList → JPA</h2>
+  <table>
+    <tr><th>Operation</th><th>Before (ArrayList)</th><th>After (JPA)</th></tr>
+    <tr><td>Read all</td><td>return customers;</td><td>customerRepository.findAll();</td></tr>
+    <tr><td>Find one</td><td>customers.stream().filter(...)</td><td>customerRepository.findById(id)</td></tr>
+    <tr><td>Create</td><td>customers.add(customer)</td><td>customerRepository.save(customer)</td></tr>
+    <tr><td>Update</td><td>customers.set(i, updated)</td><td>customerRepository.save(updated)</td></tr>
+    <tr><td>Delete</td><td>customers.removeIf(...)</td><td>customerRepository.deleteById(id)</td></tr>
+    <tr><td>Check exists</td><td>manual stream.anyMatch</td><td>customerRepository.existsById(id)</td></tr>
+    <tr><td>Data persistence</td><td>Lost on restart</td><td>Survives restart (real DB)</td></tr>
+  </table>
+
+  <div class="tomorrow">
+    <h2>Day 4 Preview</h2>
+    <p>Today you used H2 — an in-memory database that resets on restart. Day 4 you move to a <strong>real PostgreSQL database</strong> so data actually persists. You will also learn:</p>
+    <ul style="margin-top:10px">
+      <li><strong>Spring Profiles</strong> — switch between dev/test/prod config without changing code</li>
+      <li><strong>Flyway Migrations</strong> — version-control your database schema the way Git versions your code</li>
+      <li><strong>Repository Pagination</strong> — return 20 records at a time, not all 10,000</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

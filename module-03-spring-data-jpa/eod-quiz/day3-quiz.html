@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 3 Quiz — Data Persistence</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--red:#C0392B;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px}
+  header h1{font-size:1.4rem;font-weight:700}
+  header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+  .container{max-width:800px;margin:32px auto;padding:0 20px 60px}
+  .progress-bar{background:#e0e6f0;border-radius:8px;height:8px;margin:16px 0}
+  .progress-fill{background:var(--navy);height:8px;border-radius:8px;transition:width .4s}
+  .q-counter{font-size:0.85rem;color:#666;margin-bottom:20px}
+  .question-card{background:#fff;border-radius:12px;border:1px solid #e0e6f0;padding:24px;margin-bottom:20px;display:none}
+  .question-card.active{display:block}
+  .q-text{font-size:1rem;font-weight:600;color:var(--navy);margin-bottom:16px;line-height:1.5}
+  .q-text code{background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:0.9em}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:2px solid #e0e6f0;border-radius:8px;cursor:pointer;transition:all .2s;font-size:0.93rem}
+  .option:hover{border-color:var(--navy);background:var(--light)}
+  .option.correct{border-color:var(--green);background:#e8f8ef;pointer-events:none}
+  .option.wrong{border-color:var(--red);background:#fdecea;pointer-events:none}
+  .option.disabled{pointer-events:none;opacity:.6}
+  .opt-letter{background:var(--light);color:var(--navy);border-radius:50%;min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem}
+  .option.correct .opt-letter{background:var(--green);color:#fff}
+  .option.wrong .opt-letter{background:var(--red);color:#fff}
+  .feedback{margin-top:14px;padding:12px 14px;border-radius:8px;font-size:0.9rem;display:none}
+  .feedback.show{display:block}
+  .feedback.correct-fb{background:#e8f8ef;border-left:4px solid var(--green);color:#1a5c34}
+  .feedback.wrong-fb{background:#fdecea;border-left:4px solid var(--red);color:#8b1a1a}
+  .btn{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 28px;font-size:0.95rem;font-weight:600;cursor:pointer;margin-top:14px;display:none}
+  .btn:hover{background:#1a4faa}
+  .btn.show{display:inline-block}
+  .score-panel{display:none;background:#fff;border-radius:12px;padding:32px;text-align:center;border:1px solid #e0e6f0}
+  .score-panel.show{display:block}
+  .score-big{font-size:3rem;font-weight:700;color:var(--navy)}
+  .score-label{font-size:1rem;color:#666;margin-top:6px}
+  .score-msg{font-size:1.05rem;margin:16px 0;font-weight:600}
+  .retry-btn{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:10px}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Day 3 Quiz — Data Persistence</h1>
+  <p>Module 03 | ICICI Bank API Services</p>
+  <span class="badge">10 Questions</span>
+</header>
+<div class="container">
+
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+  <div class="q-counter" id="counter">Question 1 of 10</div>
+
+  <!-- Q1 -->
+  <div class="question-card active" id="q1">
+    <div class="q-text">Which annotation marks a Java class as a JPA entity?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q1')"><div class="opt-letter">A</div><span>@Repository</span></div>
+      <div class="option" onclick="answer(this,true,'q1')"><div class="opt-letter">B</div><span>@Entity</span></div>
+      <div class="option" onclick="answer(this,false,'q1')"><div class="opt-letter">C</div><span>@Component</span></div>
+      <div class="option" onclick="answer(this,false,'q1')"><div class="opt-letter">D</div><span>@Table</span></div>
+    </div>
+    <div class="feedback" id="q1-fb"></div>
+    <button class="btn" id="q1-next" onclick="nextQ('q1','q2')">Next →</button>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-card" id="q2">
+    <div class="q-text">Why must a JPA entity class have a no-arg constructor?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q2')"><div class="opt-letter">A</div><span>To allow JSON serialization</span></div>
+      <div class="option" onclick="answer(this,false,'q2')"><div class="opt-letter">B</div><span>Required by @RestController</span></div>
+      <div class="option" onclick="answer(this,true,'q2')"><div class="opt-letter">C</div><span>Hibernate instantiates entities using reflection, which requires a no-arg constructor</span></div>
+      <div class="option" onclick="answer(this,false,'q2')"><div class="opt-letter">D</div><span>Spring Boot auto-generates it otherwise</span></div>
+    </div>
+    <div class="feedback" id="q2-fb"></div>
+    <button class="btn" id="q2-next" onclick="nextQ('q2','q3')">Next →</button>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-card" id="q3">
+    <div class="q-text">What does <code>ddl-auto: create-drop</code> do?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q3')"><div class="opt-letter">A</div><span>Creates tables on startup only, keeps them after shutdown</span></div>
+      <div class="option" onclick="answer(this,false,'q3')"><div class="opt-letter">B</div><span>Validates schema but never modifies it</span></div>
+      <div class="option" onclick="answer(this,true,'q3')"><div class="opt-letter">C</div><span>Creates tables on startup, drops them on shutdown — data is lost every restart</span></div>
+      <div class="option" onclick="answer(this,false,'q3')"><div class="opt-letter">D</div><span>Drops tables on startup and recreates them</span></div>
+    </div>
+    <div class="feedback" id="q3-fb"></div>
+    <button class="btn" id="q3-next" onclick="nextQ('q3','q4')">Next →</button>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-card" id="q4">
+    <div class="q-text">You want to find a customer by their email. Which method signature is correct for a derived query in Spring Data JPA?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,true,'q4')"><div class="opt-letter">A</div><span><code>Optional&lt;Customer&gt; findByEmail(String email);</code></span></div>
+      <div class="option" onclick="answer(this,false,'q4')"><div class="opt-letter">B</div><span><code>Customer getByEmail(String email);</code></span></div>
+      <div class="option" onclick="answer(this,false,'q4')"><div class="opt-letter">C</div><span><code>@Query Customer searchEmail(String email);</code></span></div>
+      <div class="option" onclick="answer(this,false,'q4')"><div class="opt-letter">D</div><span><code>List&lt;Customer&gt; findCustomerByEmailEquals(String email);</code></span></div>
+    </div>
+    <div class="feedback" id="q4-fb"></div>
+    <button class="btn" id="q4-next" onclick="nextQ('q4','q5')">Next →</button>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-card" id="q5">
+    <div class="q-text">What is JPQL?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q5')"><div class="opt-letter">A</div><span>JavaScript Persistent Query Language</span></div>
+      <div class="option" onclick="answer(this,true,'q5')"><div class="opt-letter">B</div><span>Java Persistence Query Language — uses class and field names instead of table and column names</span></div>
+      <div class="option" onclick="answer(this,false,'q5')"><div class="opt-letter">C</div><span>A type of SQL that runs on H2 databases only</span></div>
+      <div class="option" onclick="answer(this,false,'q5')"><div class="opt-letter">D</div><span>The query language for MongoDB</span></div>
+    </div>
+    <div class="feedback" id="q5-fb"></div>
+    <button class="btn" id="q5-next" onclick="nextQ('q5','q6')">Next →</button>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-card" id="q6">
+    <div class="q-text">Which method do you call to check if an entity exists before deleting it?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q6')"><div class="opt-letter">A</div><span>customerRepository.findById(id).isPresent()</span></div>
+      <div class="option" onclick="answer(this,true,'q6')"><div class="opt-letter">B</div><span>customerRepository.existsById(id)</span></div>
+      <div class="option" onclick="answer(this,false,'q6')"><div class="opt-letter">C</div><span>customerRepository.contains(id)</span></div>
+      <div class="option" onclick="answer(this,false,'q6')"><div class="opt-letter">D</div><span>customerRepository.count(id) &gt; 0</span></div>
+    </div>
+    <div class="feedback" id="q6-fb"></div>
+    <button class="btn" id="q6-next" onclick="nextQ('q6','q7')">Next →</button>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-card" id="q7">
+    <div class="q-text">What URL do you visit to open the H2 browser console?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q7')"><div class="opt-letter">A</div><span>http://localhost:8080/h2</span></div>
+      <div class="option" onclick="answer(this,false,'q7')"><div class="opt-letter">B</div><span>http://localhost:8080/database</span></div>
+      <div class="option" onclick="answer(this,true,'q7')"><div class="opt-letter">C</div><span>http://localhost:8080/h2-console</span></div>
+      <div class="option" onclick="answer(this,false,'q7')"><div class="opt-letter">D</div><span>http://localhost:5432/h2</span></div>
+    </div>
+    <div class="feedback" id="q7-fb"></div>
+    <button class="btn" id="q7-next" onclick="nextQ('q7','q8')">Next →</button>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question-card" id="q8">
+    <div class="q-text">What Java type should you use for a monetary balance field in a JPA entity?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q8')"><div class="opt-letter">A</div><span>double</span></div>
+      <div class="option" onclick="answer(this,false,'q8')"><div class="opt-letter">B</div><span>float</span></div>
+      <div class="option" onclick="answer(this,false,'q8')"><div class="opt-letter">C</div><span>int</span></div>
+      <div class="option" onclick="answer(this,true,'q8')"><div class="opt-letter">D</div><span>BigDecimal</span></div>
+    </div>
+    <div class="feedback" id="q8-fb"></div>
+    <button class="btn" id="q8-next" onclick="nextQ('q8','q9')">Next →</button>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question-card" id="q9">
+    <div class="q-text">In JPQL, what is wrong with this query?<br><code>SELECT * FROM customers WHERE email = :email</code></div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q9')"><div class="opt-letter">A</div><span>The parameter syntax is wrong</span></div>
+      <div class="option" onclick="answer(this,true,'q9')"><div class="opt-letter">B</div><span>JPQL uses class and field names: should be <code>SELECT c FROM Customer c WHERE c.email = :email</code></span></div>
+      <div class="option" onclick="answer(this,false,'q9')"><div class="opt-letter">C</div><span>SELECT * is not supported anywhere</span></div>
+      <div class="option" onclick="answer(this,false,'q9')"><div class="opt-letter">D</div><span>Nothing — the query is correct</span></div>
+    </div>
+    <div class="feedback" id="q9-fb"></div>
+    <button class="btn" id="q9-next" onclick="nextQ('q9','q10')">Next →</button>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question-card" id="q10">
+    <div class="q-text">You call <code>customerRepository.save(customer)</code> and the customer already has an ID that exists in the database. What happens?</div>
+    <div class="options">
+      <div class="option" onclick="answer(this,false,'q10')"><div class="opt-letter">A</div><span>An exception is thrown — duplicates not allowed</span></div>
+      <div class="option" onclick="answer(this,false,'q10')"><div class="opt-letter">B</div><span>A new row is inserted alongside the existing one</span></div>
+      <div class="option" onclick="answer(this,true,'q10')"><div class="opt-letter">C</div><span>The existing row is updated (save() does INSERT if new, UPDATE if exists)</span></div>
+      <div class="option" onclick="answer(this,false,'q10')"><div class="opt-letter">D</div><span>Nothing — save() only works for new entities</span></div>
+    </div>
+    <div class="feedback" id="q10-fb"></div>
+    <button class="btn" id="q10-next" onclick="showScore()">See Score</button>
+  </div>
+
+  <div class="score-panel" id="score-panel">
+    <div class="score-big" id="score-num">0/10</div>
+    <div class="score-label">Day 3 Quiz Score</div>
+    <div class="score-msg" id="score-msg"></div>
+    <button class="retry-btn" onclick="resetQuiz()">Try Again</button>
+  </div>
+</div>
+
+<script>
+const explanations = {
+  q1: { correct: '@Entity tells Hibernate this class maps to a DB table. @Table lets you rename the table.', wrong: '@Repository is for Spring Data beans; @Table alone renames the table but doesn\'t mark it as an entity.' },
+  q2: { correct: 'Hibernate uses Java reflection to instantiate entities when loading rows — reflection requires a no-arg constructor.', wrong: 'JSON serialization (Jackson) also needs it, but the primary reason for JPA is Hibernate reflection.' },
+  q3: { correct: 'create-drop is perfect for training: every restart gives trainees a clean state. Use ddl-auto: update for dev, validate for production.', wrong: 'The key is "drop on shutdown" — this makes the H2 database ephemeral. data.sql re-seeds on every startup.' },
+  q4: { correct: 'Spring Data parses findBy + FieldName and generates WHERE email = ?. Optional is correct here since 0 or 1 result is expected.', wrong: 'While getBy and findBy both work, and A uses the correct Optional return type. D would also compile but is unnecessarily verbose.' },
+  q5: { correct: 'JPQL uses entity class names (Customer) and field names (customerId), not SQL table/column names. Hibernate translates it to the actual SQL.', wrong: 'Native SQL uses real table names. JPQL is database-agnostic.' },
+  q6: { correct: 'existsById() runs a lightweight COUNT query — faster than findById() when you only need to check existence.', wrong: 'findById().isPresent() works too but is slightly heavier — it fetches the whole entity. existsById() is idiomatic.' },
+  q7: { correct: 'The path is set by spring.h2.console.path: /h2-console in application.yml. The JDBC URL in the console form must match your datasource URL.', wrong: 'H2 runs on port 8080 (Spring Boot port), not 5432 (PostgreSQL).' },
+  q8: { correct: 'BigDecimal provides exact decimal arithmetic. double/float use binary floating-point which can introduce rounding errors — unacceptable for financial amounts.', wrong: 'Never use double or float for money. 0.1 + 0.2 in floating-point gives 0.30000000000000004.' },
+  q9: { correct: 'JPQL references the Java class (Customer) and field (email), not the SQL table (customers) or column. SELECT * is also not valid JPQL — use SELECT c.', wrong: 'This is a JPQL query — it must use class/field names. For SQL table names, use nativeQuery = true.' },
+  q10: { correct: 'save() calls either INSERT (no existing row) or UPDATE (row exists). This is "upsert" behaviour — it checks the @Id.', wrong: 'save() is not insert-only. JPA checks whether a row with that ID exists and updates if so.' }
+};
+let score = 0;
+let answered = {};
+function answer(el, isCorrect, qid) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  const opts = el.parentElement.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+  if (isCorrect) {
+    el.classList.add('correct');
+    score++;
+    showFeedback(qid, true);
+  } else {
+    el.classList.add('wrong');
+    opts.forEach(o => { if (!o.classList.contains('wrong')) o.classList.add('correct'); });
+    showFeedback(qid, false);
+  }
+  document.getElementById(qid + '-next').classList.add('show');
+  updateProgress();
+}
+function showFeedback(qid, correct) {
+  const fb = document.getElementById(qid + '-fb');
+  const exp = explanations[qid];
+  fb.textContent = correct ? '✓ ' + exp.correct : '✗ ' + exp.wrong;
+  fb.className = 'feedback show ' + (correct ? 'correct-fb' : 'wrong-fb');
+}
+function nextQ(current, next) {
+  document.getElementById(current).classList.remove('active');
+  document.getElementById(next).classList.add('active');
+  const num = parseInt(next.replace('q',''));
+  document.getElementById('counter').textContent = 'Question ' + num + ' of 10';
+  updateProgress();
+}
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  document.getElementById('progress').style.width = (done / 10 * 100) + '%';
+}
+function showScore() {
+  document.getElementById('q10').classList.remove('active');
+  const panel = document.getElementById('score-panel');
+  panel.classList.add('show');
+  document.getElementById('score-num').textContent = score + '/10';
+  const msgs = ['Keep practicing — review the cheatsheets!', 'Decent start — review the weaker areas.', 'Good work — solid understanding of JPA!', 'Excellent! You nailed Day 3.'];
+  document.getElementById('score-msg').textContent = score <= 4 ? msgs[0] : score <= 6 ? msgs[1] : score <= 8 ? msgs[2] : msgs[3];
+  document.getElementById('progress').style.width = '100%';
+}
+function resetQuiz() {
+  score = 0; answered = {};
+  document.querySelectorAll('.question-card').forEach(c => { c.classList.remove('active'); });
+  document.querySelectorAll('.option').forEach(o => { o.classList.remove('correct','wrong','disabled'); });
+  document.querySelectorAll('.feedback').forEach(f => { f.classList.remove('show','correct-fb','wrong-fb'); f.textContent=''; });
+  document.querySelectorAll('.btn').forEach(b => b.classList.remove('show'));
+  document.getElementById('score-panel').classList.remove('show');
+  document.getElementById('q1').classList.add('active');
+  document.getElementById('counter').textContent = 'Question 1 of 10';
+  document.getElementById('progress').style.width = '0%';
+}
+</script>
+</body>
+</html>

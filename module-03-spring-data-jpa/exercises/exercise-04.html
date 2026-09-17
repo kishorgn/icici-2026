@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercise 04 — Account Persistence Workshop</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px}
+  header h1{font-size:1.4rem;font-weight:700}
+  header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+  .pair{display:inline-block;background:var(--green);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px;margin-left:6px}
+  .container{max-width:860px;margin:32px auto;padding:0 20px 60px}
+  h2{color:var(--navy);margin:28px 0 12px;font-size:1.15rem;border-left:4px solid var(--orange);padding-left:10px}
+  p,li{line-height:1.7;font-size:0.95rem;margin-bottom:8px}
+  ul{padding-left:24px;margin-bottom:12px}
+  code{background:#f0f0f0;border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:0.9em}
+  pre{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.88rem;margin:12px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.9rem}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left}
+  td{padding:8px 12px;border-bottom:1px solid #e0e0e0}
+  tr:nth-child(even) td{background:var(--light)}
+  .verify{background:#fff;border-left:4px solid var(--green);padding:10px 14px;margin-bottom:8px;border-radius:0 6px 6px 0}
+  .stretch{background:#f0fff4;border:2px dashed var(--green);border-radius:8px;padding:14px;margin-top:20px}
+  .stretch h2{border-left-color:var(--green);color:var(--green)}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 04: Account Persistence Workshop</h1>
+  <p>Module 03: Data Persistence | ICICI Bank API Services | Day 3</p>
+  <span class="badge">60 min</span>
+  <span class="pair">Pair Exercise</span>
+</header>
+<div class="container">
+  <h2>Overview</h2>
+  <p>Synthesis exercise — apply every Day 3 concept independently. Trainer circulates but gives no step-by-step help.</p>
+
+  <h2>Account Entity Specification</h2>
+  <table>
+    <tr><th>Field</th><th>Java Type</th><th>Column</th><th>Constraints</th></tr>
+    <tr><td>accountNumber</td><td>String</td><td>account_number</td><td>@Id, NOT NULL, UNIQUE</td></tr>
+    <tr><td>customerId</td><td>String</td><td>customer_id</td><td>NOT NULL</td></tr>
+    <tr><td>balance</td><td>BigDecimal</td><td>balance</td><td>NOT NULL</td></tr>
+    <tr><td>accountType</td><td>String</td><td>account_type</td><td>NOT NULL (SAVINGS / CURRENT / FIXED_DEPOSIT)</td></tr>
+    <tr><td>status</td><td>String</td><td>status</td><td>NOT NULL (ACTIVE / SUSPENDED / CLOSED)</td></tr>
+  </table>
+
+  <h2>Repository Requirements</h2>
+  <ul>
+    <li>Extend <code>JpaRepository&lt;Account, String&gt;</code></li>
+    <li>Derived: <code>findByCustomerId(String customerId)</code> returns <code>List&lt;Account&gt;</code></li>
+    <li>Derived: <code>findByAccountType(String accountType)</code> returns <code>List&lt;Account&gt;</code></li>
+    <li><code>@Query</code>: find accounts where balance &gt; given amount</li>
+  </ul>
+
+  <h2>Seed Data</h2>
+  <pre>INSERT INTO accounts (account_number, customer_id, balance, account_type, status) VALUES
+    ('ACC100101', 'CUST1001', 15000.00, 'SAVINGS', 'ACTIVE'),
+    ('ACC100201', 'CUST1002', 5500.50, 'CURRENT', 'ACTIVE'),
+    ('ACC100202', 'CUST1002', 200000.00, 'FIXED_DEPOSIT', 'ACTIVE');</pre>
+
+  <h2>Verification — Show Your Trainer</h2>
+  <div class="verify">H2 console: SELECT * FROM ACCOUNTS — 3 rows visible</div>
+  <div class="verify">Hibernate log shows: create table accounts on startup</div>
+  <div class="verify">findByCustomerId("CUST1002") returns 2 accounts</div>
+  <div class="verify">Application starts without errors</div>
+
+  <h2>Common Pitfalls</h2>
+  <table>
+    <tr><th>Pitfall</th><th>Fix</th></tr>
+    <tr><td>int/long for balance</td><td>Use BigDecimal — precision matters for money</td></tr>
+    <tr><td>No no-arg constructor</td><td>Add public Account() {} — Hibernate requires it</td></tr>
+    <tr><td>Quoted numbers in data.sql</td><td>Balance must be a number, not a string: 15000.00 not '15000.00'</td></tr>
+  </table>
+
+  <div class="stretch">
+    <h2>Stretch Goals</h2>
+    <ul>
+      <li>Expose findByBalanceGreaterThan as GET /api/v1/accounts?minBalance=10000</li>
+      <li>Add @ManyToOne between Account and Customer</li>
+      <li>Use AccountStatus enum with @Enumerated(EnumType.STRING)</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

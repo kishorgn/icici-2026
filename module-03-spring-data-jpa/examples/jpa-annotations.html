@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JPA Annotations — Quick Reference</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center}
+  header h1{font-size:1.3rem;font-weight:700}
+  header p{font-size:0.8rem;opacity:.75}
+  .container{max-width:920px;margin:28px auto;padding:0 20px 60px}
+  h2{color:var(--navy);margin:28px 0 12px;font-size:1.1rem;border-bottom:2px solid var(--orange);padding-bottom:6px}
+  code{background:#f0f0f0;border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:0.88em}
+  pre{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:14px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.85rem;margin:12px 0}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.88rem}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left}
+  td{padding:8px 12px;border-bottom:1px solid #e0e0e0;vertical-align:top}
+  td:first-child{font-family:'Courier New',monospace;font-weight:700;color:var(--navy);white-space:nowrap}
+  tr:nth-child(even) td{background:var(--light)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border-radius:10px;padding:16px;border:1px solid #e0e6f0}
+  .card h3{color:var(--orange);margin-bottom:10px;font-size:0.95rem}
+  .tip{background:var(--light);border-left:3px solid var(--navy);padding:10px 14px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <div>
+    <h1>JPA Annotations — Quick Reference</h1>
+    <p>Module 03 | ICICI Bank API Services | Day 3</p>
+  </div>
+</header>
+<div class="container">
+
+  <h2>Class-Level Annotations</h2>
+  <table>
+    <tr><th>Annotation</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td>@Entity</td><td>Marks the class as a JPA entity — maps to a table</td><td><code>@Entity public class Customer {}</code></td></tr>
+    <tr><td>@Table</td><td>Customise the table name</td><td><code>@Table(name = "customers")</code></td></tr>
+    <tr><td>@MappedSuperclass</td><td>Base class with shared fields; not a table itself</td><td><code>@MappedSuperclass public class BaseEntity {}</code></td></tr>
+  </table>
+
+  <h2>Field-Level Annotations</h2>
+  <table>
+    <tr><th>Annotation</th><th>Purpose</th><th>Example</th></tr>
+    <tr><td>@Id</td><td>Marks the primary key field</td><td><code>@Id private String customerId;</code></td></tr>
+    <tr><td>@GeneratedValue</td><td>Auto-generate PK (Long/Integer IDs)</td><td><code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code></td></tr>
+    <tr><td>@Column</td><td>Map field to column with options</td><td><code>@Column(name = "customer_id", nullable = false, unique = true)</code></td></tr>
+    <tr><td>@Transient</td><td>Field NOT persisted to DB</td><td><code>@Transient private String displayLabel;</code></td></tr>
+    <tr><td>@Lob</td><td>Large object column (CLOB/BLOB)</td><td><code>@Lob private String notes;</code></td></tr>
+    <tr><td>@Enumerated</td><td>Persist enum as STRING or ORDINAL</td><td><code>@Enumerated(EnumType.STRING) private Status status;</code></td></tr>
+    <tr><td>@CreationTimestamp</td><td>Auto-set on INSERT (Hibernate)</td><td><code>@CreationTimestamp private LocalDateTime createdAt;</code></td></tr>
+    <tr><td>@UpdateTimestamp</td><td>Auto-set on UPDATE (Hibernate)</td><td><code>@UpdateTimestamp private LocalDateTime updatedAt;</code></td></tr>
+  </table>
+
+  <h2>@Column Options</h2>
+  <table>
+    <tr><th>Option</th><th>Type</th><th>Default</th><th>Meaning</th></tr>
+    <tr><td>name</td><td>String</td><td>field name</td><td>Column name in the DB</td></tr>
+    <tr><td>nullable</td><td>boolean</td><td>true</td><td>Allows NULL</td></tr>
+    <tr><td>unique</td><td>boolean</td><td>false</td><td>Unique constraint</td></tr>
+    <tr><td>length</td><td>int</td><td>255</td><td>Varchar length (String fields)</td></tr>
+    <tr><td>precision</td><td>int</td><td>0</td><td>Total digits (BigDecimal)</td></tr>
+    <tr><td>scale</td><td>int</td><td>0</td><td>Decimal places (BigDecimal)</td></tr>
+    <tr><td>insertable</td><td>boolean</td><td>true</td><td>Included in INSERT</td></tr>
+    <tr><td>updatable</td><td>boolean</td><td>true</td><td>Included in UPDATE</td></tr>
+  </table>
+
+  <h2>ddl-auto Values</h2>
+  <table>
+    <tr><th>Value</th><th>Behaviour</th><th>Use When</th></tr>
+    <tr><td>create-drop</td><td>Create on start, drop on stop</td><td>Training / demo only</td></tr>
+    <tr><td>create</td><td>Create on start (keep on stop)</td><td>Dev with fresh data each build</td></tr>
+    <tr><td>update</td><td>Add missing columns, never remove</td><td>Dev — preserves data between restarts</td></tr>
+    <tr><td>validate</td><td>Check schema matches entities, fail if not</td><td>Staging / production</td></tr>
+    <tr><td>none</td><td>Do nothing</td><td>Production (use Flyway migrations)</td></tr>
+  </table>
+
+  <h2>Minimal Entity Template</h2>
+  <pre>@Entity
+@Table(name = "my_table")
+public class MyEntity {
+
+    @Id
+    @Column(name = "id", nullable = false)
+    private String id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    public MyEntity() {}  // JPA requires this
+
+    public MyEntity(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    // getters + setters
+}</pre>
+
+  <div class="tip"><strong>Spring Boot 3.x:</strong> Use <code>jakarta.persistence.*</code> imports (not <code>javax.persistence.*</code>)</div>
+</div>
+</body>
+</html>

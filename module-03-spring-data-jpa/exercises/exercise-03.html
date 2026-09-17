@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercise 03 — Custom Query Methods</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--light:#EFF3FB}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#1a1a2e}
+  header{background:var(--navy);color:#fff;padding:20px 32px}
+  header h1{font-size:1.4rem;font-weight:700}
+  header p{font-size:0.85rem;opacity:.8;margin-top:4px}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:0.75rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:8px}
+  .container{max-width:860px;margin:32px auto;padding:0 20px 60px}
+  h2{color:var(--navy);margin:28px 0 12px;font-size:1.15rem;border-left:4px solid var(--orange);padding-left:10px}
+  h3{color:var(--navy);margin:20px 0 8px;font-size:1rem}
+  p,li{line-height:1.7;font-size:0.95rem;margin-bottom:8px}
+  ul,ol{padding-left:24px;margin-bottom:12px}
+  code{background:#f0f0f0;border-radius:4px;padding:1px 6px;font-family:'Courier New',monospace;font-size:0.9em}
+  pre{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:16px;overflow-x:auto;font-family:'Courier New',monospace;font-size:0.88rem;margin:12px 0}
+  .tip{background:var(--light);border-left:4px solid var(--navy);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:0.9rem}
+  .tip strong{color:var(--navy)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:0.9rem}
+  th{background:var(--navy);color:#fff;padding:8px 12px;text-align:left}
+  td{padding:8px 12px;border-bottom:1px solid #e0e0e0;font-family:'Courier New',monospace;font-size:0.85rem}
+  tr:nth-child(even) td{background:var(--light)}
+  .step{background:#fff;border:1px solid #e0e6f0;border-radius:10px;padding:20px;margin-bottom:20px}
+  .step-num{background:var(--orange);color:#fff;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;margin-right:8px}
+  .stretch{background:#f0fff4;border:2px dashed var(--green);border-radius:8px;padding:14px;margin-top:16px}
+  .stretch h3{color:var(--green)}
+</style>
+</head>
+<body>
+<a href="../../index.html" style="display:block;background:#0D3B8E;padding:10px 24px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;">← Back to Training Materials</a>
+<header>
+  <h1>Exercise 03: Custom Query Methods</h1>
+  <p>Module 03: Data Persistence | ICICI Bank API Services | Day 3</p>
+  <span class="badge">⏱ 45 min · Individual</span>
+</header>
+<div class="container">
+
+  <h2>Background</h2>
+  <p><code>JpaRepository</code> gives you <code>findAll()</code>, <code>findById()</code>, <code>save()</code> etc. But what about "find customer by email"? Spring Data JPA can <strong>derive the SQL from the method name</strong> — you write the signature, Spring writes the SQL.</p>
+
+  <div class="step">
+    <h2><span class="step-num">1</span> Add Derived Query Methods to CustomerRepository <small style="color:#666;font-weight:400">(15 min)</small></h2>
+    <pre>import java.util.Optional;
+import java.util.List;
+
+@Repository
+public interface CustomerRepository extends JpaRepository&lt;Customer, String&gt; {
+
+    // Find by exact email match
+    Optional&lt;Customer&gt; findByEmail(String email);
+
+    // Find by exact mobile number
+    Optional&lt;Customer&gt; findByMobile(String mobile);
+
+    // Find all customers whose name contains a keyword
+    List&lt;Customer&gt; findByNameContaining(String keyword);
+}</pre>
+    <div class="tip"><strong>💡 Zero SQL:</strong> You wrote method signatures. Spring Data JPA generates the SQL at startup using method name parsing.</div>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">2</span> Add a Custom @Query Method <small style="color:#666;font-weight:400">(10 min)</small></h2>
+    <p>Sometimes the method name would be too long. Use <code>@Query</code>:</p>
+    <pre>import org.springframework.data.jpa.repository.Query;
+
+@Query("SELECT c FROM Customer c WHERE c.name LIKE %:keyword%")
+List&lt;Customer&gt; searchByName(String keyword);</pre>
+    <p><strong>Note:</strong> This uses JPQL — <code>c</code> is the <code>Customer</code> <em>class</em>, not the DB table. <code>:keyword</code> is a named parameter.</p>
+  </div>
+
+  <div class="step">
+    <h2><span class="step-num">3</span> Add New Endpoints to CustomerController <small style="color:#666;font-weight:400">(20 min)</small></h2>
+    <pre>// GET /api/v1/customers/search/email/{email}
+@GetMapping("/search/email/{email}")
+public ResponseEntity&lt;Customer&gt; findByEmail(@PathVariable String email) {
+    return customerRepository.findByEmail(email)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
+// GET /api/v1/customers/search/mobile/{mobile}
+@GetMapping("/search/mobile/{mobile}")
+public ResponseEntity&lt;Customer&gt; findByMobile(@PathVariable String mobile) {
+    return customerRepository.findByMobile(mobile)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
+// GET /api/v1/customers/search?name=keyword
+@GetMapping("/search")
+public List&lt;Customer&gt; searchByName(@RequestParam String name) {
+    return customerRepository.searchByName(name);
+}</pre>
+  </div>
+
+  <h2>Test in Postman</h2>
+  <table>
+    <tr><th>Request</th><th>Expected Result</th></tr>
+    <tr><td>GET /api/v1/customers/search/email/arjun.sharma@email.com</td><td>Arjun Sharma object</td></tr>
+    <tr><td>GET /api/v1/customers/search/email/nobody@x.com</td><td>404 Not Found</td></tr>
+    <tr><td>GET /api/v1/customers/search/mobile/9876543210</td><td>Arjun Sharma object</td></tr>
+    <tr><td>GET /api/v1/customers/search?name=Patel</td><td>Array with Priya Patel</td></tr>
+    <tr><td>GET /api/v1/customers/search?name=a</td><td>Arjun Sharma + Rahul Verma</td></tr>
+  </table>
+
+  <div class="stretch">
+    <h3>🎯 Stretch Goal</h3>
+    <p>Add a case-insensitive version:</p>
+    <pre>List&lt;Customer&gt; findByNameContainingIgnoreCase(String keyword);</pre>
+    <p>Test: <code>GET /api/v1/customers/search?name=sharma</code> — should match "Sharma".</p>
+  </div>
+</div>
+</body>
+</html>
