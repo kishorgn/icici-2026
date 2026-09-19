@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySQL + Spring Boot — Setup Reference</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --amber:#F39C12; --lgray:#F2F4F8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fb; color: #222; }
+  nav { background: var(--navy); padding: 10px 24px; }
+  nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  header { background: var(--navy); color: #fff; padding: 28px 40px 24px; }
+  header h1 { font-size: 24px; margin-bottom: 6px; }
+  header p { font-size: 13px; opacity:.8; }
+  .container { max-width: 900px; margin: 28px auto; padding: 0 24px 60px; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px; }
+  .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.07); overflow:hidden; }
+  .card-full { grid-column: 1 / -1; }
+  .card-header { background: var(--lgray); padding:14px 20px; border-bottom:3px solid var(--orange); }
+  .card-header h2 { font-size:15px; color: var(--navy); font-weight:700; }
+  .card-body { padding:16px 20px; }
+  p { margin-bottom:10px; line-height:1.6; font-size:13px; }
+  ul { padding-left:18px; margin-bottom:10px; }
+  li { font-size:13px; line-height:1.65; margin-bottom:3px; }
+  code { background:#F0F0F0; padding:2px 5px; border-radius:4px; font-size:12px; font-family:'Courier New',monospace; }
+  pre { background:#1a1a2e; color:#e0e0e0; padding:14px 18px; border-radius:8px; overflow-x:auto; font-size:12px; line-height:1.65; margin:10px 0; }
+  pre .c { color:#7ec8e3; }
+  pre .k { color:#F7941D; }
+  pre .s { color:#98d982; }
+  .tip { background:#FFF8EC; border-left:4px solid var(--amber); padding:10px 14px; border-radius:0 6px 6px 0; margin:10px 0; font-size:12px; }
+  .warn { background:#FDF2F2; border-left:4px solid #E74C3C; padding:10px 14px; border-radius:0 6px 6px 0; margin:10px 0; font-size:12px; color:#922B21; }
+  table { width:100%; border-collapse:collapse; margin:10px 0; font-size:12px; }
+  th { background:var(--navy); color:#fff; padding:7px 10px; text-align:left; }
+  td { padding:7px 10px; border-bottom:1px solid #eee; vertical-align:top; }
+  tr:nth-child(even) td { background:#f9f9f9; }
+  @media(max-width:640px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav><a href="../../index.html">← Back to Training Materials</a></nav>
+<header>
+  <h1>MySQL + Spring Boot — Setup Reference</h1>
+  <p>Module 04 | Day 4 | ICICI Bank API Services Training</p>
+</header>
+<div class="container">
+  <div class="grid">
+
+    <!-- pom.xml dependency -->
+    <div class="card card-full">
+      <div class="card-header"><h2>📦 pom.xml — MySQL Dependency</h2></div>
+      <div class="card-body">
+        <p>Spring Boot 3.x uses the <code>com.mysql</code> groupId (changed from <code>mysql</code> in older versions). No version needed — Spring Boot's parent POM manages it.</p>
+<pre><span class="k">&lt;dependency&gt;</span>
+  <span class="k">&lt;groupId&gt;</span>com.mysql<span class="k">&lt;/groupId&gt;</span>
+  <span class="k">&lt;artifactId&gt;</span>mysql-connector-j<span class="k">&lt;/artifactId&gt;</span>
+  <span class="k">&lt;scope&gt;</span>runtime<span class="k">&lt;/scope&gt;</span>
+<span class="k">&lt;/dependency&gt;</span></pre>
+      </div>
+    </div>
+
+    <!-- JDBC URL breakdown -->
+    <div class="card card-full">
+      <div class="card-header"><h2>🔗 JDBC URL — Parameters Explained</h2></div>
+      <div class="card-body">
+<pre>jdbc:mysql://localhost:3306/icicidb?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true</pre>
+        <table>
+          <tr><th>Part</th><th>Meaning</th></tr>
+          <tr><td><code>jdbc:mysql://</code></td><td>Protocol — tells Spring to use the MySQL JDBC driver</td></tr>
+          <tr><td><code>localhost:3306</code></td><td>Host and port of the MySQL server (3306 is the default MySQL port)</td></tr>
+          <tr><td><code>/icicidb</code></td><td>Database name — must exist before the app starts</td></tr>
+          <tr><td><code>useSSL=false</code></td><td>Disables SSL for local dev (avoids certificate warnings)</td></tr>
+          <tr><td><code>serverTimezone=UTC</code></td><td>Prevents timezone mismatch warnings between JVM and MySQL</td></tr>
+          <tr><td><code>allowPublicKeyRetrieval=true</code></td><td>Required for MySQL 8+ with the caching_sha2_password auth plugin</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Create database -->
+    <div class="card">
+      <div class="card-header"><h2>🛠️ Create the Database</h2></div>
+      <div class="card-body">
+        <p>Run these commands once before starting the Spring Boot app:</p>
+<pre><span class="c"># Connect to MySQL</span>
+mysql -u root -p
+
+<span class="c">-- Create the database</span>
+<span class="k">CREATE DATABASE</span> icicidb
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+<span class="c">-- Confirm it was created</span>
+<span class="k">SHOW DATABASES</span>;
+
+exit</pre>
+        <div class="tip">💡 <code>utf8mb4</code> supports all Unicode characters including emojis. Always use it instead of plain <code>utf8</code> for new projects.</div>
+      </div>
+    </div>
+
+    <!-- application-dev.properties -->
+    <div class="card">
+      <div class="card-header"><h2>⚙️ application-dev.properties</h2></div>
+      <div class="card-body">
+<pre>spring.datasource.url=jdbc:mysql://localhost:3306/icicidb\
+?useSSL=false&amp;serverTimezone=UTC\
+&amp;allowPublicKeyRetrieval=true
+spring.datasource.driver-class-name=\
+  com.mysql.cj.jdbc.Driver
+spring.datasource.username=root
+spring.datasource.password=root
+
+spring.jpa.database-platform=\
+  org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true</pre>
+      </div>
+    </div>
+
+    <!-- ddl-auto explained -->
+    <div class="card card-full">
+      <div class="card-header"><h2>🗄️ ddl-auto — When to Use Each Value</h2></div>
+      <div class="card-body">
+        <table>
+          <tr><th>Value</th><th>What Hibernate Does on Startup</th><th>Safe For</th></tr>
+          <tr><td><code>create</code></td><td>Drops ALL tables, recreates from entities — <strong>loses all data</strong></td><td>Never use when data matters</td></tr>
+          <tr><td><code>create-drop</code></td><td>Creates on start, drops on shutdown — data gone every time</td><td>Unit / integration tests</td></tr>
+          <tr><td><code>update</code></td><td>Adds missing columns and tables; never removes existing columns</td><td>Dev — data is preserved between restarts</td></tr>
+          <tr><td><code>validate</code></td><td>Checks schema matches entities; <em>fails fast</em> on mismatch — makes no changes</td><td>Production — proves schema is correct</td></tr>
+          <tr><td><code>none</code></td><td>Ignores schema completely — you manage DDL yourself</td><td>When DBA controls the schema</td></tr>
+        </table>
+        <div class="warn">⚠️ Never deploy <code>ddl-auto=create</code> to production — it will drop every table and delete all customer data on the next deployment.</div>
+      </div>
+    </div>
+
+    <!-- Common errors -->
+    <div class="card card-full">
+      <div class="card-header"><h2>🚨 Common MySQL Connection Errors and Fixes</h2></div>
+      <div class="card-body">
+        <table>
+          <tr><th>Error Message</th><th>Most Likely Cause</th><th>Fix</th></tr>
+          <tr>
+            <td><code>Communications link failure</code></td>
+            <td>MySQL server is not running</td>
+            <td>Start MySQL: <code>brew services start mysql</code> (macOS) or <code>sudo service mysql start</code> (Linux)</td>
+          </tr>
+          <tr>
+            <td><code>Unknown database 'icicidb'</code></td>
+            <td>Database does not exist yet</td>
+            <td>Run: <code>CREATE DATABASE icicidb CHARACTER SET utf8mb4;</code></td>
+          </tr>
+          <tr>
+            <td><code>Access denied for user 'root'@'localhost'</code></td>
+            <td>Wrong password in properties file</td>
+            <td>Check <code>spring.datasource.password</code> matches your MySQL root password</td>
+          </tr>
+          <tr>
+            <td><code>Public Key Retrieval is not allowed</code></td>
+            <td>Missing URL parameter</td>
+            <td>Add <code>allowPublicKeyRetrieval=true</code> to the JDBC URL</td>
+          </tr>
+          <tr>
+            <td><code>Schema-validation: missing table</code></td>
+            <td><code>ddl-auto=validate</code> but table does not exist</td>
+            <td>Switch to <code>ddl-auto=update</code> for dev, or create the table manually</td>
+          </tr>
+          <tr>
+            <td><code>Table 'icicidb.xyz' doesn't exist</code></td>
+            <td>Entity exists but table was never created</td>
+            <td>Confirm <code>ddl-auto=update</code> and restart the app</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Useful MySQL commands -->
+    <div class="card">
+      <div class="card-header"><h2>💻 Useful MySQL Commands</h2></div>
+      <div class="card-body">
+<pre><span class="c">-- List all databases</span>
+<span class="k">SHOW DATABASES</span>;
+
+<span class="c">-- Switch to icicidb</span>
+<span class="k">USE</span> icicidb;
+
+<span class="c">-- List tables</span>
+<span class="k">SHOW TABLES</span>;
+
+<span class="c">-- Inspect a table structure</span>
+<span class="k">DESCRIBE</span> customers;
+
+<span class="c">-- Query data</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> customers;
+
+<span class="c">-- Count rows</span>
+<span class="k">SELECT COUNT</span>(*) <span class="k">FROM</span> transactions;</pre>
+      </div>
+    </div>
+
+    <!-- Verify Spring Boot connected -->
+    <div class="card">
+      <div class="card-header"><h2>✅ Verify Spring Boot is Connected</h2></div>
+      <div class="card-body">
+        <p><strong>In startup logs, look for:</strong></p>
+<pre>HikariPool-1 - Starting...
+HikariPool-1 - Start completed.
+<span class="c">-- no red WARN/ERROR lines about datasource</span></pre>
+        <p><strong>Via Actuator health endpoint:</strong></p>
+<pre>GET http://localhost:8080/actuator/health
+
+<span class="c">-- Expected response:</span>
+{
+  <span class="s">"status"</span>: <span class="s">"UP"</span>,
+  <span class="s">"components"</span>: {
+    <span class="s">"db"</span>: {
+      <span class="s">"status"</span>: <span class="s">"UP"</span>,
+      <span class="s">"details"</span>: {
+        <span class="s">"database"</span>: <span class="s">"MySQL"</span>,
+        <span class="s">"validationQuery"</span>: <span class="s">"isValid()"</span>
+      }
+    }
+  }
+}</pre>
+        <div class="tip">💡 If you see <code>"database": "MySQL"</code> in the health response, the connection is working correctly.</div>
+      </div>
+    </div>
+
+  </div><!-- .grid -->
+</div>
+</body>
+</html>

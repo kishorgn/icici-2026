@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 04 – Account Entity Workshop</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --amber:#F39C12; --lgray:#F2F4F8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fb; color: #222; }
+  nav { background: var(--navy); padding: 10px 24px; }
+  nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  header { background: var(--navy); color: #fff; padding: 32px 40px 28px; }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { font-size: 14px; opacity: .8; }
+  .badge { display:inline-block; background: var(--green); color:#fff; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; margin-top:12px; }
+  .container { max-width: 860px; margin: 32px auto; padding: 0 24px 60px; }
+  .meta { display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+  .chip { background:#fff; border:1px solid #dde; border-radius:20px; padding:6px 14px; font-size:13px; color:#555; }
+  .chip span { font-weight:700; color: var(--navy); }
+  .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.07); margin-bottom:24px; overflow:hidden; }
+  .card-header { background: var(--lgray); padding:16px 24px; border-bottom:3px solid var(--orange); }
+  .card-header h2 { font-size:17px; color: var(--navy); }
+  .card-header .num { font-size:24px; font-weight:800; color: var(--orange); float:right; }
+  .card-body { padding:20px 24px; }
+  p { margin-bottom:12px; line-height:1.65; font-size:14px; }
+  ul,ol { padding-left:22px; margin-bottom:12px; }
+  li { font-size:14px; line-height:1.7; margin-bottom:4px; }
+  code { background:#F0F0F0; padding:2px 6px; border-radius:4px; font-size:13px; font-family:'Courier New',monospace; }
+  pre { background:#1a1a2e; color:#e0e0e0; padding:16px 20px; border-radius:8px; overflow-x:auto; font-size:13px; line-height:1.6; margin:12px 0; }
+  pre .c { color:#7ec8e3; } pre .s { color:#98d982; } pre .k { color:#F7941D; } pre .an { color:#c792ea; }
+  .tip { background:#FFF8EC; border-left:4px solid var(--amber); padding:12px 16px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; }
+  .step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .step-num { min-width:32px; height:32px; background:var(--orange); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .verify { background:#EBF5EF; border:1px solid #A8D5B5; border-radius:8px; padding:14px 18px; margin:12px 0; font-size:13px; }
+  .verify strong { color: var(--green); }
+  .pairs-badge { display:inline-block; background:#9B59B6; color:#fff; padding:4px 12px; border-radius:12px; font-size:12px; font-weight:700; margin-right:8px; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:8px 12px; text-align:left; }
+  td { padding:8px 12px; border-bottom:1px solid #eee; }
+  tr:nth-child(even) td { background:#f9f9f9; }
+</style>
+</head>
+<body>
+<nav><a href="../../index.html">← Back to Training Materials</a></nav>
+<header>
+  <h1>Exercise 04 — Account Entity Workshop</h1>
+  <p>Module 04: Spring Profiles + MySQL | ICICI Bank API Services | Day 4</p>
+  <span class="badge">⏱ 60 Minutes · Pair Exercise</span>
+</header>
+<div class="container">
+
+  <div class="meta">
+    <div class="chip"><span class="pairs-badge">PAIRS</span> Work with a partner</div>
+    <div class="chip">Builds on: <span>Exercises 01–03</span></div>
+    <div class="chip">Goal: <span>Wire up Account entity end-to-end independently</span></div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="card">
+    <div class="card-header"><h2>The Challenge</h2></div>
+    <div class="card-body">
+      <p>You have now seen the full pattern twice — with Customer (Day 3) and with Transaction (Exercise 02 today). It is time to apply it independently.</p>
+      <p>You and your pair will add a complete <strong>Account</strong> feature to the banking API — entity, repository, and controller. <code>ddl-auto=update</code> in the dev profile will create the <code>accounts</code> table automatically when you start the app.</p>
+      <p>Try building from memory first. Use today's reference code only if you are stuck for more than 5 minutes.</p>
+    </div>
+  </div>
+
+  <!-- WHAT TO BUILD -->
+  <div class="card">
+    <div class="card-header"><h2>What You Are Building</h2></div>
+    <div class="card-body">
+      <p>An <code>Account</code> has these fields. Hibernate will auto-create the <code>accounts</code> table in MySQL from your entity annotations:</p>
+      <table>
+        <tr><th>Java Field</th><th>DB Column</th><th>Type</th><th>Notes</th></tr>
+        <tr><td><code>accountId</code></td><td><code>account_id</code></td><td>String</td><td>Primary key, format ACC10001</td></tr>
+        <tr><td><code>customerId</code></td><td><code>customer_id</code></td><td>String</td><td>Links to a customer</td></tr>
+        <tr><td><code>accountType</code></td><td><code>account_type</code></td><td>String</td><td>"SAVINGS" or "CURRENT"</td></tr>
+        <tr><td><code>balance</code></td><td><code>balance</code></td><td>BigDecimal</td><td>Always use BigDecimal for money</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- REQUIREMENTS -->
+  <div class="card">
+    <div class="card-header"><h2>Requirements (What to Build)</h2><span class="num">✓</span></div>
+    <div class="card-body">
+      <ol>
+        <li><strong>Account.java</strong> — JPA entity with all four fields, <code>@Entity</code>, <code>@Table(name="accounts")</code>, <code>@Id</code>, <code>@Column</code> annotations, and a no-arg constructor plus getters/setters.</li>
+        <li><strong>AccountRepository.java</strong> — extends <code>JpaRepository&lt;Account, String&gt;</code>, with:
+          <ul>
+            <li><code>List&lt;Account&gt; findByCustomerId(String customerId)</code></li>
+            <li><code>Page&lt;Account&gt; findAll(Pageable pageable)</code></li>
+          </ul>
+        </li>
+        <li><strong>AccountController.java</strong> — base path <code>/api/v1/accounts</code>, with these endpoints:
+          <ul>
+            <li><code>GET /api/v1/accounts</code> — return all accounts</li>
+            <li><code>GET /api/v1/accounts/{accountId}</code> — return one or 404</li>
+            <li><code>GET /api/v1/accounts/customer/{customerId}</code> — all accounts for one customer</li>
+            <li><code>GET /api/v1/accounts/page</code> — paginated: <code>?page=0&amp;size=3&amp;sort=balance</code></li>
+            <li><code>POST /api/v1/accounts</code> — create, auto-generate <code>accountId</code> as <code>ACC1XXXX</code></li>
+            <li><code>DELETE /api/v1/accounts/{accountId}</code> — 204 No Content or 404</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- HINTS -->
+  <div class="card">
+    <div class="card-header"><h2>Hints</h2></div>
+    <div class="card-body">
+      <div class="tip">💡 <code>ddl-auto=update</code> in <code>application-dev.properties</code> means Hibernate auto-creates the <code>accounts</code> table on startup. No SQL scripts needed — just annotate the entity correctly and start the app.</div>
+      <div class="tip">💡 AccountId format: Start an <code>AtomicInteger counter = new AtomicInteger(10000)</code> in the controller, then use <code>"ACC" + counter.incrementAndGet()</code> for each new account.</div>
+      <div class="tip">💡 Import <code>java.math.BigDecimal</code> for the balance field. Use <code>@Column(precision=15, scale=2)</code> to control the MySQL column type (<code>DECIMAL(15,2)</code>).</div>
+      <div class="tip">💡 For the paginated endpoint, accept <code>@RequestParam(defaultValue="0") int page</code> and <code>@RequestParam(defaultValue="5") int size</code> — or use Spring's <code>Pageable</code> directly as a method parameter.</div>
+      <div class="tip">💡 Verify in MySQL: <code>DESCRIBE accounts;</code> should show your columns, and <code>SELECT * FROM accounts;</code> shows records you inserted via POST.</div>
+    </div>
+  </div>
+
+  <!-- VERIFICATION -->
+  <div class="card">
+    <div class="card-header"><h2>Verification</h2></div>
+    <div class="card-body">
+      <p>When your implementation is complete, confirm these work end-to-end:</p>
+      <table>
+        <tr><th>Step</th><th>Request</th><th>Expected Result</th></tr>
+        <tr>
+          <td>1</td>
+          <td><code>POST /api/v1/accounts</code><br><small>body: customerId, accountType, balance</small></td>
+          <td>201 Created with auto-generated accountId (ACC10001)</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>GET /api/v1/accounts</code></td>
+          <td>Array containing the account you just created</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>GET /api/v1/accounts/ACC10001</code></td>
+          <td>The single account object</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><code>GET /api/v1/accounts/customer/{customerId}</code></td>
+          <td>All accounts for that customer</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><code>GET /api/v1/accounts/page?page=0&amp;size=2&amp;sort=balance</code></td>
+          <td>Paginated response sorted by balance</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><code>DELETE /api/v1/accounts/ACC10001</code></td>
+          <td>204 No Content; subsequent GET returns 404</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>MySQL: <code>SELECT * FROM accounts;</code></td>
+          <td>Remaining rows match what is visible via REST API</td>
+        </tr>
+      </table>
+      <div class="verify">
+        <strong>✅ Done?</strong> Restart the app and confirm data persists — that is the whole point of using MySQL instead of H2. Your accounts must still be there after a fresh start.
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

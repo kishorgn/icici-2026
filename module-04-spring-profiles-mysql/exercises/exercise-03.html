@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 03 – Pagination & Sorting</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --amber:#F39C12; --lgray:#F2F4F8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fb; color: #222; }
+  nav { background: var(--navy); padding: 10px 24px; }
+  nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  header { background: var(--navy); color: #fff; padding: 32px 40px 28px; }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { font-size: 14px; opacity: .8; }
+  .badge { display:inline-block; background: var(--orange); color:#fff; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; margin-top:12px; }
+  .container { max-width: 860px; margin: 32px auto; padding: 0 24px 60px; }
+  .meta { display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+  .chip { background:#fff; border:1px solid #dde; border-radius:20px; padding:6px 14px; font-size:13px; color:#555; }
+  .chip span { font-weight:700; color: var(--navy); }
+  .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.07); margin-bottom:24px; overflow:hidden; }
+  .card-header { background: var(--lgray); padding:16px 24px; border-bottom:3px solid var(--orange); }
+  .card-header h2 { font-size:17px; color: var(--navy); }
+  .card-header .num { font-size:24px; font-weight:800; color: var(--orange); float:right; }
+  .card-body { padding:20px 24px; }
+  p { margin-bottom:12px; line-height:1.65; font-size:14px; }
+  ul,ol { padding-left:22px; margin-bottom:12px; }
+  li { font-size:14px; line-height:1.7; margin-bottom:4px; }
+  code { background:#F0F0F0; padding:2px 6px; border-radius:4px; font-size:13px; font-family:'Courier New',monospace; }
+  pre { background:#1a1a2e; color:#e0e0e0; padding:16px 20px; border-radius:8px; overflow-x:auto; font-size:13px; line-height:1.6; margin:12px 0; }
+  pre .c { color:#7ec8e3; } pre .s { color:#98d982; } pre .k { color:#F7941D; } pre .an { color:#c792ea; }
+  .tip { background:#FFF8EC; border-left:4px solid var(--amber); padding:12px 16px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; }
+  .step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .step-num { min-width:32px; height:32px; background:var(--orange); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .verify { background:#EBF5EF; border:1px solid #A8D5B5; border-radius:8px; padding:14px 18px; margin:12px 0; font-size:13px; }
+  .verify strong { color: var(--green); }
+  .json { background:#1a1a2e; color:#98d982; padding:16px; border-radius:8px; font-family:'Courier New',monospace; font-size:12px; line-height:1.6; margin:12px 0; white-space:pre; overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:8px 12px; text-align:left; }
+  td { padding:8px 12px; border-bottom:1px solid #eee; }
+  tr:nth-child(even) td { background:#f9f9f9; }
+</style>
+</head>
+<body>
+<nav><a href="../../index.html">← Back to Training Materials</a></nav>
+<header>
+  <h1>Exercise 03 — Pagination &amp; Sorting</h1>
+  <p>Module 04: Spring Profiles + MySQL | ICICI Bank API Services | Day 4</p>
+  <span class="badge">⏱ 45 Minutes · Individual</span>
+</header>
+<div class="container">
+
+  <div class="meta">
+    <div class="chip">Difficulty: <span>Intermediate</span></div>
+    <div class="chip">Builds on: <span>Exercise 02</span></div>
+    <div class="chip">Goal: <span>Add a paginated GET endpoint with sort support</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>The Problem Without Pagination</h2></div>
+    <div class="card-body">
+      <p>Your current <code>GET /api/v1/customers</code> returns <em>all</em> customers in one response. With 5 records this is fine. At ICICI scale — tens of millions of customers — this query would time out, consume gigabytes of memory, and crash the server.</p>
+      <p>You will add a second endpoint <code>GET /api/v1/customers/page</code> that accepts <code>page</code>, <code>size</code>, and <code>sort</code> parameters and returns a <code>Page&lt;Customer&gt;</code> — a paginated slice with metadata.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Part A — Repository Change</h2><span class="num">A</span></div>
+    <div class="card-body">
+      <div class="step"><div class="step-num">1</div>
+        <div>Add these imports to <code>CustomerRepository.java</code>:</div>
+      </div>
+<pre><span class="k">import</span> org.springframework.data.domain.Page;
+<span class="k">import</span> org.springframework.data.domain.Pageable;</pre>
+      <div class="step"><div class="step-num">2</div>
+        <div>Add the pageable override inside the interface body:</div>
+      </div>
+<pre><span class="k">Page</span>&lt;Customer&gt; findAll(<span class="k">Pageable</span> pageable);</pre>
+      <div class="tip">💡 <code>JpaRepository</code> already has this method. Adding it explicitly is optional but makes the intent visible — a good habit.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Part B — Controller Endpoint</h2><span class="num">B</span></div>
+    <div class="card-body">
+      <div class="step"><div class="step-num">3</div>
+        <div>Add these imports to <code>CustomerController.java</code>:</div>
+      </div>
+<pre><span class="k">import</span> org.springframework.data.domain.Page;
+<span class="k">import</span> org.springframework.data.domain.PageRequest;
+<span class="k">import</span> org.springframework.data.domain.Pageable;
+<span class="k">import</span> org.springframework.data.domain.Sort;</pre>
+      <div class="step"><div class="step-num">4</div>
+        <div>Add this endpoint method inside <code>CustomerController</code>:</div>
+      </div>
+<pre><span class="c">// GET /api/v1/customers/page?page=0&size=3&sort=name</span>
+<span class="an">@GetMapping</span>(<span class="s">"/page"</span>)
+<span class="k">public</span> <span class="k">Page</span>&lt;Customer&gt; getCustomersPage(
+        <span class="an">@RequestParam</span>(defaultValue = <span class="s">"0"</span>)    <span class="k">int</span> page,
+        <span class="an">@RequestParam</span>(defaultValue = <span class="s">"3"</span>)    <span class="k">int</span> size,
+        <span class="an">@RequestParam</span>(defaultValue = <span class="s">"name"</span>) String sort) {
+
+    Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+    <span class="k">return</span> customerRepository.findAll(pageable);
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Part C — Test in Postman</h2><span class="num">C</span></div>
+    <div class="card-body">
+      <p>Start the application and send these requests. Verify each expected response.</p>
+      <table>
+        <tr><th>Request URL</th><th>Expected result</th></tr>
+        <tr><td><code>GET /api/v1/customers/page</code></td><td>3 customers, page 0, totalElements=5, totalPages=2</td></tr>
+        <tr><td><code>GET /api/v1/customers/page?page=1</code></td><td>2 customers, page 1, last=true</td></tr>
+        <tr><td><code>GET /api/v1/customers/page?size=5</code></td><td>All 5 customers, totalPages=1</td></tr>
+        <tr><td><code>GET /api/v1/customers/page?sort=mobile</code></td><td>Sorted by mobile number</td></tr>
+        <tr><td><code>GET /api/v1/customers/page?page=99</code></td><td><code>content: []</code>, empty=true</td></tr>
+      </table>
+      <div class="verify">
+        <strong>✓ Page response structure to confirm:</strong><br>
+        <code>content</code> — the list of customers<br>
+        <code>totalElements: 5</code> — total records in DB<br>
+        <code>totalPages: 2</code> — with default size=3<br>
+        <code>first: true</code> on page 0, <code>last: true</code> on page 1
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h2>Part D — Stretch Goals</h2><span class="num">D</span></div>
+    <div class="card-body">
+      <ol>
+        <li>Add a maximum size guard: if <code>size &gt; 20</code>, set <code>size = 20</code> before creating the Pageable.</li>
+        <li>Try sorting by a field that doesn't exist (e.g. <code>sort=xyz</code>) — observe the error. Return 400 Bad Request instead of a 500.</li>
+        <li>Add the same <code>/page</code> endpoint to the <code>AccountController</code> (hint: it is identical in structure).</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

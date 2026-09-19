@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fund Transfer API Reference | ICICI Bank API Services</title>
+  <style>
+    /* ── Tokens ──────────────────────────────────────── */
+    :root {
+      --navy:   #0D3B8E;
+      --orange: #F7941D;
+      --green:  #1E8449;
+      --amber:  #F39C12;
+      --red:    #C0392B;
+      --bg:     #F4F6F9;
+      --card:   #FFFFFF;
+      --border: #D5D8DC;
+      --text:   #2C3E50;
+      --muted:  #5D6D7E;
+      --code-bg:#1E272E;
+      --code-fg:#ECF0F1;
+      --tag-bg: #EBF5FB;
+      --tag-fg: #1A5276;
+      --get:    #1E8449;
+      --post:   #1A5276;
+      --radius: 8px;
+      --mono:   'Courier New', Courier, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 0;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 32px 14px;
+    }
+    .header-top .bank-icon { font-size: 28px; }
+    .header-top h1 { font-size: 20px; font-weight: 700; }
+    .header-top p  { font-size: 13px; color: #BDC3C7; margin-top: 2px; }
+    .header-stripe {
+      background: var(--orange);
+      padding: 10px 32px;
+      font-size: 13px;
+      color: #fff;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .header-stripe span { opacity: .9; }
+    .header-stripe strong { opacity: 1; }
+
+    /* ── Layout ──────────────────────────────────────── */
+    .page { max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* ── Section titles ───────────────────────────────── */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--navy);
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 6px;
+      margin: 36px 0 18px;
+    }
+
+    /* ── Info cards ───────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .card h3 {
+      font-size: 14px;
+      color: var(--navy);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    /* ── Base URL pill ────────────────────────────────── */
+    .base-url-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--navy);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .base-url-box .label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .base-url-box .url   { font-family: var(--mono); font-size: 14px; color: var(--navy); font-weight: 700; }
+
+    /* ── Endpoint cards ───────────────────────────────── */
+    .endpoint {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .endpoint-header {
+      padding: 14px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: #FAFBFC;
+    }
+    .method-badge {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .method-badge.get  { background: #D5F5E3; color: #1E8449; }
+    .method-badge.post { background: #D6EAF8; color: #1A5276; }
+
+    .endpoint-path {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .endpoint-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    .endpoint-body { padding: 20px; }
+
+    /* ── Field table ──────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin-top: 8px;
+    }
+    thead th {
+      background: var(--navy);
+      color: #fff;
+      padding: 9px 12px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    tbody tr:nth-child(even) { background: var(--bg); }
+    tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    code.inline {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--tag-bg);
+      color: var(--tag-fg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .req-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-left: 4px;
+    }
+    .req-badge.required  { background: #FDEDEC; color: #C0392B; }
+    .req-badge.optional  { background: #F0F3F4; color: #717D7E; }
+    .req-badge.generated { background: #FEF9E7; color: #B7950B; }
+
+    /* ── Code blocks ──────────────────────────────────── */
+    .code-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 4px;
+      margin-top: 16px;
+    }
+    pre {
+      background: var(--code-bg);
+      color: var(--code-fg);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin-top: 4px;
+    }
+    pre .key   { color: #81CFFA; }
+    pre .str   { color: #A8D9A0; }
+    pre .num   { color: #F0B27A; }
+    pre .punct { color: #BDC3C7; }
+    pre .cmt   { color: #778899; font-style: italic; }
+
+    /* ── Status codes ─────────────────────────────────── */
+    .status-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+    .status-pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      min-width: 40px;
+      text-align: center;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+    .s2xx { background: #D5F5E3; color: #1E8449; }
+    .s4xx { background: #FDEDEC; color: #C0392B; }
+    .s5xx { background: #FEF9E7; color: #B7950B; }
+    .status-text { font-size: 13.5px; color: var(--text); }
+    .status-text em { color: var(--muted); font-style: normal; }
+
+    /* ── Notes / warnings ─────────────────────────────── */
+    .note {
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 13.5px;
+      margin-top: 12px;
+    }
+    .note.info    { background: #EBF5FB; border-left: 4px solid #1A5276; color: #1A5276; }
+    .note.warning { background: #FEF9E7; border-left: 4px solid var(--amber); color: #7D6608; }
+    .note.tip     { background: #D5F5E3; border-left: 4px solid var(--green); color: #1D6A39; }
+    .note strong  { font-weight: 700; }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      background: var(--navy);
+      color: #BDC3C7;
+      text-align: center;
+      font-size: 12px;
+      padding: 14px;
+      margin-top: 48px;
+    }
+
+    @media (max-width: 600px) {
+      .header-top { padding: 16px 16px 12px; }
+      .page { padding: 20px 12px 40px; }
+      .endpoint-body { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ────────────────────────────────────────────────────────── -->
+<header>
+  <div class="header-top">
+    <span class="bank-icon">🏦</span>
+    <div>
+      <h1>ICICI Bank API Services</h1>
+      <p>Module 4 — Day 4 · Student Reference</p>
+    </div>
+  </div>
+  <div class="header-stripe">
+    <span><strong>Fund Transfer REST API</strong> — Specification &amp; Reference</span>
+    <span>Base: <strong>http://localhost:8080</strong></span>
+    <span>Format: <strong>JSON</strong></span>
+  </div>
+</header>
+
+<!-- ── PAGE ──────────────────────────────────────────────────────────── -->
+<div class="page">
+
+  <!-- OVERVIEW -->
+  <div class="section-title">Overview</div>
+
+  <div class="base-url-box">
+    <span class="label">Base URL</span>
+    <span class="url">http://localhost:8080/api/v1/transactions</span>
+  </div>
+
+  <div class="card">
+    <h3>What you are building</h3>
+    <p>A <strong>Fund Transfer REST API</strong> that records money movements between bank accounts.
+    Each transaction is persisted to a MySQL table (<code class="inline">transactions</code>) and given a
+    human-readable ID like <code class="inline">TXN1001</code>.</p>
+  </div>
+
+  <div class="note info">
+    <strong>No authentication required</strong> for this exercise — focus on entity design, JPA, and REST structure.
+  </div>
+
+
+  <!-- TRANSACTION OBJECT -->
+  <div class="section-title">Transaction Object</div>
+
+  <p style="margin-bottom:14px; color:var(--muted); font-size:13.5px;">
+    This is the JSON structure used in both requests and responses.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Required?</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code class="inline">transactionId</code></td>
+        <td><code class="inline">String</code></td>
+        <td><span class="req-badge generated">Generated</span></td>
+        <td>Auto-assigned by the server. Format: <code class="inline">TXN1001</code>, <code class="inline">TXN1002</code>, …
+            Do <strong>not</strong> send this in a POST request.</td>
+      </tr>
+      <tr>
+        <td><code class="inline">fromAccountId</code></td>
+        <td><code class="inline">String</code></td>
+        <td><span class="req-badge required">Required</span></td>
+        <td>The account debited. Example: <code class="inline">ACC001</code></td>
+      </tr>
+      <tr>
+        <td><code class="inline">toAccountId</code></td>
+        <td><code class="inline">String</code></td>
+        <td><span class="req-badge required">Required</span></td>
+        <td>The account credited. Example: <code class="inline">ACC002</code></td>
+      </tr>
+      <tr>
+        <td><code class="inline">amount</code></td>
+        <td><code class="inline">BigDecimal</code></td>
+        <td><span class="req-badge required">Required</span></td>
+        <td>Transfer amount — up to 2 decimal places. Example: <code class="inline">5000.00</code>
+            <br><em>Must be positive. Use BigDecimal in Java, not double.</em></td>
+      </tr>
+      <tr>
+        <td><code class="inline">transactionType</code></td>
+        <td><code class="inline">String</code></td>
+        <td><span class="req-badge required">Required</span></td>
+        <td>Either <code class="inline">DEBIT</code> or <code class="inline">CREDIT</code></td>
+      </tr>
+      <tr>
+        <td><code class="inline">remarks</code></td>
+        <td><code class="inline">String</code></td>
+        <td><span class="req-badge optional">Optional</span></td>
+        <td>Free-text note. Example: <code class="inline">Monthly rent</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  <!-- ENDPOINTS -->
+  <div class="section-title">Endpoints</div>
+
+
+  <!-- POST -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method-badge post">POST</span>
+      <div>
+        <div class="endpoint-path">/api/v1/transactions</div>
+        <div class="endpoint-desc">Create a new fund transfer</div>
+      </div>
+    </div>
+    <div class="endpoint-body">
+
+      <div class="code-label">Request Body</div>
+      <pre><span class="punct">{</span>
+  <span class="key">"fromAccountId"</span><span class="punct">:</span>    <span class="str">"ACC001"</span><span class="punct">,</span>
+  <span class="key">"toAccountId"</span><span class="punct">:</span>      <span class="str">"ACC002"</span><span class="punct">,</span>
+  <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">5000.00</span><span class="punct">,</span>
+  <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"DEBIT"</span><span class="punct">,</span>
+  <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Monthly rent payment"</span>
+<span class="punct">}</span></pre>
+
+      <div class="code-label">Response — 201 Created</div>
+      <pre><span class="punct">{</span>
+  <span class="key">"transactionId"</span><span class="punct">:</span>   <span class="str">"TXN1001"</span><span class="punct">,</span>    <span class="cmt">// generated by the server</span>
+  <span class="key">"fromAccountId"</span><span class="punct">:</span>   <span class="str">"ACC001"</span><span class="punct">,</span>
+  <span class="key">"toAccountId"</span><span class="punct">:</span>     <span class="str">"ACC002"</span><span class="punct">,</span>
+  <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">5000.00</span><span class="punct">,</span>
+  <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"DEBIT"</span><span class="punct">,</span>
+  <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Monthly rent payment"</span>
+<span class="punct">}</span></pre>
+
+      <div style="margin-top:16px;">
+        <div class="status-row">
+          <span class="status-pill s2xx">201</span>
+          <span class="status-text">Transaction created successfully</span>
+        </div>
+        <div class="status-row">
+          <span class="status-pill s4xx">400</span>
+          <span class="status-text">Bad request — missing required fields</span>
+        </div>
+        <div class="status-row">
+          <span class="status-pill s5xx">500</span>
+          <span class="status-text">Server error — check MySQL connection</span>
+        </div>
+      </div>
+
+      <div class="note tip" style="margin-top:14px;">
+        <strong>Tip:</strong> The server generates <code class="inline">transactionId</code> automatically.
+        Do not include it in the request — it will be ignored or cause an error.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- GET ALL -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method-badge get">GET</span>
+      <div>
+        <div class="endpoint-path">/api/v1/transactions</div>
+        <div class="endpoint-desc">Retrieve all transactions</div>
+      </div>
+    </div>
+    <div class="endpoint-body">
+
+      <div class="code-label">Response — 200 OK</div>
+      <pre><span class="punct">[</span>
+  <span class="punct">{</span>
+    <span class="key">"transactionId"</span><span class="punct">:</span>   <span class="str">"TXN1001"</span><span class="punct">,</span>
+    <span class="key">"fromAccountId"</span><span class="punct">:</span>   <span class="str">"ACC001"</span><span class="punct">,</span>
+    <span class="key">"toAccountId"</span><span class="punct">:</span>     <span class="str">"ACC002"</span><span class="punct">,</span>
+    <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">5000.00</span><span class="punct">,</span>
+    <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"DEBIT"</span><span class="punct">,</span>
+    <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Monthly rent payment"</span>
+  <span class="punct">},</span>
+  <span class="punct">{</span>
+    <span class="key">"transactionId"</span><span class="punct">:</span>   <span class="str">"TXN1002"</span><span class="punct">,</span>
+    <span class="key">"fromAccountId"</span><span class="punct">:</span>   <span class="str">"ACC003"</span><span class="punct">,</span>
+    <span class="key">"toAccountId"</span><span class="punct">:</span>     <span class="str">"ACC001"</span><span class="punct">,</span>
+    <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">12000.50</span><span class="punct">,</span>
+    <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"CREDIT"</span><span class="punct">,</span>
+    <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Salary credit"</span>
+  <span class="punct">}</span>
+<span class="punct">]</span></pre>
+
+      <div style="margin-top:12px;">
+        <div class="status-row">
+          <span class="status-pill s2xx">200</span>
+          <span class="status-text">Returns array of transactions. <em>Empty array [ ] if none exist.</em></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- GET BY ID -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method-badge get">GET</span>
+      <div>
+        <div class="endpoint-path">/api/v1/transactions/{id}</div>
+        <div class="endpoint-desc">Retrieve a single transaction by ID</div>
+      </div>
+    </div>
+    <div class="endpoint-body">
+
+      <table style="margin-bottom:16px;">
+        <thead><tr><th>Path Variable</th><th>Type</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">id</code></td>
+            <td><code class="inline">String</code></td>
+            <td><code class="inline">TXN1001</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">Example Request</div>
+      <pre>GET /api/v1/transactions/TXN1001</pre>
+
+      <div class="code-label">Response — 200 OK</div>
+      <pre><span class="punct">{</span>
+  <span class="key">"transactionId"</span><span class="punct">:</span>   <span class="str">"TXN1001"</span><span class="punct">,</span>
+  <span class="key">"fromAccountId"</span><span class="punct">:</span>   <span class="str">"ACC001"</span><span class="punct">,</span>
+  <span class="key">"toAccountId"</span><span class="punct">:</span>     <span class="str">"ACC002"</span><span class="punct">,</span>
+  <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">5000.00</span><span class="punct">,</span>
+  <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"DEBIT"</span><span class="punct">,</span>
+  <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Monthly rent payment"</span>
+<span class="punct">}</span></pre>
+
+      <div style="margin-top:12px;">
+        <div class="status-row">
+          <span class="status-pill s2xx">200</span>
+          <span class="status-text">Transaction found</span>
+        </div>
+        <div class="status-row">
+          <span class="status-pill s5xx">500</span>
+          <span class="status-text">Transaction not found — RuntimeException thrown <em>(you may improve this to 404)</em></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- GET BY ACCOUNT -->
+  <div class="endpoint">
+    <div class="endpoint-header">
+      <span class="method-badge get">GET</span>
+      <div>
+        <div class="endpoint-path">/api/v1/transactions/account/{accountId}</div>
+        <div class="endpoint-desc">Retrieve all transactions involving an account (as sender or receiver)</div>
+      </div>
+    </div>
+    <div class="endpoint-body">
+
+      <table style="margin-bottom:16px;">
+        <thead><tr><th>Path Variable</th><th>Type</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">accountId</code></td>
+            <td><code class="inline">String</code></td>
+            <td><code class="inline">ACC001</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-label">Example Request</div>
+      <pre>GET /api/v1/transactions/account/ACC001</pre>
+
+      <div class="code-label">Response — 200 OK</div>
+      <pre><span class="cmt">// Returns transactions where ACC001 is fromAccountId OR toAccountId</span>
+<span class="punct">[</span>
+  <span class="punct">{</span>
+    <span class="key">"transactionId"</span><span class="punct">:</span>   <span class="str">"TXN1001"</span><span class="punct">,</span>
+    <span class="key">"fromAccountId"</span><span class="punct">:</span>   <span class="str">"ACC001"</span><span class="punct">,</span>    <span class="cmt">// ACC001 sent this</span>
+    <span class="key">"toAccountId"</span><span class="punct">:</span>     <span class="str">"ACC002"</span><span class="punct">,</span>
+    <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">5000.00</span><span class="punct">,</span>
+    <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"DEBIT"</span><span class="punct">,</span>
+    <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Monthly rent payment"</span>
+  <span class="punct">},</span>
+  <span class="punct">{</span>
+    <span class="key">"transactionId"</span><span class="punct">:</span>   <span class="str">"TXN1002"</span><span class="punct">,</span>
+    <span class="key">"fromAccountId"</span><span class="punct">:</span>   <span class="str">"ACC003"</span><span class="punct">,</span>
+    <span class="key">"toAccountId"</span><span class="punct">:</span>     <span class="str">"ACC001"</span><span class="punct">,</span>    <span class="cmt">// ACC001 received this</span>
+    <span class="key">"amount"</span><span class="punct">:</span>          <span class="num">12000.50</span><span class="punct">,</span>
+    <span class="key">"transactionType"</span><span class="punct">:</span> <span class="str">"CREDIT"</span><span class="punct">,</span>
+    <span class="key">"remarks"</span><span class="punct">:</span>         <span class="str">"Salary credit"</span>
+  <span class="punct">}</span>
+<span class="punct">]</span></pre>
+
+      <div style="margin-top:12px;">
+        <div class="status-row">
+          <span class="status-pill s2xx">200</span>
+          <span class="status-text">Returns combined list of sent and received transactions. <em>Empty array [ ] if account has no transactions.</em></span>
+        </div>
+      </div>
+
+      <div class="note info" style="margin-top:14px;">
+        <strong>How this works:</strong> The repository calls <code class="inline">findByFromAccountId()</code>
+        and <code class="inline">findByToAccountId()</code> separately, then the controller merges both lists
+        into one response.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TRANSACTION ID FORMAT -->
+  <div class="section-title">Transaction ID Generation</div>
+
+  <div class="card">
+    <h3>Format: TXN + sequential number starting at 1001</h3>
+    <p style="margin-bottom:12px;">IDs are generated in the controller using an <code class="inline">AtomicInteger</code> counter.
+    The counter starts at <code class="inline">1000</code>, and <code class="inline">incrementAndGet()</code> is called on each POST,
+    giving <code class="inline">TXN1001</code>, <code class="inline">TXN1002</code>, and so on.</p>
+
+    <div class="code-label">Counter setup (class-level field in the controller)</div>
+    <pre style="font-size:12.5px;"><span class="cmt">// Declare at class level — NOT inside the method</span>
+private final AtomicInteger counter = new AtomicInteger(1000);
+
+<span class="cmt">// Inside POST handler:</span>
+t.setTransactionId("TXN" + counter.incrementAndGet());</pre>
+
+    <div class="note warning" style="margin-top:12px;">
+      <strong>Note:</strong> The counter resets to 1001 every time the application restarts
+      (it lives in memory, not in MySQL). This is expected for today's exercise.
+    </div>
+  </div>
+
+
+  <!-- POSTMAN QUICK START -->
+  <div class="section-title">Postman Quick-Start</div>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Method</th><th>URL</th><th>Body?</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><span class="req-badge" style="background:#D6EAF8;color:#1A5276;">POST</span></td>
+        <td><code class="inline">http://localhost:8080/api/v1/transactions</code></td>
+        <td>Yes — JSON request body</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><span class="req-badge" style="background:#D5F5E3;color:#1E8449;">GET</span></td>
+        <td><code class="inline">http://localhost:8080/api/v1/transactions</code></td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><span class="req-badge" style="background:#D5F5E3;color:#1E8449;">GET</span></td>
+        <td><code class="inline">http://localhost:8080/api/v1/transactions/TXN1001</code></td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><span class="req-badge" style="background:#D5F5E3;color:#1E8449;">GET</span></td>
+        <td><code class="inline">http://localhost:8080/api/v1/transactions/account/ACC001</code></td>
+        <td>No</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note tip" style="margin-top:16px;">
+    <strong>Postman tip:</strong> For POST requests, set
+    <code class="inline">Content-Type: application/json</code> in the Headers tab,
+    and paste the JSON body in the Body tab → select <strong>raw → JSON</strong>.
+  </div>
+
+
+  <!-- MYSQL VERIFICATION -->
+  <div class="section-title">Verify in MySQL</div>
+
+  <p style="margin-bottom:12px; color:var(--muted); font-size:13.5px;">After creating a few transactions, confirm the data landed in MySQL:</p>
+
+  <pre style="font-size:13px;">mysql -u root -p icicidb
+
+<span class="cmt">-- Check the table exists</span>
+SHOW TABLES;
+
+<span class="cmt">-- See all transactions</span>
+SELECT * FROM transactions;
+
+<span class="cmt">-- Filter by sender</span>
+SELECT * FROM transactions WHERE from_account_id = 'ACC001';
+
+<span class="cmt">-- Check column types (BigDecimal → DECIMAL)</span>
+DESCRIBE transactions;</pre>
+
+
+  <!-- IMPORTANT NOTES -->
+  <div class="section-title">Things to Remember</div>
+
+  <div class="note warning" style="margin-bottom:10px;">
+    <strong>BigDecimal, not double:</strong> Always use <code class="inline">BigDecimal</code> for the
+    <code class="inline">amount</code> field. Using <code class="inline">double</code> can cause rounding
+    errors in financial calculations.
+  </div>
+  <div class="note warning" style="margin-bottom:10px;">
+    <strong>jakarta.persistence, not javax:</strong> Spring Boot 3.x uses
+    <code class="inline">jakarta.persistence.*</code> imports. If you see a red
+    <code class="inline">javax.persistence</code> import, fix it.
+  </div>
+  <div class="note warning" style="margin-bottom:10px;">
+    <strong>@Table(name = "transactions"):</strong> Add this annotation to the entity.
+    Without it, Hibernate may use the class name "Transaction" which is a reserved word in MySQL.
+  </div>
+  <div class="note info">
+    <strong>Repository ID type:</strong> Since <code class="inline">transactionId</code> is a
+    <code class="inline">String</code>, your repository must extend
+    <code class="inline">JpaRepository&lt;Transaction, String&gt;</code> — not
+    <code class="inline">JpaRepository&lt;Transaction, Long&gt;</code>.
+  </div>
+
+</div><!-- /page -->
+
+<footer>
+  ICICI Bank API Services &nbsp;|&nbsp; Module 4 — Day 4 &nbsp;|&nbsp; Fund Transfer API Reference
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 01 – Spring Profiles Setup</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --amber:#F39C12; --lgray:#F2F4F8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fb; color: #222; }
+  nav { background: var(--navy); padding: 10px 24px; }
+  nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  header { background: var(--navy); color: #fff; padding: 32px 40px 28px; }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { font-size: 14px; opacity: .8; }
+  .badge { display:inline-block; background: var(--orange); color:#fff; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; margin-top:12px; }
+  .container { max-width: 860px; margin: 32px auto; padding: 0 24px 60px; }
+  .meta { display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+  .chip { background:#fff; border:1px solid #dde; border-radius:20px; padding:6px 14px; font-size:13px; color:#555; }
+  .chip span { font-weight:700; color: var(--navy); }
+  .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.07); margin-bottom:24px; overflow:hidden; }
+  .card-header { background: var(--lgray); padding:16px 24px; border-bottom:3px solid var(--orange); }
+  .card-header h2 { font-size:17px; color: var(--navy); }
+  .card-header .num { font-size:24px; font-weight:800; color: var(--orange); float:right; }
+  .card-body { padding:20px 24px; }
+  p { margin-bottom:12px; line-height:1.65; font-size:14px; }
+  ul,ol { padding-left:22px; margin-bottom:12px; }
+  li { font-size:14px; line-height:1.7; margin-bottom:4px; }
+  code { background:#F0F0F0; padding:2px 6px; border-radius:4px; font-size:13px; font-family:'Courier New',monospace; }
+  pre { background:#1a1a2e; color:#e0e0e0; padding:16px 20px; border-radius:8px; overflow-x:auto; font-size:13px; line-height:1.6; margin:12px 0; }
+  pre .c { color:#7ec8e3; } pre .s { color:#98d982; } pre .k { color:#F7941D; }
+  .tip { background:#FFF8EC; border-left:4px solid var(--amber); padding:12px 16px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; }
+  .step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .step-num { min-width:32px; height:32px; background:var(--orange); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:8px 12px; text-align:left; }
+  td { padding:8px 12px; border-bottom:1px solid #eee; }
+  tr:nth-child(even) td { background:#f9f9f9; }
+  .verify { background:#EBF5EF; border:1px solid #A8D5B5; border-radius:8px; padding:14px 18px; margin:12px 0; font-size:13px; }
+  .verify strong { color: var(--green); }
+  .file-label { display:inline-block; background:var(--navy); color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:4px 4px 0 0; margin-bottom:-1px; font-family:monospace; }
+</style>
+</head>
+<body>
+<nav><a href="../../index.html">← Back to Training Materials</a></nav>
+<header>
+  <h1>Exercise 01 — Spring Profiles Setup</h1>
+  <p>Module 04: Spring Profiles + MySQL | ICICI Bank API Services | Day 4</p>
+  <span class="badge">⏱ 45 Minutes · Individual</span>
+</header>
+<div class="container">
+
+  <div class="meta">
+    <div class="chip">Difficulty: <span>Intermediate</span></div>
+    <div class="chip">Starting point: <span>Day-3 project</span></div>
+    <div class="chip">Goal: <span>Split config into dev / prod profiles using .properties</span></div>
+  </div>
+
+  <!-- CONTEXT -->
+  <div class="card">
+    <div class="card-header"><h2>Context</h2><span class="num">01</span></div>
+    <div class="card-body">
+      <p>So far the project has a single <code>application.properties</code> file. When the same app runs on a developer's laptop and on a production server, the database credentials, logging levels, and connection settings are different. Hard-coding prod values is a security risk; Spring Profiles solve this cleanly.</p>
+      <p>By the end of this exercise you will have <strong>three</strong> properties files:</p>
+      <ul>
+        <li><code>application.properties</code> — common settings shared by all profiles</li>
+        <li><code>application-dev.properties</code> — developer laptop (MySQL local, show-sql=true)</li>
+        <li><code>application-prod.properties</code> — production (MySQL credentials from env vars)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STEP 1 — pom.xml -->
+  <div class="card">
+    <div class="card-header"><h2>Step 1 — Add MySQL Dependency</h2><span class="num">01</span></div>
+    <div class="card-body">
+      <p>Open <code>pom.xml</code>. Replace any H2 dependency with the MySQL connector. Spring Boot 3.x uses the <code>com.mysql</code> groupId:</p>
+<div class="file-label">pom.xml</div>
+<pre><span class="c">&lt;!-- MySQL JDBC driver --&gt;</span>
+<span class="k">&lt;dependency&gt;</span>
+  <span class="k">&lt;groupId&gt;</span>com.mysql<span class="k">&lt;/groupId&gt;</span>
+  <span class="k">&lt;artifactId&gt;</span>mysql-connector-j<span class="k">&lt;/artifactId&gt;</span>
+  <span class="k">&lt;scope&gt;</span>runtime<span class="k">&lt;/scope&gt;</span>
+<span class="k">&lt;/dependency&gt;</span></pre>
+      <div class="tip">💡 No version number needed — Spring Boot's parent POM manages the version for you.</div>
+    </div>
+  </div>
+
+  <!-- STEP 2 — common properties -->
+  <div class="card">
+    <div class="card-header"><h2>Step 2 — Create application.properties (common)</h2><span class="num">02</span></div>
+    <div class="card-body">
+      <p>This file holds settings that apply to <em>every</em> profile. The <code>spring.profiles.active</code> line picks the profile to load on top of this.</p>
+<div class="file-label">src/main/resources/application.properties</div>
+<pre>server.port=8080
+spring.application.name=icici-banking-api
+
+<span class="c"># Active profile — change to 'prod' for production</span>
+spring.profiles.active=dev
+
+<span class="c"># Actuator endpoints</span>
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.show-details=always
+
+<span class="c"># App info visible at /actuator/info</span>
+info.app.name=ICICI Banking API
+info.app.version=1.0.0
+info.app.trainer=Kishor</pre>
+    </div>
+  </div>
+
+  <!-- STEP 3 — dev properties -->
+  <div class="card">
+    <div class="card-header"><h2>Step 3 — Create application-dev.properties</h2><span class="num">03</span></div>
+    <div class="card-body">
+      <p>Dev profile points to your local MySQL. First create the database if it does not exist:</p>
+      <pre>mysql -u root -p
+<span class="k">CREATE DATABASE</span> icicidb CHARACTER SET utf8mb4;
+exit</pre>
+      <p>Then create the profile file:</p>
+<div class="file-label">src/main/resources/application-dev.properties</div>
+<pre>spring.datasource.url=jdbc:mysql://localhost:3306/icicidb?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.username=root
+spring.datasource.password=root
+
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true</pre>
+      <div class="tip">💡 <strong>ddl-auto=update</strong> — Hibernate automatically creates or alters tables to match your entities. Safe for dev; never use in production.</div>
+    </div>
+  </div>
+
+  <!-- STEP 4 — prod properties -->
+  <div class="card">
+    <div class="card-header"><h2>Step 4 — Create application-prod.properties</h2><span class="num">04</span></div>
+    <div class="card-body">
+      <p>Production credentials must never be hard-coded. Use the <code>${VAR:default}</code> syntax so they come from environment variables:</p>
+<div class="file-label">src/main/resources/application-prod.properties</div>
+<pre>spring.datasource.url=${DB_URL:jdbc:mysql://localhost:3306/icicidb}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.username=${DB_USERNAME:root}
+spring.datasource.password=${DB_PASSWORD:root}
+
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=false</pre>
+      <div class="tip">💡 <strong>ddl-auto=validate</strong> — Hibernate checks that the schema matches the entities but makes no changes. The app fails fast if there is a mismatch.</div>
+    </div>
+  </div>
+
+  <!-- STEP 5 — Three ways to activate -->
+  <div class="card">
+    <div class="card-header"><h2>Step 5 — Three Ways to Activate a Profile</h2><span class="num">05</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>Command / Setting</th><th>When to use</th></tr>
+        <tr>
+          <td>1. In properties file</td>
+          <td><code>spring.profiles.active=dev</code></td>
+          <td>Default for local dev</td>
+        </tr>
+        <tr>
+          <td>2. JVM argument</td>
+          <td><code>java -Dspring.profiles.active=prod -jar app.jar</code></td>
+          <td>CI/CD scripts, overrides file</td>
+        </tr>
+        <tr>
+          <td>3. Environment variable</td>
+          <td><code>export SPRING_PROFILES_ACTIVE=prod</code></td>
+          <td>Docker, Kubernetes, cloud deploy</td>
+        </tr>
+      </table>
+      <div class="tip">⚠️ The JVM argument and environment variable both override <code>spring.profiles.active</code> in the properties file — they take higher precedence.</div>
+    </div>
+  </div>
+
+  <!-- STEP 6 — Run and verify -->
+  <div class="card">
+    <div class="card-header"><h2>Step 6 — Run and Verify</h2><span class="num">06</span></div>
+    <div class="card-body">
+      <div class="step">
+        <div class="step-num">A</div>
+        <div>Start the app normally (dev profile active by default):<br>
+          <code>mvn spring-boot:run</code>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">B</div>
+        <div>Look for this line in startup logs:<br>
+          <code>The following 1 profile is active: "dev"</code>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">C</div>
+        <div>Check health endpoint confirms MySQL is connected:<br>
+          <code>GET http://localhost:8080/actuator/health</code>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">D</div>
+        <div>Switch to prod profile via JVM arg:<br>
+          <code>mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=prod"</code>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">E</div>
+        <div>Logs now show: <code>The following 1 profile is active: "prod"</code></div>
+      </div>
+      <div class="verify">
+        <strong>✅ Checkpoint</strong> — You should see the active profile name in startup logs, and <code>/actuator/health</code> should show <code>"status": "UP"</code> with MySQL listed under components.
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="card">
+    <div class="card-header"><h2>Challenge (If You Finish Early)</h2><span class="num">★</span></div>
+    <div class="card-body">
+      <ol>
+        <li>Add a <code>spring.jpa.properties.hibernate.show_sql</code> entry only in the dev profile and confirm it appears in dev logs but not prod logs.</li>
+        <li>Create a third profile called <code>test</code> — same MySQL URL but <code>ddl-auto=create-drop</code> so tables are rebuilt fresh for each test run.</li>
+        <li>In <code>application.properties</code>, add <code>info.app.env=${spring.profiles.active}</code> and observe that <code>/actuator/info</code> now shows the active profile name.</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

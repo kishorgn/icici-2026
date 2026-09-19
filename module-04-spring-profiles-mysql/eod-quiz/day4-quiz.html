@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 Quiz | ICICI Banking API</title>
+<style>
+  :root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--red:#C0392B;--amber:#F39C12;--light:#F4F6FB;--white:#FFFFFF;--text:#1A1A2E;--muted:#6B7280;--border:#D1D9EE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--light);color:var(--text);line-height:1.6;}
+  .ph{background:linear-gradient(135deg,var(--navy) 0%,#1a52b8 100%);color:#fff;padding:40px 48px 36px;}
+  .badge{display:inline-block;background:var(--orange);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:14px;}
+  .ph h1{font-size:30px;font-weight:700;margin-bottom:6px;}
+  .ph p{font-size:15px;opacity:.85;}
+  .sb{display:flex;align-items:center;gap:20px;margin-top:20px;padding:14px 20px;background:rgba(255,255,255,.1);border-radius:10px;max-width:420px;}
+  .sv{font-size:32px;font-weight:800;color:var(--orange);}
+  .sl{font-size:13px;opacity:.85;}
+  .container{max-width:860px;margin:0 auto;padding:40px 24px 80px;}
+  .pw{background:var(--border);border-radius:99px;height:8px;margin-bottom:32px;overflow:hidden;}
+  .pb{height:100%;background:var(--orange);border-radius:99px;transition:width .4s ease;}
+  .qc{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:30px 32px;margin-bottom:24px;transition:border-color .2s;}
+  .qc.ac{border-color:var(--green);} .qc.aw{border-color:var(--red);}
+  .qn{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .qt{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:20px;line-height:1.5;}
+  .qt code,.ol code{background:#eff6ff;color:#1e40af;padding:1px 6px;border-radius:4px;font-family:Consolas,monospace;font-size:.92em;}
+  .opts{display:flex;flex-direction:column;gap:10px;}
+  .opt{display:flex;align-items:flex-start;gap:14px;padding:12px 16px;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;user-select:none;}
+  .opt:hover:not(.lk){border-color:#93c5fd;background:#eff6ff;}
+  .opt.sel{border-color:var(--navy);background:#eff6ff;}
+  .opt.cor{border-color:var(--green);background:#f0fdf4;}
+  .opt.wrg{border-color:var(--red);background:#fef2f2;}
+  .opt.rev{border-color:var(--green);background:#f0fdf4;opacity:.7;}
+  .opt.lk{cursor:default;}
+  .ol{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .15s;}
+  .opt.sel .ol{border-color:var(--navy);color:var(--navy);}
+  .opt.cor .ol{background:var(--green);border-color:var(--green);color:#fff;}
+  .opt.wrg .ol{background:var(--red);border-color:var(--red);color:#fff;}
+  .opt.rev .ol{background:var(--green);border-color:var(--green);color:#fff;}
+  .ot{font-size:14px;color:#374151;flex:1;padding-top:3px;}
+  .exp{display:none;margin-top:18px;padding:14px 18px;border-radius:8px;font-size:13.5px;line-height:1.6;}
+  .exp.show{display:block;}
+  .exp.ce{background:#f0fdf4;border-left:4px solid var(--green);color:#14532d;}
+  .exp.we{background:#fef2f2;border-left:4px solid var(--red);color:#7f1d1d;}
+  .br{display:flex;justify-content:flex-end;margin-top:18px;}
+  .btn{padding:10px 26px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+  .bs{background:var(--navy);color:#fff;}
+  .bs:hover{opacity:.85;} .bs:disabled{opacity:.4;cursor:default;}
+  #rp{display:none;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:36px;text-align:center;margin-top:40px;}
+  #rp.show{display:block;}
+  .rs{font-size:56px;font-weight:800;line-height:1;margin-bottom:8px;}
+  .rl{font-size:18px;font-weight:700;margin-bottom:16px;}
+  .rm{font-size:14px;color:var(--muted);max-width:480px;margin:0 auto 28px;}
+  .rbars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:480px;margin:0 auto 28px;}
+  .rb{background:var(--light);border-radius:8px;padding:14px;}
+  .rv{font-size:28px;font-weight:800;}
+  .rlab{font-size:12px;color:var(--muted);}
+  .rb.g .rv{color:var(--green);} .rb.r .rv{color:var(--red);} .rb.n .rv{color:var(--navy);}
+  .br2{background:var(--orange);color:#fff;padding:12px 36px;font-size:15px;}
+  footer{background:var(--navy);color:rgba(255,255,255,.7);text-align:center;padding:20px 24px;font-size:13px;margin-top:60px;}
+  footer strong{color:var(--orange);}
+</style>
+</head>
+<body>
+<div class="ph">
+  <div class="badge">Day 4 Quiz</div>
+  <h1>Spring Profiles &middot; MySQL &middot; Pagination</h1>
+  <p>10 questions &middot; Select an answer, then click Submit for each question.</p>
+  <div class="sb">
+    <div class="sv" id="ls">0 / 10</div>
+    <div class="sl">Questions answered correctly<br><span id="ac">0 of 10 answered</span></div>
+  </div>
+</div>
+<div class="container">
+  <div class="pw"><div class="pb" id="pb" style="width:0%"></div></div>
+  <div id="qc"></div>
+  <div id="rp">
+    <div class="rs" id="fs">0/10</div>
+    <div class="rl" id="fl">&#8212;</div>
+    <div class="rm" id="fm">&#8212;</div>
+    <div class="rbars">
+      <div class="rb g"><div class="rv" id="rc">0</div><div class="rlab">Correct</div></div>
+      <div class="rb r"><div class="rv" id="rw">0</div><div class="rlab">Incorrect</div></div>
+      <div class="rb n"><div class="rv" id="rp2">0%</div><div class="rlab">Score</div></div>
+    </div>
+    <button class="btn br2" onclick="retry()">Try Again</button>
+  </div>
+</div>
+<footer>ICICI Bank &#8212; API Services Training &nbsp;&middot;&nbsp; <strong>Day 4</strong> &nbsp;&middot;&nbsp; Trainer: Kishor Kumar</footer>
+<script>
+const Q=[
+  {q:"You have <code>application.properties</code>, <code>application-dev.properties</code>, and <code>application-prod.properties</code>. Which file is ALWAYS loaded regardless of which profile is active?",
+   o:["application-dev.properties &#8212; because dev is the most common profile","application.properties &#8212; it is always loaded first as the common base","Both application-dev.properties and application-prod.properties are loaded simultaneously","None &#8212; Spring Boot requires you to specify the file explicitly"],
+   c:1,
+   e:"<strong>application.properties is always loaded.</strong> It is the common base. Profile-specific files are loaded additionally when that profile is active, and their keys override matching keys in application.properties."},
+  {q:"Which correctly activates the <code>prod</code> profile when running a JAR file from the command line?",
+   o:["<code>java -Dspring.profiles.active=prod -jar app.jar</code>","<code>java --profile=prod -jar app.jar</code>","<code>java -jar app.jar --spring.active.profile=prod</code>","<code>java -Dprofile=prod -jar app.jar</code>"],
+   c:0,
+   e:"<strong>-Dspring.profiles.active=prod is correct.</strong> The JVM system property key is exactly <code>spring.profiles.active</code>. The other options use wrong property names that Spring Boot does not recognise."},
+  {q:"A developer sets <code>spring.jpa.hibernate.ddl-auto=create</code> in the dev profile. What happens every time the application restarts?",
+   o:["Hibernate creates tables only on the very first startup; subsequent restarts are safe","Hibernate drops ALL tables and recreates them from scratch &#8212; all inserted data is lost","Hibernate adds missing tables but never drops existing ones","The application fails to start because <code>create</code> is not a valid value"],
+   c:1,
+   e:"<strong>ddl-auto=create drops all tables on every startup.</strong> Every restart wipes your MySQL database. Use <code>ddl-auto=update</code> in dev (adds missing columns, never drops data) and <code>ddl-auto=validate</code> in production (fails fast if schema doesn't match entities)."},
+  {q:"Your Spring Boot app is configured with <code>spring.datasource.url=jdbc:mysql://localhost:3306/icicidb</code>. On startup you see: <em>com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure</em>. What is the most likely cause?",
+   o:["The database name <code>icicidb</code> does not exist in MySQL","MySQL server is not running","The password in <code>application-dev.properties</code> is wrong","The JDBC URL is missing the <code>?useSSL=false</code> parameter"],
+   c:1,
+   e:"<strong>Communications link failure means the JDBC driver cannot reach the MySQL server at all.</strong> The driver made a TCP connection attempt to port 3306 and got no response &#8212; the server is not running. Fix: <code>brew services start mysql</code> (macOS) or <code>sudo service mysql start</code> (Linux). A wrong password produces <em>Access denied</em>, not a link failure. A missing database produces <em>Unknown database</em>."},
+  {q:"Both <code>application.properties</code> and <code>application-dev.properties</code> contain the line <code>spring.jpa.show-sql=true</code>. The common file sets it to <code>false</code>; the dev file sets it to <code>true</code>. The active profile is <code>dev</code>. What is the effective value?",
+   o:["false &#8212; the common file is loaded last","false &#8212; common settings always take precedence","true &#8212; profile-specific values override common values","A startup error &#8212; the same key cannot appear in both files"],
+   c:2,
+   e:"<strong>Profile-specific values always override common values.</strong> Spring Boot loads <code>application.properties</code> first, then the active-profile file on top. Any key in <code>application-dev.properties</code> that also exists in <code>application.properties</code> wins. This is how you change logging, SQL visibility, or connection strings per environment without editing the common file."},
+  {q:"You want page 2 (the third page, 0-indexed) of customers, 5 per page, sorted by name. Which code is correct?",
+   o:["<code>PageRequest.of(3, 5, Sort.by(\"name\"))</code>","<code>PageRequest.of(2, 5, Sort.by(\"name\"))</code>","<code>PageRequest.of(2, 5, Sort.by(\"customer_name\"))</code>","<code>PageRequest.of(1, 5, Sort.by(\"name\"))</code>"],
+   c:1,
+   e:"<strong>PageRequest.of(2, 5, Sort.by(\"name\")) is correct.</strong> Page indexes are 0-based: page 0 = first, page 1 = second, page 2 = third. The sort field <code>\"name\"</code> is the Java entity field name, not the SQL column name."},
+  {q:"Your <code>Page&lt;Customer&gt;</code> response has <code>totalElements: 12</code> and <code>size: 5</code>. What is <code>totalPages</code>?",
+   o:["2","2.4","3","12"],
+   c:2,
+   e:"<strong>totalPages = 3.</strong> Spring Data computes Math.ceil(totalElements / size) = Math.ceil(12 / 5) = Math.ceil(2.4) = 3. Page 0 has 5 records, page 1 has 5, page 2 has 2."},
+  {q:"In the Account entity, why is <code>balance</code> declared as <code>BigDecimal</code> and mapped to <code>DECIMAL(15,2)</code> &#8212; rather than <code>double</code>?",
+   o:["BigDecimal is faster than double for arithmetic","double cannot be stored in a relational database","Floating-point types like double cannot represent 0.1 exactly &#8212; leading to rounding errors in monetary calculations","Spring Data JPA does not support mapping double to a database column"],
+   c:2,
+   e:"<strong>Floating-point arithmetic is inherently imprecise.</strong> In Java, 0.1 + 0.2 == 0.30000000000000004. For banking software this is unacceptable. BigDecimal performs exact decimal arithmetic. DECIMAL(15,2) in SQL also stores exact decimal values."},
+  {q:"You call <code>Sort.by(\"accountType\")</code> in your AccountRepository query but get an exception. A colleague suggests changing it to <code>Sort.by(\"account_type\")</code>. Are they correct?",
+   o:["Yes &#8212; Sort.by() requires the SQL column name","No &#8212; Sort.by() uses the Java entity field name. <code>accountType</code> is already correct; the bug is elsewhere","Yes &#8212; Spring Data accepts either camelCase or snake_case","It doesn't matter &#8212; Sort.by() accepts either format"],
+   c:1,
+   e:"<strong>Sort.by() requires the Java entity field name, not the SQL column name.</strong> The Java field is <code>accountType</code> (camelCase). Passing <code>\"account_type\"</code> (snake_case) throws PropertyReferenceException because there is no Java field with that name."},
+  {q:"Your Day 4 project already has 5 customers in MySQL (CUST1001&#8211;CUST1005, inserted via earlier POSTs). The <code>AtomicInteger</code> counter in CustomerController is <code>new AtomicInteger(1001)</code>. You restart the app and do a new POST. What problem occurs?",
+   o:["No problem &#8212; the counter will correctly generate CUST1002","A primary key collision: the POST inserts CUST1002 which already exists from seed data","Spring Boot auto-detects seed data and skips those IDs","The counter and seed data are independent &#8212; no conflict"],
+   c:1,
+   e:"<strong>Primary key collision.</strong> Seed data already contains CUST1001&#8211;CUST1005. If the counter starts at 1001, the first incrementAndGet() produces 1002 (CUST1002), which already exists. Fix: initialise to <code>new AtomicInteger(1005)</code> so the first new customer gets CUST1006."}
+];
+
+let answers=new Array(Q.length).fill(null),correct=0;
+
+function build(){
+  const c=document.getElementById('qc');
+  c.innerHTML='';answers=new Array(Q.length).fill(null);correct=0;upd();
+  Q.forEach((q,qi)=>{
+    const L=['A','B','C','D'];
+    const oh=q.o.map((o,oi)=>`<div class="opt" id="o-${qi}-${oi}" onclick="sel(${qi},${oi})"><div class="ol" id="l-${qi}-${oi}">${L[oi]}</div><div class="ot">${o}</div></div>`).join('');
+    const d=document.createElement('div');
+    d.className='qc';d.id='q-'+qi;
+    d.innerHTML=`<div class="qn">Question ${qi+1} of ${Q.length}</div><div class="qt">${q.q}</div><div class="opts">${oh}</div><div class="exp" id="e-${qi}"></div><div class="br"><button class="btn bs" id="b-${qi}" onclick="sub(${qi})" disabled>Submit</button></div>`;
+    c.appendChild(d);
+  });
+}
+
+function sel(qi,oi){
+  if(answers[qi]!==null)return;
+  Q[qi].o.forEach((_,i)=>{document.getElementById(`o-${qi}-${i}`).classList.remove('sel');});
+  document.getElementById(`o-${qi}-${oi}`).classList.add('sel');
+  const b=document.getElementById(`b-${qi}`);b.disabled=false;b.dataset.s=oi;
+}
+
+function sub(qi){
+  const b=document.getElementById(`b-${qi}`);
+  const oi=parseInt(b.dataset.s);if(isNaN(oi))return;
+  answers[qi]=oi;const cor=Q[qi].c;
+  const card=document.getElementById('q-'+qi);const exp=document.getElementById('e-'+qi);
+  Q[qi].o.forEach((_,i)=>{
+    const o=document.getElementById(`o-${qi}-${i}`);o.classList.add('lk');o.classList.remove('sel');
+    if(i===cor&&i!==oi)o.classList.add('rev');
+  });
+  const so=document.getElementById(`o-${qi}-${oi}`);
+  if(oi===cor){so.classList.add('cor');card.classList.add('ac');exp.className='exp ce show';exp.innerHTML='&#10003; '+Q[qi].e;correct++;}
+  else{so.classList.add('wrg');card.classList.add('aw');exp.className='exp we show';exp.innerHTML='&#10007; '+Q[qi].e;}
+  b.disabled=true;upd();
+  if(answers.filter(a=>a!==null).length===Q.length)setTimeout(show,600);
+}
+
+function upd(){
+  const n=answers.filter(a=>a!==null).length;
+  document.getElementById('ls').textContent=correct+' / '+Q.length;
+  document.getElementById('ac').textContent=n+' of '+Q.length+' answered';
+  document.getElementById('pb').style.width=(n/Q.length*100)+'%';
+}
+
+function show(){
+  const w=Q.length-correct,pct=Math.round(correct/Q.length*100);
+  document.getElementById('fs').textContent=correct+'/'+Q.length;
+  document.getElementById('rc').textContent=correct;
+  document.getElementById('rw').textContent=w;
+  document.getElementById('rp2').textContent=pct+'%';
+  let label,msg,col;
+  if(pct===100){label='&#127942; Perfect Score!';msg='Outstanding! You have mastered all Day 4 concepts. Well prepared for Day 5.';col='#1E8449';}
+  else if(pct>=80){label='&#10003; Great Work!';msg='Strong understanding of today\'s concepts. Review the questions you missed.';col='#1E8449';}
+  else if(pct>=60){label='&#128310; Good Effort';msg='You have the basics. Revisit the Spring Profiles precedence rules and Sort field naming.';col='#F39C12';}
+  else{label='&#128218; Keep Practising';msg='Review the Spring Profiles and MySQL reference pages, then try again.';col='#C0392B';}
+  document.getElementById('fs').style.color=col;
+  document.getElementById('fl').textContent='';
+  document.getElementById('fl').innerHTML=label;
+  document.getElementById('fm').textContent=msg;
+  const rp=document.getElementById('rp');rp.classList.add('show');rp.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function retry(){document.getElementById('rp').classList.remove('show');build();window.scrollTo({top:0,behavior:'smooth'});}
+build();
+</script>
+</body>
+</html>

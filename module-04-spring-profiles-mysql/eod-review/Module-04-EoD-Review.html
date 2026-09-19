@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 04 — EoD Review</title>
+<style>
+:root{--navy:#0D3B8E;--orange:#F7941D;--green:#1E8449;--amber:#F39C12;--lgray:#F2F4F8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f7fb;color:#222;}
+nav{background:var(--navy);padding:10px 24px;}
+nav a{color:#fff;text-decoration:none;font-size:13px;font-weight:600;}
+header{background:var(--navy);color:#fff;padding:28px 40px 22px;}
+header h1{font-size:24px;margin-bottom:6px;}
+header p{font-size:13px;opacity:.8;}
+.container{max-width:860px;margin:28px auto;padding:0 24px 60px;}
+.sh{display:flex;align-items:center;gap:16px;margin:32px 0 14px;}
+.sh .n{min-width:38px;height:38px;background:var(--orange);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;}
+.sh h2{font-size:20px;font-weight:700;color:var(--navy);}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.07);padding:20px 24px;margin-bottom:20px;}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px;}
+.sc{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 5px rgba(0,0,0,.06);border-top:3px solid var(--navy);}
+.sc.o{border-top-color:var(--orange);}
+.sc.g{border-top-color:var(--green);}
+.sc h4{font-size:13px;color:var(--navy);margin-bottom:8px;font-weight:700;}
+.sc ul{padding-left:16px;}
+.sc li{font-size:12px;line-height:1.6;margin-bottom:2px;}
+p{margin-bottom:10px;line-height:1.65;font-size:14px;}
+ul,ol{padding-left:20px;margin-bottom:10px;}
+li{font-size:14px;line-height:1.7;margin-bottom:4px;}
+h3{font-size:16px;color:var(--navy);margin:16px 0 8px;}
+code{background:#F0F0F0;padding:2px 6px;border-radius:4px;font-size:12px;font-family:'Courier New',monospace;}
+pre{background:#1a1a2e;color:#e0e0e0;padding:14px 18px;border-radius:8px;overflow-x:auto;font-size:12px;line-height:1.65;margin:10px 0;}
+pre .cc{color:#7ec8e3;}pre .s{color:#98d982;}pre .k{color:#F7941D;}
+.al{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-radius:8px;margin:10px 0;font-size:13px;}
+.ai{font-size:20px;}
+.at{background:#EBF5FB;border-left:4px solid #2980B9;}
+.aw{background:#FFF8EC;border-left:4px solid var(--amber);}
+.ae{background:#FDECEA;border-left:4px solid #C0392B;}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px;}
+th{background:var(--navy);color:#fff;padding:7px 12px;text-align:left;}
+td{padding:7px 12px;border-bottom:1px solid #eee;vertical-align:top;}
+tr:nth-child(even) td{background:#f9f9f9;}
+.td{background:#1E8449;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:4px;}
+.tp{background:#E67E22;color:#fff;font-size:10px;padding:2px 6px;border-radius:10px;margin-left:4px;}
+.ml{list-style:none;padding:0;}
+.ml li{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid #f0f0f0;}
+.ml li:last-child{border:0;}
+.mt{min-width:80px;background:#C0392B;color:#fff;font-size:11px;padding:3px 8px;border-radius:6px;height:fit-content;white-space:nowrap;}
+.mc{min-width:80px;background:var(--green);color:#fff;font-size:11px;padding:3px 8px;border-radius:6px;height:fit-content;white-space:nowrap;}
+/* checklist */
+.cl{list-style:none;padding:0;}
+.cl li{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #f0f0f0;align-items:flex-start;}
+.cl li:last-child{border:0;}
+.bx{width:20px;height:20px;border:2px solid var(--navy);border-radius:4px;cursor:pointer;flex-shrink:0;margin-top:2px;transition:background .2s;}
+.bx.chk{background:var(--green);border-color:var(--green);}
+.bx.chk::after{content:"✓";color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;height:100%;}
+.lbl{font-size:14px;font-weight:600;}
+.sub{font-size:12px;color:#666;display:block;margin-top:2px;}
+@media(max-width:600px){.scgrid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav><a href="../../index.html">← Back to Training Materials</a></nav>
+<header>
+  <h1>Module 04 — End of Day Review</h1>
+  <p>Spring Profiles &middot; MySQL &middot; Pagination | Day 4 | ICICI Bank API Services</p>
+</header>
+<div class="container">
+
+<!-- ── 1. TODAY AT A GLANCE ── -->
+<div class="sh"><div class="n">1</div><h2>Today at a Glance</h2></div>
+<div class="scgrid">
+  <div class="sc"><h4>Spring Profiles</h4><ul>
+    <li>application.properties (common)</li>
+    <li>application-dev.properties</li>
+    <li>application-prod.properties</li>
+    <li>3 ways to activate</li>
+    <li>ddl-auto values</li>
+  </ul></div>
+  <div class="sc o"><h4>MySQL Integration</h4><ul>
+    <li>mysql-connector-j (Spring Boot 3)</li>
+    <li>JDBC URL parameters</li>
+    <li>MySQLDialect</li>
+    <li>CREATE DATABASE icicidb</li>
+    <li>Data persists across restarts</li>
+  </ul></div>
+  <div class="sc g"><h4>Pagination</h4><ul>
+    <li>Pageable / PageRequest</li>
+    <li>Page&lt;T&gt; response shape</li>
+    <li>?page=0&amp;size=5&amp;sort=name</li>
+    <li>Sort.by() and Direction</li>
+    <li>totalElements / totalPages</li>
+  </ul></div>
+</div>
+
+<!-- ── 2. SPRING PROFILES ── -->
+<div class="sh"><div class="n">2</div><h2>Spring Profiles — How They Work</h2></div>
+<div class="card">
+  <p>Spring Boot loads <code>application.properties</code> first (always), then the profile-specific file on top. Profile-specific keys override common keys.</p>
+<pre>src/main/resources/
+├── application.properties          <span class="cc"># Always loaded — common settings</span>
+├── application-dev.properties      <span class="cc"># Loaded when profile = dev</span>
+└── application-prod.properties     <span class="cc"># Loaded when profile = prod</span></pre>
+
+  <h3>Three Ways to Activate a Profile</h3>
+  <table>
+    <tr><th>#</th><th>Method</th><th>Syntax</th><th>Overrides</th></tr>
+    <tr><td>1</td><td>In <code>application.properties</code></td><td><code>spring.profiles.active=dev</code></td><td>Nothing (lowest precedence)</td></tr>
+    <tr><td>2</td><td>JVM argument</td><td><code>java -Dspring.profiles.active=prod -jar app.jar</code></td><td>Properties file</td></tr>
+    <tr><td>3</td><td>Environment variable</td><td><code>export SPRING_PROFILES_ACTIVE=prod</code></td><td>Both of the above</td></tr>
+  </table>
+
+  <h3>Dev vs Prod Configuration Comparison</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Dev <span class="td">dev</span></th><th>Prod <span class="tp">prod</span></th></tr></thead>
+    <tbody>
+      <tr><td>datasource.url</td><td><code>jdbc:mysql://localhost:3306/icicidb?...</code></td><td><code>${DB_URL}</code> env var</td></tr>
+      <tr><td>username</td><td><code>root</code> (hard-coded OK locally)</td><td><code>${DB_USERNAME}</code> env var</td></tr>
+      <tr><td>ddl-auto</td><td><code>update</code> — Hibernate auto-creates tables</td><td><code>validate</code> — schema must exist; fails fast</td></tr>
+      <tr><td>show-sql</td><td><code>true</code> — see every query in logs</td><td><code>false</code> — no SQL noise in prod logs</td></tr>
+    </tbody>
+  </table>
+  <div class="al aw"><span class="ai">⚠️</span><div>Profile-specific values always override common values — even if both files set the same key. The last file loaded wins.</div></div>
+</div>
+
+<!-- ── 3. MYSQL INTEGRATION ── -->
+<div class="sh"><div class="n">3</div><h2>MySQL Integration — Key Points</h2></div>
+<div class="card">
+  <h3>Dependency (pom.xml)</h3>
+<pre><span class="k">&lt;dependency&gt;</span>
+  <span class="k">&lt;groupId&gt;</span>com.mysql<span class="k">&lt;/groupId&gt;</span>          <span class="cc">&lt;!-- Spring Boot 3.x groupId --&gt;</span>
+  <span class="k">&lt;artifactId&gt;</span>mysql-connector-j<span class="k">&lt;/artifactId&gt;</span>
+  <span class="k">&lt;scope&gt;</span>runtime<span class="k">&lt;/scope&gt;</span>
+<span class="k">&lt;/dependency&gt;</span></pre>
+
+  <h3>JDBC URL — What Each Parameter Does</h3>
+<pre>jdbc:mysql://localhost:3306/icicidb?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true
+              ─────┬─────  ──┬──  ───────────────────────────────────────────────────────────────
+                 host    port  icicidb = database name; params prevent SSL &amp; timezone errors</pre>
+
+  <h3>Hibernate creates tables automatically (dev only)</h3>
+  <p>With <code>ddl-auto=update</code>, Hibernate reads your <code>@Entity</code> classes and runs <code>CREATE TABLE</code> SQL for you on startup. You do not need to write SQL scripts. This is what makes development fast.</p>
+  <div class="al at"><span class="ai">💡</span><div>Verify with MySQL: <code>USE icicidb; SHOW TABLES;</code> — you should see a row for each entity class in your project.</div></div>
+
+  <h3>ddl-auto Values Ranked by Risk</h3>
+  <table>
+    <tr><th>Value</th><th>Action</th><th>Use In</th></tr>
+    <tr><td><code>create</code></td><td>Drops ALL tables, recreates — loses all data</td><td>Never in production</td></tr>
+    <tr><td><code>update</code></td><td>Adds missing columns/tables, preserves data</td><td>Dev only</td></tr>
+    <tr><td><code>validate</code></td><td>Checks schema, makes no changes, fails fast on mismatch</td><td>Production</td></tr>
+    <tr><td><code>none</code></td><td>Does nothing</td><td>DBA-managed schemas</td></tr>
+  </table>
+</div>
+
+<!-- ── 4. PAGINATION ── -->
+<div class="sh"><div class="n">4</div><h2>Pagination &amp; Sorting — The Full Mental Model</h2></div>
+<div class="card">
+  <h3>Why Pagination?</h3>
+  <p>A banking system with 10 million accounts cannot return them all in one API response. Pagination returns a window of results and tells the client how many total records exist.</p>
+
+  <h3>Repository — Enable Pagination in One Line</h3>
+<pre><span class="cc">// Add Page&lt;T&gt; findAll(Pageable pageable) to your repository</span>
+<span class="k">public interface</span> CustomerRepository <span class="k">extends</span> JpaRepository&lt;Customer, String&gt; {
+    Page&lt;Customer&gt; findAll(Pageable pageable);
+}</pre>
+
+  <h3>Controller — Accept Pageable Parameters</h3>
+<pre><span class="k">@GetMapping</span>(<span class="s">"/page"</span>)
+<span class="k">public</span> Page&lt;Customer&gt; getPage(
+        <span class="k">@RequestParam</span>(defaultValue=<span class="s">"0"</span>) <span class="k">int</span> page,
+        <span class="k">@RequestParam</span>(defaultValue=<span class="s">"5"</span>) <span class="k">int</span> size,
+        <span class="k">@RequestParam</span>(defaultValue=<span class="s">"name"</span>) String sort) {
+    Pageable p = PageRequest.of(page, size, Sort.by(sort));
+    <span class="k">return</span> repo.findAll(p);
+}</pre>
+
+  <h3>URL Pattern &amp; Page Response Shape</h3>
+  <table>
+    <tr><th>URL</th><th>Meaning</th></tr>
+    <tr><td><code>GET /api/v1/customers/page?page=0&amp;size=5&amp;sort=name</code></td><td>Page 1, 5 items, sorted by name A→Z</td></tr>
+    <tr><td><code>GET /api/v1/customers/page?page=1&amp;size=5&amp;sort=name</code></td><td>Page 2 (items 6–10)</td></tr>
+    <tr><td><code>GET /api/v1/customers/page?page=0&amp;size=10&amp;sort=balance,desc</code></td><td>Top 10 by balance, highest first</td></tr>
+  </table>
+
+  <h3>Page&lt;T&gt; Response Fields</h3>
+  <table>
+    <tr><th>Field</th><th>Description</th></tr>
+    <tr><td><code>content</code></td><td>The actual records for this page</td></tr>
+    <tr><td><code>totalElements</code></td><td>Total records across all pages</td></tr>
+    <tr><td><code>totalPages</code></td><td>How many pages exist at this page size</td></tr>
+    <tr><td><code>number</code></td><td>Current page number (0-indexed)</td></tr>
+    <tr><td><code>size</code></td><td>Page size requested</td></tr>
+    <tr><td><code>first</code> / <code>last</code></td><td>Whether this is the first or last page</td></tr>
+  </table>
+</div>
+
+<!-- ── 5. TOP MISTAKES ── -->
+<div class="sh"><div class="n">5</div><h2>Top Mistakes — Day 4</h2></div>
+<div class="card">
+  <ul class="ml">
+    <li>
+      <span class="mt">✗ Mistake</span>
+      <div><strong>ddl-auto=create in dev</strong><br>Every app restart drops all tables and recreates them — losing all data you inserted via POST. Use <code>ddl-auto=update</code> in dev to preserve data between restarts.</div>
+    </li>
+    <li>
+      <span class="mt">✗ Mistake</span>
+      <div><strong>MySQL server not running → "Communications link failure"</strong><br>The JDBC URL is correct but MySQL process is not started. Fix: <code>brew services start mysql</code> (macOS) or <code>sudo service mysql start</code> (Linux), then restart the app.</div>
+    </li>
+    <li>
+      <span class="mt">✗ Mistake</span>
+      <div><strong>Database "icicidb" does not exist</strong><br>MySQL starts but the database was never created. Fix: <code>CREATE DATABASE icicidb CHARACTER SET utf8mb4;</code> in a MySQL shell before starting the app.</div>
+    </li>
+    <li>
+      <span class="mt">✗ Mistake</span>
+      <div><strong>javax.persistence instead of jakarta.persistence</strong><br>Spring Boot 3.x uses the Jakarta EE namespace. Any <code>import javax.persistence.*</code> causes compile errors. Fix: change to <code>import jakarta.persistence.*</code>.</div>
+    </li>
+    <li>
+      <span class="mc">✓ Correct</span>
+      <div><strong>Profile-specific values override common values</strong><br>If both <code>application.properties</code> and <code>application-dev.properties</code> set the same key, the dev-profile value wins. This is how you override defaults per environment.</div>
+    </li>
+    <li>
+      <span class="mc">✓ Correct</span>
+      <div><strong>BigDecimal for all monetary amounts</strong><br><code>double</code> has floating-point precision errors (0.1 + 0.2 ≠ 0.3 in Java). Banking applications always use <code>BigDecimal</code> for amounts.</div>
+    </li>
+  </ul>
+</div>
+
+<!-- ── 6. CHECKLIST ── -->
+<div class="sh"><div class="n">6</div><h2>Readiness Checklist — Before You Leave</h2></div>
+<div class="card">
+  <ul class="cl">
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">application.properties has spring.profiles.active=dev</span><span class="sub">common config — server port 8080, app name, actuator endpoints</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">application-dev.properties uses MySQL with ddl-auto=update</span><span class="sub">JDBC URL has useSSL=false, serverTimezone=UTC, allowPublicKeyRetrieval=true</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">application-prod.properties uses environment variable placeholders</span><span class="sub">${DB_URL}, ${DB_USERNAME}, ${DB_PASSWORD} with fallback defaults</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">pom.xml has com.mysql:mysql-connector-j (runtime scope)</span><span class="sub">Spring Boot 3.x groupId is com.mysql, not mysql</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">MySQL database icicidb exists before app startup</span><span class="sub">CREATE DATABASE icicidb CHARACTER SET utf8mb4;</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">App starts with "The following 1 profile is active: dev" in logs</span><span class="sub">HikariPool shows no connection errors</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">GET /actuator/health shows "db": {"status": "UP", "database": "MySQL"}</span><span class="sub">Confirms Spring Boot successfully connected to MySQL</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">Transaction API works — POST creates TXN1001, GET returns it, data survives restart</span><span class="sub">Exercise 02 use case verified end-to-end</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">Paginated endpoint works: /api/v1/customers/page?page=0&size=3&sort=name</span><span class="sub">Response has content, totalElements, totalPages fields</span></div></li>
+    <li><div class="bx" onclick="this.classList.toggle('chk')"></div><div><span class="lbl">Switched to prod profile via JVM arg — logs show "prod" active</span><span class="sub">java -Dspring.profiles.active=prod -jar app.jar</span></div></li>
+  </ul>
+</div>
+
+<!-- ── 7. DAY 5 PREVIEW ── -->
+<div class="sh"><div class="n">7</div><h2>Day 5 Preview</h2></div>
+<div class="card">
+  <p>Tomorrow: <strong>Spring Security + JWT Authentication</strong></p>
+  <ul>
+    <li>Add login endpoint — returns a JWT token</li>
+    <li>Secure all <code>/api/v1/</code> endpoints — require a valid token in the header</li>
+    <li>Roles — ADMIN can delete; USER can only read and create</li>
+    <li>BCrypt — never store plain-text passwords</li>
+  </ul>
+  <div class="al at"><span class="ai">💡</span><div>Pre-read: Spring Security architecture — <code>SecurityFilterChain</code>, <code>AuthenticationManager</code>, and how JWT tokens work (header.payload.signature).</div></div>
+</div>
+
+</div>
+<script>
+function t(el){el.classList.toggle('chk');}
+</script>
+</body>
+</html>

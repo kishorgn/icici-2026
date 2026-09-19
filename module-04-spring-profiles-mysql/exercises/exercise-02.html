@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercise 02 – Build a Fund Transfer REST API</title>
+<style>
+  :root { --navy:#0D3B8E; --orange:#F7941D; --green:#1E8449; --amber:#F39C12; --lgray:#F2F4F8; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fb; color: #222; }
+  nav { background: var(--navy); padding: 10px 24px; }
+  nav a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; }
+  header { background: var(--navy); color: #fff; padding: 32px 40px 28px; }
+  header h1 { font-size: 26px; margin-bottom: 8px; }
+  header p { font-size: 14px; opacity: .8; }
+  .badge { display:inline-block; background: var(--orange); color:#fff; padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; margin-top:12px; }
+  .container { max-width: 880px; margin: 32px auto; padding: 0 24px 60px; }
+  .meta { display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+  .chip { background:#fff; border:1px solid #dde; border-radius:20px; padding:6px 14px; font-size:13px; color:#555; }
+  .chip span { font-weight:700; color: var(--navy); }
+  .card { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.07); margin-bottom:24px; overflow:hidden; }
+  .card-header { background: var(--lgray); padding:16px 24px; border-bottom:3px solid var(--orange); }
+  .card-header h2 { font-size:17px; color: var(--navy); }
+  .card-header .num { font-size:24px; font-weight:800; color: var(--orange); float:right; }
+  .card-body { padding:20px 24px; }
+  p { margin-bottom:12px; line-height:1.65; font-size:14px; }
+  ul,ol { padding-left:22px; margin-bottom:12px; }
+  li { font-size:14px; line-height:1.7; margin-bottom:4px; }
+  code { background:#F0F0F0; padding:2px 6px; border-radius:4px; font-size:13px; font-family:'Courier New',monospace; }
+  pre { background:#1a1a2e; color:#e0e0e0; padding:16px 20px; border-radius:8px; overflow-x:auto; font-size:13px; line-height:1.7; margin:12px 0; }
+  pre .c { color:#7ec8e3; }
+  pre .s { color:#98d982; }
+  pre .k { color:#F7941D; }
+  pre .t { color:#c8c8ff; }
+  .tip { background:#FFF8EC; border-left:4px solid var(--amber); padding:12px 16px; border-radius:0 8px 8px 0; margin:12px 0; font-size:13px; }
+  .step { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+  .step-num { min-width:32px; height:32px; background:var(--orange); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:13px; }
+  th { background:var(--navy); color:#fff; padding:8px 12px; text-align:left; }
+  td { padding:8px 12px; border-bottom:1px solid #eee; vertical-align:top; }
+  tr:nth-child(even) td { background:#f9f9f9; }
+  .verify { background:#EBF5EF; border:1px solid #A8D5B5; border-radius:8px; padding:14px 18px; margin:12px 0; font-size:13px; }
+  .verify strong { color: var(--green); }
+  .file-label { display:inline-block; background:var(--navy); color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:4px 4px 0 0; margin-bottom:-1px; font-family:monospace; }
+  .usecase-box { background: #EBF5FB; border: 2px solid #2980B9; border-radius: 10px; padding: 18px 22px; margin-bottom: 18px; }
+  .usecase-box h3 { color: var(--navy); margin-bottom: 8px; font-size: 15px; }
+</style>
+</head>
+<body>
+<nav><a href="../../index.html">← Back to Training Materials</a></nav>
+<header>
+  <h1>Exercise 02 — Build a Fund Transfer REST API</h1>
+  <p>Module 04: Spring Profiles + MySQL | ICICI Bank API Services | Day 4</p>
+  <span class="badge">⏱ 60 Minutes · Individual</span>
+</header>
+<div class="container">
+
+  <div class="meta">
+    <div class="chip">Difficulty: <span>Intermediate</span></div>
+    <div class="chip">Profile: <span>dev (MySQL)</span></div>
+    <div class="chip">New concepts: <span>Entity · Repository · Controller</span></div>
+  </div>
+
+  <!-- USE CASE -->
+  <div class="usecase-box">
+    <h3>📋 Use Case — ICICI Fund Transfer Tracking</h3>
+    <p style="font-size:14px;margin-bottom:8px;">ICICI Bank needs to track every fund transfer between accounts. When a customer initiates a transfer, the system records the transaction with a unique ID (TXN1001, TXN1002, …), the sender's account, the receiver's account, the amount, and a transaction type (DEBIT or CREDIT).</p>
+    <p style="font-size:14px;margin:0;">Your task: build the REST API that records and retrieves these transactions, persisted in MySQL.</p>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="card">
+    <div class="card-header"><h2>What You Will Build</h2><span class="num">∑</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+        <tr><td><code>GET</code></td><td><code>/api/v1/transactions</code></td><td>List all transactions</td></tr>
+        <tr><td><code>GET</code></td><td><code>/api/v1/transactions/{id}</code></td><td>Get transaction by ID</td></tr>
+        <tr><td><code>POST</code></td><td><code>/api/v1/transactions</code></td><td>Record a new transaction</td></tr>
+        <tr><td><code>GET</code></td><td><code>/api/v1/transactions/account/{accountId}</code></td><td>Get all transactions from an account</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- STEP 1 — Entity -->
+  <div class="card">
+    <div class="card-header"><h2>Step 1 — Create the Transaction Entity</h2><span class="num">01</span></div>
+    <div class="card-body">
+      <p>Create <code>Transaction.java</code> in the <code>model</code> package. Use <code>BigDecimal</code> for the amount — financial values must never be stored as <code>double</code>.</p>
+<div class="file-label">src/main/java/com/icici/banking/model/Transaction.java</div>
+<pre><span class="k">package</span> com.icici.banking.model;
+
+<span class="k">import</span> jakarta.persistence.*;
+<span class="k">import</span> java.math.BigDecimal;
+
+<span class="k">@Entity</span>
+<span class="k">@Table</span>(name = <span class="s">"transactions"</span>)
+<span class="k">public class</span> <span class="t">Transaction</span> {
+
+    <span class="k">@Id</span>
+    <span class="k">@Column</span>(name = <span class="s">"transaction_id"</span>)
+    <span class="k">private</span> String transactionId;       <span class="c">// TXN1001, TXN1002, ...</span>
+
+    <span class="k">@Column</span>(name = <span class="s">"from_account_id"</span>, nullable = <span class="k">false</span>)
+    <span class="k">private</span> String fromAccountId;
+
+    <span class="k">@Column</span>(name = <span class="s">"to_account_id"</span>, nullable = <span class="k">false</span>)
+    <span class="k">private</span> String toAccountId;
+
+    <span class="k">@Column</span>(nullable = <span class="k">false</span>, precision = <span class="k">15</span>, scale = <span class="k">2</span>)
+    <span class="k">private</span> BigDecimal amount;
+
+    <span class="k">@Column</span>(name = <span class="s">"transaction_type"</span>, nullable = <span class="k">false</span>)
+    <span class="k">private</span> String transactionType;     <span class="c">// "DEBIT" or "CREDIT"</span>
+
+    <span class="k">@Column</span>
+    <span class="k">private</span> String remarks;
+
+    <span class="c">// Constructors</span>
+    <span class="k">public</span> Transaction() {}
+
+    <span class="k">public</span> Transaction(String transactionId, String fromAccountId,
+                       String toAccountId, BigDecimal amount,
+                       String transactionType, String remarks) {
+        <span class="k">this</span>.transactionId   = transactionId;
+        <span class="k">this</span>.fromAccountId  = fromAccountId;
+        <span class="k">this</span>.toAccountId    = toAccountId;
+        <span class="k">this</span>.amount         = amount;
+        <span class="k">this</span>.transactionType = transactionType;
+        <span class="k">this</span>.remarks        = remarks;
+    }
+
+    <span class="c">// Getters &amp; Setters (generate with IDE: Alt+Insert → Getter and Setter)</span>
+    <span class="k">public</span> String getTransactionId()   { <span class="k">return</span> transactionId; }
+    <span class="k">public void</span>   setTransactionId(String v) { transactionId = v; }
+    <span class="k">public</span> String getFromAccountId()   { <span class="k">return</span> fromAccountId; }
+    <span class="k">public void</span>   setFromAccountId(String v) { fromAccountId = v; }
+    <span class="k">public</span> String getToAccountId()     { <span class="k">return</span> toAccountId; }
+    <span class="k">public void</span>   setToAccountId(String v) { toAccountId = v; }
+    <span class="k">public</span> BigDecimal getAmount()      { <span class="k">return</span> amount; }
+    <span class="k">public void</span>   setAmount(BigDecimal v) { amount = v; }
+    <span class="k">public</span> String getTransactionType() { <span class="k">return</span> transactionType; }
+    <span class="k">public void</span>   setTransactionType(String v) { transactionType = v; }
+    <span class="k">public</span> String getRemarks()         { <span class="k">return</span> remarks; }
+    <span class="k">public void</span>   setRemarks(String v) { remarks = v; }
+}</pre>
+      <div class="tip">💡 <code>jakarta.persistence.*</code> is the correct import in Spring Boot 3.x. If you see red imports for <code>javax.persistence</code>, you're on the wrong package.</div>
+    </div>
+  </div>
+
+  <!-- STEP 2 — Repository -->
+  <div class="card">
+    <div class="card-header"><h2>Step 2 — Create TransactionRepository</h2><span class="num">02</span></div>
+    <div class="card-body">
+      <p>Spring Data JPA generates SQL for you. Declare an interface that extends <code>JpaRepository</code> — you get save, findAll, findById, delete for free. Add two custom finders by naming convention:</p>
+<div class="file-label">src/main/java/com/icici/banking/repository/TransactionRepository.java</div>
+<pre><span class="k">package</span> com.icici.banking.repository;
+
+<span class="k">import</span> com.icici.banking.model.Transaction;
+<span class="k">import</span> org.springframework.data.jpa.repository.JpaRepository;
+<span class="k">import</span> org.springframework.stereotype.Repository;
+<span class="k">import</span> java.util.List;
+
+<span class="k">@Repository</span>
+<span class="k">public interface</span> <span class="t">TransactionRepository</span> <span class="k">extends</span> JpaRepository&lt;Transaction, String&gt; {
+
+    <span class="c">// Spring Data generates: SELECT * FROM transactions WHERE from_account_id = ?</span>
+    List&lt;Transaction&gt; findByFromAccountId(String accountId);
+
+    <span class="c">// Spring Data generates: SELECT * FROM transactions WHERE to_account_id = ?</span>
+    List&lt;Transaction&gt; findByToAccountId(String accountId);
+}</pre>
+      <div class="tip">💡 <code>JpaRepository&lt;Transaction, String&gt;</code> — the second type parameter is the type of the primary key (<code>transactionId</code> is a <code>String</code>).</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 — Controller -->
+  <div class="card">
+    <div class="card-header"><h2>Step 3 — Create TransactionController</h2><span class="num">03</span></div>
+    <div class="card-body">
+      <p>Wire up the four endpoints. Use an <code>AtomicInteger</code> counter to generate IDs like TXN1001, TXN1002, … in order:</p>
+<div class="file-label">src/main/java/com/icici/banking/controller/TransactionController.java</div>
+<pre><span class="k">package</span> com.icici.banking.controller;
+
+<span class="k">import</span> com.icici.banking.model.Transaction;
+<span class="k">import</span> com.icici.banking.repository.TransactionRepository;
+<span class="k">import</span> org.springframework.http.HttpStatus;
+<span class="k">import</span> org.springframework.http.ResponseEntity;
+<span class="k">import</span> org.springframework.web.bind.annotation.*;
+
+<span class="k">import</span> java.util.List;
+<span class="k">import</span> java.util.concurrent.atomic.AtomicInteger;
+
+<span class="k">@RestController</span>
+<span class="k">@RequestMapping</span>(<span class="s">"/api/v1/transactions"</span>)
+<span class="k">public class</span> <span class="t">TransactionController</span> {
+
+    <span class="k">private final</span> TransactionRepository repo;
+    <span class="k">private final</span> AtomicInteger counter = <span class="k">new</span> AtomicInteger(<span class="k">1000</span>);
+
+    <span class="k">public</span> TransactionController(TransactionRepository repo) {
+        <span class="k">this</span>.repo = repo;
+    }
+
+    <span class="c">// GET /api/v1/transactions — list all</span>
+    <span class="k">@GetMapping</span>
+    <span class="k">public</span> List&lt;Transaction&gt; getAll() {
+        <span class="k">return</span> repo.findAll();
+    }
+
+    <span class="c">// GET /api/v1/transactions/{id} — find one</span>
+    <span class="k">@GetMapping</span>(<span class="s">"/{id}"</span>)
+    <span class="k">public</span> ResponseEntity&lt;Transaction&gt; getById(<span class="k">@PathVariable</span> String id) {
+        <span class="k">return</span> repo.findById(id)
+                   .map(t -&gt; ResponseEntity.ok(t))
+                   .orElse(ResponseEntity.notFound().build());
+    }
+
+    <span class="c">// POST /api/v1/transactions — record a new transaction</span>
+    <span class="k">@PostMapping</span>
+    <span class="k">public</span> ResponseEntity&lt;Transaction&gt; create(<span class="k">@RequestBody</span> Transaction txn) {
+        String id = <span class="s">"TXN"</span> + counter.incrementAndGet();
+        txn.setTransactionId(id);
+        Transaction saved = repo.save(txn);
+        <span class="k">return</span> ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    <span class="c">// GET /api/v1/transactions/account/{accountId} — by sender</span>
+    <span class="k">@GetMapping</span>(<span class="s">"/account/{accountId}"</span>)
+    <span class="k">public</span> List&lt;Transaction&gt; getByAccount(<span class="k">@PathVariable</span> String accountId) {
+        <span class="k">return</span> repo.findByFromAccountId(accountId);
+    }
+}</pre>
+    </div>
+  </div>
+
+  <!-- STEP 4 — Run and test -->
+  <div class="card">
+    <div class="card-header"><h2>Step 4 — Start the App and Test</h2><span class="num">04</span></div>
+    <div class="card-body">
+      <p>Make sure MySQL is running and <code>icicidb</code> database exists. Then:</p>
+      <pre>mvn spring-boot:run</pre>
+      <p>Look for <code>ddl-auto=update</code> in the logs — Hibernate will auto-create the <code>transactions</code> table.</p>
+      <p><strong>Test with Postman or curl:</strong></p>
+
+      <p><strong>1. Record a fund transfer (POST)</strong></p>
+      <pre>POST http://localhost:8080/api/v1/transactions
+Content-Type: application/json
+
+{
+  <span class="s">"fromAccountId"</span>: <span class="s">"ACC001"</span>,
+  <span class="s">"toAccountId"</span>:   <span class="s">"ACC002"</span>,
+  <span class="s">"amount"</span>:        <span class="k">25000.00</span>,
+  <span class="s">"transactionType"</span>: <span class="s">"DEBIT"</span>,
+  <span class="s">"remarks"</span>:       <span class="s">"Rent payment"</span>
+}</pre>
+      <p>Expected response: <code>201 Created</code> with <code>transactionId: "TXN1001"</code></p>
+
+      <p><strong>2. List all transactions (GET)</strong></p>
+      <pre>GET http://localhost:8080/api/v1/transactions</pre>
+
+      <p><strong>3. Get by ID (GET)</strong></p>
+      <pre>GET http://localhost:8080/api/v1/transactions/TXN1001</pre>
+
+      <p><strong>4. Get all transactions from account (GET)</strong></p>
+      <pre>GET http://localhost:8080/api/v1/transactions/account/ACC001</pre>
+
+      <div class="verify">
+        <strong>✅ Checkpoint</strong> — POST returns 201 with a TXN-prefixed ID. GET /transactions returns the list. Restart the app; the data should still be there (MySQL persists it, unlike H2 in-memory).
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 — Verify in MySQL -->
+  <div class="card">
+    <div class="card-header"><h2>Step 5 — Verify Directly in MySQL</h2><span class="num">05</span></div>
+    <div class="card-body">
+      <p>Open a MySQL shell and confirm the data is really in the database:</p>
+<pre>mysql -u root -p icicidb
+
+<span class="k">SHOW TABLES</span>;
+<span class="c">-- Expected: transactions</span>
+
+<span class="k">DESCRIBE</span> transactions;
+<span class="c">-- Expected: transaction_id, from_account_id, to_account_id, amount, transaction_type, remarks</span>
+
+<span class="k">SELECT</span> * <span class="k">FROM</span> transactions;
+<span class="c">-- Expected: rows you inserted via POST</span></pre>
+      <div class="tip">💡 This is the key difference from Day 3's H2 — data survives application restarts because MySQL writes to disk.</div>
+    </div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="card">
+    <div class="card-header"><h2>Challenge (If You Finish Early)</h2><span class="num">★</span></div>
+    <div class="card-body">
+      <ol>
+        <li>Add a <code>DELETE /api/v1/transactions/{id}</code> endpoint that returns <code>204 No Content</code> on success and <code>404 Not Found</code> if the ID doesn't exist.</li>
+        <li>Add a <code>GET /api/v1/transactions/type/{type}</code> endpoint (e.g. <code>/type/DEBIT</code>) using a derived query method in the repository: <code>findByTransactionType(String type)</code>.</li>
+        <li>Add a <code>createdAt</code> field (<code>LocalDateTime</code>, auto-set to now in the controller) and verify it appears in the MySQL table and in the JSON response.</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
